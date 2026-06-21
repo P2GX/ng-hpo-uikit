@@ -1,0 +1,21 @@
+---
+layout: home
+
+hero:
+  name: "ng-hpo-uikit"
+  text: "Biocuration UI Library"
+  tagline: "Clean, responsive, and standardized Angular tools for HPO-based workflows."
+  actions:
+    - theme: brand
+      text: Get Started
+      link: /guides/installation
+    - theme: alt
+      text: View Components
+      link: /components/orcid-dialog
+
+features:
+  - title: Standalone Architecture
+    details: Fully compliant with modern Angular standalone directives—zero heavy root modules needed.
+  - title: Scoped Contexts
+    details: Handles token layouts, styles, and custom inputs safely inside isolation boundaries.
+---
