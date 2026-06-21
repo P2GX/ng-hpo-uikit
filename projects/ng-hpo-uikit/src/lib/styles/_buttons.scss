@@ -1,0 +1,54 @@
+// projects/ng-hpo-uikit/src/lib/styles/_buttons.scss
+
+// 1. Define reusable design tokens as CSS variables with defaults
+:root {
+  --hpo-btn-radius: 6px;
+  --hpo-btn-font-weight: 500;
+  --hpo-btn-transition: all 0.15s ease-in-out;
+}
+
+// 2. Create a Mixin for base structural styles (avoids repeating layout CSS)
+@mixin hpo-button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: var(--hpo-btn-font-weight);
+  border-radius: var(--hpo-btn-radius);
+  cursor: pointer;
+  transition: var(--hpo-btn-transition);
+  border: 1px solid transparent;
+  
+  &:disabled {
+    background: #e2e8f0 !important;
+    color: #94a3b8 !important;
+    border-color: transparent !important;
+    cursor: not-allowed !important;
+    box-shadow: none !important;
+  }
+}
+
+// 3. Define standard utility button classes
+.hpo-btn-primary {
+  @include hpo-button-base;
+  background: var(--hpo-ui-primary-color, #0284c7);
+  color: #ffffff;
+
+  &:hover:not(:disabled) {
+    background: var(--hpo-ui-primary-hover, #0369a1);
+  }
+}
+
+.hpo-btn-secondary {
+  @include hpo-button-base;
+  border-color: var(--hpo-ui-border-dark, #cbd5e1);
+  background: #ffffff;
+  color: #475569;
+
+  &:hover:not(:disabled) {
+    background: #f8fafc;
+    color: #1e293b;
+    border-color: #94a3b8;
+  }
+}

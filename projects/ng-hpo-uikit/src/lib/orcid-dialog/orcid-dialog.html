@@ -1,0 +1,50 @@
+<h2 mat-dialog-title class="dialog-title">Enter ORCID researcher identifier</h2>
+
+<mat-dialog-content class="dialog-content">
+  <form [formGroup]="orcidForm" class="orcid-form">
+    <mat-form-field appearance="outline" class="form-field-full" subscriptSizing="fixed">
+      <mat-icon matPrefix class="input-icon-prefix">fingerprint</mat-icon>
+      <input matInput
+             formControlName="orcid"
+             placeholder="0000-0000-0000-0000"
+             maxlength="19"
+             class="orcid-input-field">
+      <mat-hint class="custom-hint">Format: 0000-0000-0000-0000</mat-hint>
+      
+      @if (orcidForm.get('orcid')?.hasError('required')) {
+        <mat-error>ORCID is required</mat-error>
+      }
+      @if (orcidForm.get('orcid')?.hasError('pattern')) {
+        <mat-error>Invalid ORCID format</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  <div class="orcid-info">
+  <!-- Adding matTooltip makes this icon fully interactive out of the box -->
+  <mat-icon class="info-icon" 
+            matTooltip="ORCID helps distinguish you from every other researcher with a matching name." 
+            matTooltipPosition="above"
+            style="cursor: help;">
+    info
+  </mat-icon>
+  <span>
+    ORCID provides a persistent digital identifier for researchers.
+    <a href="https://orcid.org/" target="_blank" class="orcid-link">Learn more</a>
+  </span>
+</div>
+</mat-dialog-content>
+
+<div class="dialog-actions">
+  <button type="button"
+          (click)="onCancel()"
+          class="btn-outline-primary">
+    Cancel
+  </button>
+  <button type="button"
+          (click)="onSave()"
+          [disabled]="orcidForm.invalid"
+          class="btn-outline-primary btn-save">
+    Save
+  </button>
+</div>

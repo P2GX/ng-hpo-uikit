@@ -1,0 +1,80 @@
+@use '../styles/buttons' as *;
+
+:host {
+  display: block;
+  font-family: var(--hpo-ui-font-family, system-ui, sans-serif);
+
+  // This override tells Angular Material to gracefully curve the outer dialog box container
+  --mdc-dialog-container-shape: 12px; 
+}
+
+.dialog-title {
+  margin: 0 !important;
+  padding: 24px 24px 10px 24px !important;
+  border-bottom: none !important;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem !important;
+}
+
+mat-dialog-content.dialog-content {
+  min-width: 400px;
+  overflow: hidden !important; 
+  display: block !important;
+  border-top: none !important; 
+  border-bottom: none !important;
+  padding-top: 12px !important;
+}
+
+.orcid-form {
+  margin-top: 0.5rem;
+
+  .form-field-full {
+    width: 100%;
+    input.mat-mdc-input-element {
+      padding-left: 8px !important; 
+    }
+  }
+}
+
+.input-icon-prefix {
+    color: var(--hpo-ui-text-muted, #94a3b8);
+    margin-right: 12px !important;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+
+.orcid-info {
+  background: var(--hpo-ui-bg-light, #f8f9fa);
+  padding: 12px;
+  border-radius: 6px;
+  margin-top: 20px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--hpo-ui-text-muted, #4b5563);
+  border: 1px solid var(--hpo-ui-border-light, #e5e7eb);
+
+  .orcid-link {
+    color: var(--hpo-ui-link-color, #2563eb);
+    text-decoration: underline;
+  }
+}
+
+.dialog-actions {
+  padding: 16px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  .btn-secondary {
+    @extend .hpo-btn-secondary;
+    min-width: 100px; // Component-specific override
+  }
+
+  .btn-primary {
+    @extend .hpo-btn-primary;
+    min-width: 100px;
+  }
+}
