@@ -1,6 +1,8 @@
-#
+# ng-hpo-uikit
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.0.3.
+Angular HPO Application UI Toolkit
+
+See the [Documentation](https://p2gx.github.io/ng-hpo-uikit/).
 
 ## Development server
 
