@@ -13,26 +13,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Pull down your repository code tree
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
-      # 2. Setup your Node environment using modern Node 22 runtime
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 22
           cache: 'npm' # Automatically caches node_modules dependencies between runs
 
-      # 3. Clean-install dependencies exactly as locked in package.json
       - name: Install Dependencies
         run: npm ci
 
-      # 4. Compile the Markdown into production static build files via VitePress
+      # build files via VitePress
       - name: Build Documentation Site
         run: npm run docs:build
 
-      # 5. Extract and deploy the compiled folder target straight to gh-pages branch
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
