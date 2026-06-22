@@ -3,7 +3,7 @@ name: Deploy Documentation Site
 on:
   push:
     branches:
-      - main # Triggers the build sequence automatically on any push to main
+      - master # Triggers the build sequence automatically on any push to main
 
 permissions:
   contents: write # Allows the deployment token to commit the static assets to gh-pages
