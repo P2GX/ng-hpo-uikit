@@ -45,3 +45,5 @@ Thumbs.db
 .editorconfig
 .prettierrc
 .vscode/
+
+docs/.vitepress/cache/
