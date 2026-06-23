@@ -20,11 +20,11 @@ The GitHub Actions is appended to the documentation action (deploy.yml).
 ```
 
 
-Users need to add the following to the `package.json` file of their application:
+Users need to add the following to the `package.json` file of their application (Replace `your-github-username`):
 
 ```json
 "dependencies": {
-  "ng-hpo-uikit": "github:your-github-username/ng-hpo-uikit#dist-build"
+  "ng-hpo-uikit": "github:P2GXng-hpo-uikit#dist-build"
 }
 ```
 

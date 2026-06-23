@@ -5,7 +5,7 @@ To use components of this library in angular (including Tauri) applications, add
 
 ```json
 "dependencies": {
-  "ng-hpo-uikit": "github:your-github-username/ng-hpo-uikit#dist-build"
+  "ng-hpo-uikit": "github:P2GX/ng-hpo-uikit#dist-build"
 }
 ```
 
