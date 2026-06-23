@@ -1,5 +1,23 @@
 # Installation
 
+To use components of this library in angular (including Tauri) applications, add the following line to the `package.json` file of their application:
+
+
+```json
+"dependencies": {
+  "ng-hpo-uikit": "github:your-github-username/ng-hpo-uikit#dist-build"
+}
+```
+
+Then, all of the modules provided by this library can be used in components. For instance, `OrcidDialogComponent`, add  the following import statement.
+
+```typescript
+import { OrcidDialogComponent } from 'ng-hpo-uikit';
+```
+
+
+
+
 
 
 ## Demonstration
