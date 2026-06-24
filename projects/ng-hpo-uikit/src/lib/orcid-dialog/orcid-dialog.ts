@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -28,6 +28,7 @@ export class OrcidDialogComponent {
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<OrcidDialogComponent>);
   public data = inject<OrcidDialogData>(MAT_DIALOG_DATA);
+  public externalLinkClicked = output<string>();
 
   orcidForm: FormGroup = this.fb.group({
     orcid: [
@@ -38,6 +39,11 @@ export class OrcidDialogComponent {
       ]
     ]
   });
+
+  onLinkClick(event: Event): void {
+    event.preventDefault(); 
+    this.externalLinkClicked.emit('https://orcid.org/');
+  }
 
   onCancel(): void {
     this.dialogRef.close();

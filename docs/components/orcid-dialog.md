@@ -12,6 +12,8 @@ To use the dialog in an external application, import the standalone component an
 import { Component, inject, signal } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { OrcidDialogComponent } from 'ng-hpo-uikit';
+// Import Tauri shell API to handle desktop system navigation
+import { open as openExternalBrowser } from '@tauri-apps/plugin-shell';
 
 @Component({
   selector: 'app-biocurator-settings',
@@ -34,6 +36,12 @@ export class SettingsComponent {
       }
     });
 
+    // this subscribes to the @output/emit of the dialog and opens
+    // the ORCID website in the system browser
+    dialogRef.componentInstance.externalLinkClicked.subscribe((url: string) => {
+      this.handleExternalNavigation(url);
+    });
+
     dialogRef.afterClosed().subscribe((result: string | undefined) => {
       // If the user cancelled or cleared the input, exit cleanly
       if (!result) return;
@@ -41,6 +49,16 @@ export class SettingsComponent {
       // Update the reactive signal state
       this.biocuratorOrcid.set(result);
     });
+  }
+
+  private async handleExternalNavigation(url: string): Promise<void> {
+    try {
+      // Directs the native OS to launch the link in the user's default browser
+      await openExternalBrowser(url);
+    } catch (error) {
+      console.warn('Tauri environment missing, falling back to standard web navigation.', error);
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
   }
 }
 ```
@@ -66,6 +84,17 @@ The component expects an object conforming to the following structure passed int
 | Property | Type | Description |
 | :--- | :--- | :--- |
 | `currentOrcid` | `string` | The active ORCID value populated in the form field when initialized. |
+
+
+
+### Outputs
+
+The component exposes a signal-driven output stream accessible via the componentInstance property on the opened dialog reference:
+
+| Output | Emitted type | Description |
+| :--- | :--- | :--- |
+| `externalLinkClicked` | `string` | Emits the target absolute URL string whenever the user interacts with documentation links inside the modal context. |
+
 
 ### Return Types
 

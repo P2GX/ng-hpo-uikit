@@ -21,7 +21,8 @@ export default defineConfig({
       {
         text: 'UI Components',
         items: [
-          { text: 'ORCID Dialog', link: '/components/orcid-dialog' }
+          { text: 'ORCID Dialog', link: '/components/orcid-dialog' },
+          { text: 'Footer', link: '/components/footer' }
         ]
       }
     ],
