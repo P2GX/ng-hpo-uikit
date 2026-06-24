@@ -16,8 +16,16 @@ import { OrcidDialogComponent } from 'ng-hpo-uikit';
 ```
 
 
+## Updates
+After this library has been updated, it will be necessary to pull in the latest version for applications
 
-
+```bash
+npm install
+```
+or with minor version conflicts
+```bash
+npm install --legacy-peer-deps
+```
 
 
 ## Demonstration

@@ -1,6 +1,6 @@
-# Shared Footer Component
+# Footer Component
 
-The `SharedFooterComponent` provides a unified, responsive structural footer for layout boundaries across biocuration interfaces. It abstracts brand identity and software version tracking into consistent visual layouts while allowing individual applications to retain control over dynamic documentation targets and repository problem logs.
+The `FooterComponent` provides a unified, responsive structural footer for layout boundaries across biocuration interfaces. It abstracts brand identity and software version tracking into consistent visual layouts while allowing individual applications to retain control over dynamic documentation targets and repository problem logs.
 
 ## Core Features
 * **Modular Architecture:** Fully independent layout built on modern Angular signal-based inputs—isolated completely from window environments.
@@ -19,17 +19,15 @@ import { Component, input, output } from '@angular/core';
 @Component({
   selector: 'lib-shared-footer',
   standalone: true,
-  templateUrl: './shared-footer.component.html',
-  styleUrl: './shared-footer.component.scss'
+  templateUrl: './footer.component.html',
+  styleUrl: './footer.component.scss'
 })
-export class SharedFooterComponent {
-  // Declarative metadata inputs
+export class FooterComponent {
   public appName = input.required<string>();
   public appVersion = input.required<string>();
   public gitHubIssuesUrl = input.required<string>();
   public currentYear = input<number>(2026);
 
-  // Structural events emitted to host application context
   public helpRequested = output<void>();
 
   public onHelpClick(): void {
@@ -90,7 +88,7 @@ import { open as openExternalBrowser } from '@tauri-apps/plugin-shell';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [SharedFooterComponent],
+  imports: [FooterComponent],
   templateUrl: './app.component.html'
 })
 export class AppComponent {
