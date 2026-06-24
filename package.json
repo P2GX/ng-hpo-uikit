@@ -22,6 +22,7 @@
     "@angular/material": "^22.0.2",
     "@angular/platform-browser": "^22.0.0",
     "@angular/router": "^22.0.0",
+    "@tauri-apps/plugin-opener": "^2.5.4",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

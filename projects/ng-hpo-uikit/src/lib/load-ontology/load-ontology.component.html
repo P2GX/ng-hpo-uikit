@@ -1,0 +1,35 @@
+<h2 class="home-card__section-label">{{ title() }} Setup</h2>
+<div class="home-card__row">
+    <div class="action-with-help">
+        <button (click)="onLoad.emit()" [disabled]="isLoading()" class="btn-outline-primary home-card__action-btn">
+           @if (isLoading()) {
+                <mat-spinner diameter="15"></mat-spinner>
+                <span>Loading...</span>
+            } @else {
+                <span>Load {{ label() }}</span>
+            }
+        </button>
+        
+        <ui-help-button 
+            [title]="'Loading the ' + label()" 
+            [lines]="helpLines()" 
+            [helpUrl]="helpUrl()" />
+        </div>
+    
+    <div class="ontology-status">
+        <span [ngClass]="{
+            'hpo-status__text--loading': isLoading(), 
+            'hpo-status__text--loaded': isLoaded()}" 
+            class="hpo-status__text">
+            @if(isLoaded()) {
+              <mat-icon class="hpo-status__icon">check_circle</mat-icon> 
+            }
+            {{ statusMessage() }}
+        </span>
+        @if(isLoaded() && termCount() !== undefined) {
+          <span class="hpo-status__terms">
+            {{ termCount() }} terms available
+          </span>
+        }
+    </div>
+</div>

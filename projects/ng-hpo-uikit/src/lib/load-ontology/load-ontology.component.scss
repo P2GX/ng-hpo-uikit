@@ -1,0 +1,64 @@
+.home-card__section-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #333333;
+}
+
+.home-card__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.action-with-help {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .home-card__action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 120px;
+    justify-content: center;
+  }
+}
+
+/* Generalized Status Classes */
+.ontology-status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+
+  .__text {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: #666666;
+
+    &--loading {
+      color: #0288d1;
+    }
+
+    &--loaded {
+      color: #388e3c;
+      font-weight: 500;
+    }
+  }
+
+  .__icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  .__terms {
+    font-size: 0.8rem;
+    color: #757575;
+  }
+}

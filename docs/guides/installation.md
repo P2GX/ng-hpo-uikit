@@ -47,4 +47,23 @@ terminate the server:
 
 ```bash
 kill -9 $(lsof -t -i:4200)
+# alternatively
+pkill -f "node|nx|tauri"
+```
+
+
+# Reset
+
+Sometime, the versions of angular or dependencies see to get out of whack, and a reset can do wonders.
+
+```bash
+# Clear npm's internal cache
+npm cache clean --force
+
+# Delete the node_modules folder and package lock
+rm -rf node_modules package-lock.json
+
+# Clear Nx's local cache folder
+rm -rf .nx/cache
+npm install --legacy-peer-deps
 ```
