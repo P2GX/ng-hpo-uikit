@@ -24,6 +24,13 @@ export default defineConfig({
           { text: 'ORCID Dialog', link: '/components/orcid-dialog' },
           { text: 'Footer', link: '/components/footer' }
         ]
+      },
+      {
+        text: 'Shared Services',
+        items: [
+
+          { text: 'Notification Service', link: '/services/notification-service' }
+        ]
       }
     ],
     socialLinks: [

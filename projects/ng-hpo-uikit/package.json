@@ -1,9 +1,10 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "peerDependencies": {
     "@angular/common": "^22.0.0",
-    "@angular/core": "^22.0.0"
+    "@angular/core": "^22.0.0",
+    "@angular/material": "^22.0.0"
   },
   "dependencies": {
     "tslib": "^2.3.0"

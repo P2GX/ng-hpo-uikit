@@ -31,3 +31,12 @@ Users need to add the following to the `package.json` file of their application 
 ## Public API
 
 Recall that all components need to be made public by a corresponding entry in the `public-api.ts` file.
+
+
+## Documentation
+
+Test new documentation locally using
+
+```bash
+npm run docs:dev
+```

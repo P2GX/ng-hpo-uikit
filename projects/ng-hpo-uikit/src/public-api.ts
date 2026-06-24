@@ -5,3 +5,6 @@
 export * from './lib/ng-hpo-uikit';
 export * from './lib/orcid-dialog/orcid-dialog'
 export * from './lib/footer/footer.component'
+
+/* services */
+export * from './lib/services/notification.service';
