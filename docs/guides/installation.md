@@ -22,9 +22,9 @@ After this library has been updated, it will be necessary to pull in the latest 
 ```bash
 npm install
 ```
-or with minor version conflicts
+or to update the library and mitigate minor version conflicts
 ```bash
-npm install --legacy-peer-deps
+npm update --legacy-peer-deps
 ```
 
 

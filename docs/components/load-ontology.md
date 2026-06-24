@@ -9,6 +9,13 @@ The `LoadOntologyComponent` provides a unified, reusable layout interface for lo
 <ui-load-ontology></ui-load-ontology>
 ```
 
+Import as
+
+```typescript
+import { LoadOntologyComponent } from 'ng-hpo-uikit';
+```
+ 
+
 ### Inputs & Outputs
 
 | Property | Type | Required | Description |
@@ -29,7 +36,7 @@ The `LoadOntologyComponent` provides a unified, reusable layout interface for lo
 Standard Human Phenotype Ontology Setup
 
 ```html
-<hpo-ui-load-ontology
+<ui-load-ontology
   title="Ontology"
   label="HPO"
   [isLoading]="statusService.hpoLoading()"
@@ -39,14 +46,14 @@ Standard Human Phenotype Ontology Setup
   helpUrl="[https://p2gx.github.io/phenoboard/help/start.html#load-the-hpo](https://p2gx.github.io/phenoboard/help/start.html#load-the-hpo)"
   [helpLines]="['Select the local hp.json file from your machine configuration storage directory.']"
   (onLoad)="loadHpo()">
-</hpo-ui-load-ontology>
+</ui-load-ontology>
 ```
 
 
 ## Secondary Gene Ontology (GO) Setup Variant
 
 ```html
-<hpo-ui-load-ontology
+<ui-load-ontology
   title="Gene Functional Annotation"
   label="GO"
   [isLoading]="statusService.goLoading()"
@@ -56,6 +63,6 @@ Standard Human Phenotype Ontology Setup
   helpUrl="[https://p2gx.github.io/phenoboard/help/start.html#load-the-go](https://p2gx.github.io/phenoboard/help/start.html#load-the-go)"
   [helpLines]="['Select the go.json layout descriptor package file.']"
   (onLoad)="loadGo()">
-</hpo-ui-load-ontology>
+</ui-load-ontology>
 ```
 
