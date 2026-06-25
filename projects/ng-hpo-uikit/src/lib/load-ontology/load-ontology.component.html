@@ -1,8 +1,7 @@
-<h2 class="home-card__section-label">{{ title() }} Setup</h2>
 <div class="home-card__row">
     <div class="action-with-help">
         <button (click)="onLoad.emit()" [disabled]="isLoading()" class="btn-outline-primary home-card__action-btn">
-           @if (isLoading()) {
+            @if (isLoading()) {
                 <mat-spinner diameter="15"></mat-spinner>
                 <span>Loading...</span>
             } @else {
@@ -14,22 +13,18 @@
             [title]="'Loading the ' + label()" 
             [lines]="helpLines()" 
             [helpUrl]="helpUrl()" />
-        </div>
+    </div>
     
     <div class="ontology-status">
         <span [ngClass]="{
-            'hpo-status__text--loading': isLoading(), 
-            'hpo-status__text--loaded': isLoaded()}" 
-            class="hpo-status__text">
+            'ontology-status__text--loading': isLoading(), 
+            'ontology-status__text--loaded': isLoaded()}" 
+            class="ontology-status__text">
             @if(isLoaded()) {
-              <mat-icon class="hpo-status__icon">check_circle</mat-icon> 
+                <mat-icon class="ontology-status__icon">check_circle</mat-icon> 
+                {{ statusMessage() }}
+                <span class="ontology-status__terms">{{ termCount() }} terms available</span>
             }
-            {{ statusMessage() }}
         </span>
-        @if(isLoaded() && termCount() !== undefined) {
-          <span class="hpo-status__terms">
-            {{ termCount() }} terms available
-          </span>
-        }
     </div>
 </div>

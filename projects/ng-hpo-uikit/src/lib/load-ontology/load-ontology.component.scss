@@ -27,37 +27,41 @@
   }
 }
 
-/* Generalized Status Classes */
 .ontology-status {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
 
-  .__text {
+  // The '&' nests and compiles to '.ontology-status__text'
+  &__text {
     display: flex;
     align-items: center;
     gap: 6px;
     font-size: 0.9rem;
     color: #666666;
 
+    // Compiles to '.ontology-status__text--loading'
     &--loading {
       color: #0288d1;
     }
 
+    // Compiles to '.ontology-status__text--loaded'
     &--loaded {
       color: #388e3c;
       font-weight: 500;
     }
   }
 
-  .__icon {
+  // Compiles to '.ontology-status__icon'
+  &__icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
   }
 
-  .__terms {
+  // Compiles to '.ontology-status__terms'
+  &__terms {
     font-size: 0.8rem;
     color: #757575;
   }
