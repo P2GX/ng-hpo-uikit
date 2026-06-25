@@ -24,6 +24,7 @@ export default defineConfig({
           { text: 'ORCID Dialog', link: '/components/orcid-dialog' },
           { text: 'Footer', link: '/components/footer' },
           { text: "Ontology Loader", link:  '/components/load-ontology' } ,
+          { text: "Ontology Autocomplete", link:  '/components/ontology-autocomplete' } ,
           { text: 'Help button', link: '/components/help-button' }
         ]
       },
@@ -32,6 +33,13 @@ export default defineConfig({
         items: [
 
           { text: 'Notification Service', link: '/services/notification-service' }
+        ]
+      },
+      {
+        text: 'Models',
+        items: [
+
+          { text: 'OntologyMatch', link: '/models/ontology-match' }
         ]
       }
     ],

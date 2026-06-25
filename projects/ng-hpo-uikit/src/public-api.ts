@@ -10,3 +10,5 @@ export * from './lib/load-ontology/load-ontology.component';
 
 /* services */
 export * from './lib/services/notification.service';
+/* models */
+export * from './lib/models/ontology-dto';

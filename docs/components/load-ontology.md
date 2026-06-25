@@ -20,7 +20,6 @@ import { LoadOntologyComponent } from 'ng-hpo-uikit';
 
 | Property | Type | Required | Description |
 | :--- | :--- | :---: | :--- |
-| `title` | `Signal<string>` | **Yes** | Header text category mapping label (e.g., `"Ontology"`, `"Gene Ontology"`). |
 | `label` | `Signal<string>` | **Yes** | Inline visual label applied to buttons and help links (e.g., `"HPO"`, `"GO"`). |
 | `isLoading` | `Signal<boolean>` | **Yes** | Disables interactions and spins a progress spinner when evaluating files. |
 | `isLoaded` | `Signal<boolean>` | **Yes** | Displays a success checkmark block and metadata tracking strings. |
@@ -37,7 +36,6 @@ Standard Human Phenotype Ontology Setup
 
 ```html
 <ui-load-ontology
-  title="Ontology"
   label="HPO"
   [isLoading]="statusService.hpoLoading()"
   [isLoaded]="statusService.hpoLoaded()"
@@ -54,7 +52,6 @@ Standard Human Phenotype Ontology Setup
 
 ```html
 <ui-load-ontology
-  title="Gene Functional Annotation"
   label="GO"
   [isLoading]="statusService.goLoading()"
   [isLoaded]="statusService.goLoaded()"

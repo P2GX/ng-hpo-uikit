@@ -1,0 +1,47 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Ensure the material form field takes up the full width of whatever container it sits in */
+.full-width-field {
+  width: 100%;
+}
+
+/* Container inside the mat-option */
+.option-container {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2; 
+  padding: 4px 0;   
+}
+
+/* The primary matched text token */
+.option-matched-text {
+  font-size: 0.875rem; 
+  font-weight: 500;    
+}
+
+/* The italicized primary label (fallback if matched on a synonym) */
+.option-primary-label {
+  opacity: 0.7;       
+  font-style: italic; 
+  font-size: 0.75rem; 
+}
+
+/* The namespace/accession ID style (e.g., HP:0001250 or GO:0008150) */
+.option-id {
+  color: #2563eb;     // text-blue-600
+  font-size: 0.75rem; 
+}
+
+/* * Overrides Material MDC density rules to allow multiple text rows 
+ * to expand naturally without clipping.
+ */
+::ng-deep .mat-mdc-option {
+  line-height: normal !important;
+  height: auto !important;
+  min-height: 48px;
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
