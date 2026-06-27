@@ -1,0 +1,28 @@
+<div 
+  class="drop-container"
+  [class.drop-container--active]="isDragging()"
+  (dragover)="onDragOver($event)"
+  (dragleave)="onDragLeave()"
+  (drop)="onDrop($event)"
+>
+  <div class="drop-illustration">
+    <i class="upload-icon">📄</i>
+    @if (fileName()) {
+      <p class="file-status">Loaded: <code>{{ fileName() }}</code></p>
+    } @else {
+      <p>Drag and drop a Phenopacket file here, or click to browse.</p>
+    }
+  </div>
+
+  <button type="button" (click)="fileInput.click()">
+    Select Phenopacket Profile
+  </button>
+  
+  <input 
+    #fileInput 
+    type="file" 
+    accept=".json" 
+    (change)="onFileSelected($event)" 
+    hidden 
+  />
+</div>

@@ -25,6 +25,7 @@ export default defineConfig({
           { text: 'Footer', link: '/components/footer' },
           { text: "Ontology Loader", link:  '/components/load-ontology' } ,
           { text: "Ontology Autocomplete", link:  '/components/ontology-autocomplete' } ,
+          { text: "Phenopacket Loader", link:  '/components/phenopacket-loader' } ,
           { text: 'Help button', link: '/components/help-button' }
         ]
       },
