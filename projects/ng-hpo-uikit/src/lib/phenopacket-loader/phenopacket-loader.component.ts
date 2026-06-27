@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   selector: 'lib-phenopacket-loader',
   standalone: true,
   imports: [CommonModule],
-  styleUrls: ['./phenopacket-loader.component.css'],
+  styleUrls: ['./phenopacket-loader.component.scss'],
   templateUrl: './phenopacket-loader.component.html'
 })
 export class PhenopacketLoaderComponent {
