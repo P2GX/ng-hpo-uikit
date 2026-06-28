@@ -83,7 +83,7 @@ Controller Setup (app.component.ts)
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedFooterComponent } from 'ng-hpo-uikit';
-import { open as openExternalBrowser } from '@tauri-apps/plugin-shell';
+import { open as openUrlBrowser } from '@tauri-apps/plugin-shell';
 
 @Component({
   selector: 'app-root',

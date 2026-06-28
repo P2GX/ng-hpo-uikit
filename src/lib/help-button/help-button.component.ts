@@ -2,7 +2,6 @@ import { Component, input, ViewEncapsulation } from '@angular/core';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { openUrl } from '@tauri-apps/plugin-opener'; 
 
 @Component({
   selector: 'ui-help-button', // Generalized for library usage
@@ -17,15 +16,21 @@ export class HelpButtonComponent {
   lines = input.required<string[]>();
   helpUrl = input<string>();
 
-  /* Open page safely in system browser via Tauri opener */
+  /* Open page safely in system browser via Tauri opener, or a new tab otherwise */
   async openDocs() {
     const url = this.helpUrl();
-    if (url) {
-      try {
+    if (!url) {
+      return;
+    }
+    try {
+      if ('__TAURI__' in window) {
+        const { openUrl } = await import('@tauri-apps/plugin-opener');
         await openUrl(url);
-      } catch (err) {
-        console.error("Failed to open documentation via Tauri Opener:", err);
+      } else {
+        window.open(url, '_blank', 'noopener,noreferrer');
       }
+    } catch (err) {
+      console.error('Failed to open documentation:', err);
     }
   }
 }

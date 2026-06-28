@@ -9,11 +9,11 @@
   "peerDependencies": {
     "@angular/common": "^22.0.0",
     "@angular/core": "^22.0.0",
-    "@angular/material": "^22.0.0"
+    "@angular/material": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
+    "@tauri-apps/plugin-opener": "^2.0.0"
   },
   "dependencies": {
-    "@angular/platform-browser": "^22.0.4",
-    "@tauri-apps/plugin-opener": "^2.5.4",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
@@ -27,8 +27,10 @@
     "@angular/core": "^22.0.0",
     "@angular/forms": "^22.0.0",
     "@angular/material": "^22.0.0",
+    "@angular/platform-browser": "^22.0.0",
     "@compodoc/compodoc": "^2.0.0",
     "@storybook/angular": "^10.4.6",
+    "@tauri-apps/plugin-opener": "^2.5.4",
     "ng-packagr": "^22.0.0",
     "storybook": "^10.4.6",
     "typescript": "^6.0.3",
@@ -37,5 +39,10 @@
   "overrides": {
     "webpack": "^5.90.0"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "@tauri-apps/plugin-opener": {
+      "optional": "true"
+    }
+  }
 }
