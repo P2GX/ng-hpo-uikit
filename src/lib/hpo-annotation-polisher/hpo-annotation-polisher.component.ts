@@ -1,7 +1,11 @@
-import { Component, input, model, output, signal } from '@angular/core';
+import { Component, input, model, computed, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 export interface HpoTermMinimal {
   termId: string;
@@ -24,7 +28,14 @@ export interface PolishedHpoAnnotation {
 @Component({
   selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>
   standalone: true,
-  imports: [CommonModule, FormsModule, MatIconModule],
+  imports: [
+    CommonModule, 
+    FormsModule, 
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule, 
+    MatInputModule, 
+    MatFormFieldModule],
   templateUrl: './hpo-annotation-polisher.component.html',
   styleUrl: './hpo-annotation-polisher.component.scss'
 })
@@ -37,9 +48,32 @@ export class HpoAnnotationPolisherComponent {
 
   readonly updated = output<PolishedHpoAnnotation>();
   readonly deleteRequested = output<void>();
+  requestNewOnsetCreation = output<void>();
   readonly termClick = output<string>();
 
+  // Local autocomplete search inputs
+  modifierSearchQuery = signal<string>('');
+  onsetSearchQuery = signal<string>('');
+
   readonly showHierarchyMenu = signal<boolean>(false);
+
+  filteredModifiers = computed(() => {
+    const query = this.modifierSearchQuery().toLowerCase().trim();
+    const available = this.availableModifiers();
+    const currentSelected = this.annotation().modifiers || [];
+    
+    return available.filter(mod => 
+      !currentSelected.includes(mod) && 
+      mod.toLowerCase().includes(query)
+    );
+  });
+
+  filteredOnsets = computed(() => {
+    const query = this.onsetSearchQuery().toLowerCase().trim();
+    return this.availableOnsets().filter(onset => 
+      onset.toLowerCase().includes(query)
+    );
+  });
 
   toggleHierarchyMenu(): void {
     this.showHierarchyMenu.update(v => !v);

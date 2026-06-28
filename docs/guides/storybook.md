@@ -18,9 +18,16 @@ Create a file such as `hpo-annotation-polisher.stories.ts` in the same directory
 
 ### Launch the development server
 
+First build
+
+```bash
+npx ng build ng-hpo-uikit --configuration production
+```
+and then run
 ```bash
 npx ng run ng-hpo-uikit:storybook
 ```
+
 
 
 ### Exit server

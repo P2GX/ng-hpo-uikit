@@ -38,6 +38,8 @@
             "browserTarget": "ng-hpo-uikit:storybook-host",
             "compodoc": true,
             "compodocArgs": [
+              "-p",
+              ".storybook/tsconfig.json",
               "-e",
               "json",
               "-d",
@@ -53,6 +55,8 @@
             "browserTarget": "ng-hpo-uikit:storybook-host",
             "compodoc": true,
             "compodocArgs": [
+              "-p",
+              ".storybook/tsconfig.json",
               "-e",
               "json",
               "-d",
@@ -66,7 +70,7 @@
           "options": {
             "outputPath": "dist/ng-hpo-uikit-storybook-host",
             "index": ".storybook/host/index.html",
-            "main": ".storybook/main.ts",
+            "main": ".storybook/preview.ts",
             "tsConfig": ".storybook/tsconfig.json",
             "styles": [],
             "assets": []
