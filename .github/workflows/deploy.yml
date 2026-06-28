@@ -28,15 +28,15 @@ jobs:
       - name: Build Documentation Site
         run: npm run docs:build
 
+      - name: Compile Angular Library Distribution
+        run: npx ng build ng-hpo-uikit --configuration production
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: docs/.vitepress/dist
           force_orphan: true
-
-      - name: Compile Angular Library Distribution
-        run: npx ng build ng-hpo-uikit --configuration production
 
       - name: Deploy Built Library Assets to dist-build Branch
         uses: peaceiris/actions-gh-pages@v4
