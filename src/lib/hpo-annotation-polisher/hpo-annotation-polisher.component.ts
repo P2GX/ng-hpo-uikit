@@ -6,6 +6,8 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { HpoOnsetSelectorComponent } from "../hpo-onset-selector/hpo-onset-selector.component";
+import { HpoModifierMenuComponent } from "../hpo-modifier-menu/hpo-modifier-menu.component";
 
 export interface HpoTermMinimal {
   termId: string;
@@ -29,13 +31,16 @@ export interface PolishedHpoAnnotation {
   selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
+    CommonModule,
+    FormsModule,
     MatChipsModule,
     MatIconModule,
-    MatAutocompleteModule, 
-    MatInputModule, 
-    MatFormFieldModule],
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule,
+    HpoOnsetSelectorComponent,
+    HpoModifierMenuComponent
+],
   templateUrl: './hpo-annotation-polisher.component.html',
   styleUrl: './hpo-annotation-polisher.component.scss'
 })
@@ -48,14 +53,16 @@ export class HpoAnnotationPolisherComponent {
 
   readonly updated = output<PolishedHpoAnnotation>();
   readonly deleteRequested = output<void>();
-  requestNewOnsetCreation = output<void>();
   readonly termClick = output<string>();
+
+  createOnsetRequested = output<void>(); 
 
   // Local autocomplete search inputs
   modifierSearchQuery = signal<string>('');
   onsetSearchQuery = signal<string>('');
 
   readonly showHierarchyMenu = signal<boolean>(false);
+  showModifierMenu = signal(false);
 
   filteredModifiers = computed(() => {
     const query = this.modifierSearchQuery().toLowerCase().trim();
@@ -74,6 +81,20 @@ export class HpoAnnotationPolisherComponent {
       onset.toLowerCase().includes(query)
     );
   });
+
+  formattedModifierOptions = computed(() => {
+    return this.availableModifiers().map(m => ({ id: m, label: m }));
+  });
+
+  updateModifiers(updatedMods: string[]): void {
+  const updatedAnnotation = {
+    ...this.annotation(),
+    modifiers: updatedMods
+  };
+  
+  this.annotation.set(updatedAnnotation); // Update local signal view
+  this.updated.emit(updatedAnnotation);   // Inform parent/backend pipeline
+}
 
   toggleHierarchyMenu(): void {
     this.showHierarchyMenu.update(v => !v);
@@ -136,5 +157,9 @@ export class HpoAnnotationPolisherComponent {
 
     this.annotation.set(updatedAnnotation); 
     this.updated.emit(updatedAnnotation);
+  }
+
+  onRequestNewOnset(): void {
+    this.createOnsetRequested.emit();
   }
 }

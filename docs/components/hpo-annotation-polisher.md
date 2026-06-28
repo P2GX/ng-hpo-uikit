@@ -64,27 +64,36 @@ Because the component is configured as an attribute selector to prevent breaking
 To embed the polisher row component inside a standard tabular layout using the native [(annotation)] model tracking pattern:
 
 ```html
-<div class="curation-table-container">
-  <table class="clinical-data-table">
+<div class="table-container">
+  <table class="phenotype-table">
     <thead>
       <tr>
-        <th>Term ID</th>
-        <th>Phenotypic Label</th>
+        <th>HPO ID</th>
+        <th>Phenotype Term Label</th>
         <th>Status</th>
-        <th>Onset Context</th>
-        <th>Modifiers</th>
+        <th>Onset Age</th>
+        <th>Clinical Modifiers</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of patientAnnotations; trackBy: trackByTermId"
-          app-hpo-annotation-polisher
-          [(annotation)]="item"
-          [hierarchy]="ontologyHierarchyMap[item.termId]"
-          [availableOnsets]="onsetOptions"
-          [availableModifiers]="modifierOptions"
-          (updated)="onAnnotationPersist($event)"
-          (deleteRequested)="onRemoveAnnotation(item.termId)" />
+      @for (item of annotations(); track item.termId; let idx = $index) {
+        <tr 
+          lib-hpo-polisher-row
+          [annotation]="item"
+          [availableOnsets]="ageTerms()"
+          [availableModifiers]="modifierTerms()"
+          (updated)="handleRowUpdate($event, idx)"
+          (deleteRequested)="handleRowDelete(idx)"
+          (createOnsetRequested)="openNewOnsetModal()">
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="6" class="empty-state">
+            No phenotype annotations added yet.
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>
@@ -93,33 +102,74 @@ To embed the polisher row component inside a standard tabular layout using the n
 and
 
 ```typescript
-import { Component, OnInit } from '@angular/core';
-import { PolishedHpoAnnotation, HierarchyMapItem } from 'ng-hpo-uikit';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { HpoPolisherRowComponent } from './hpo-polisher-row.component'; // Your row component
+
+// Define a strict structure for your annotation data
+export interface PhenotypeAnnotation {
+  termId: string;
+  label: string;
+  isObserved: boolean;
+  onsetString?: string;
+  modifiers?: string[];
+}
 
 @Component({
-  selector: 'app-phenotype-curation-panel',
-  templateUrl: './curation-panel.component.html',
-  styleUrls: ['./curation-panel.component.scss']
+  selector: 'app-phenotype-manager',
+  standalone: true,
+  imports: [CommonModule, HpoPolisherRowComponent],
+  templateUrl: './phenotype-manager.component.html',
+  styleUrls: ['./phenotype-manager.component.scss']
 })
-export class CurationPanelComponent implements OnInit {
-  
-  // Master state collection arrays
-  patientAnnotations: PolishedHpoAnnotation[] = [];
-  onsetOptions: string[] = [];
-  modifierOptions: string[] = [];
-  ontologyHierarchyMap: Record<string, HierarchyMapItem> = {};
+export class PhenotypeManagerComponent {
+  // Master state tracking the active list of phenotypes in the app
+  annotations = signal<PhenotypeAnnotation[]>([
+    { 
+      termId: 'HP:0000175', 
+      label: 'Cleft palate', 
+      isObserved: true, 
+      onsetString: 'Congenital onset', 
+      modifiers: ['Severe'] 
+    },
+    { 
+      termId: 'HP:0001249', 
+      label: 'Intellectual disability', 
+      isObserved: true, 
+      onsetString: 'Infantile onset', 
+      modifiers: [] 
+    }
+  ]);
 
-  trackByTermId(index: number, item: PolishedHpoAnnotation): string {
-    return item.termId;
+  // Master lookup data passed down to selectors
+  ageTerms = signal<string[]>(['Antenatal onset', 'Congenital onset', 'Infantile onset', 'Juvenile onset']);
+  modifierTerms = signal<string[]>(['Mild', 'Moderate', 'Severe', 'Unilateral', 'Bilateral']);
+
+  /**
+   * Handles saving a cloned, updated annotation back into the master state array
+   */
+  handleRowUpdate(updatedRow: PhenotypeAnnotation, index: number): void {
+    this.annotations.update(currentList => {
+      const newList = [...currentList];
+      newList[index] = updatedRow;
+      return newList;
+    });
+    console.log('Successfully saved row update to master state:', updatedRow);
   }
 
-  onAnnotationPersist(updatedRecord: PolishedHpoAnnotation) {
-    console.log('Optimistic local update complete. Synchronizing to data store:', updatedRecord);
-    // Execute backend service update stream here if necessary
+  /**
+   * Handles row deletion
+   */
+  handleRowDelete(index: number): void {
+    this.annotations.update(currentList => currentList.filter((_, i) => i !== index));
   }
 
-  onRemoveAnnotation(termId: string) {
-    this.patientAnnotations = this.patientAnnotations.filter(a => a.termId !== termId);
+  /**
+   * Orchestrates launching a global dialog when a row requests a brand new onset term
+   */
+  openNewOnsetModal(): void {
+    console.log('App Layer: Launching dialog/form to register a new HPO age term...');
+    // e.g., this.dialog.open(CreateAgeTermModalComponent);
   }
 }
 ```

@@ -40,35 +40,37 @@
 </td>
 
 <td class="onset-cell">
-    <div class="onset-inline-group">
-    <select 
-        [ngModel]="annotation().onsetString"
-        (ngModelChange)="changeOnset($event)"
-        class="onset-select"
-    >
-        <option [value]="''">-- No Onset Specified --</option>
-        @for (option of availableOnsets(); track option) {  
-        <option [value]="option">{{ option }}</option>
-        }
-    </select>
-    </div>
+  <lib-hpo-onset-selector
+    [selectedOnset]="annotation().onsetString"
+    [availableOnsets]="availableOnsets()"
+    (onsetChanged)="changeOnset($event)"
+    (requestNewOnset)="onRequestNewOnset()"
+  />
 </td>
 
 <td class="modifier-cell">
-    <div class="modifiers-container">
-    @for (mod of annotation().modifiers || []; track mod; let idx = $index) {
-        <span class="modifier-chip">
-        {{ mod }}
-        <button class="remove-mod-btn" (click)="removeModifier(idx)">×</button>
-        </span>
-    }
-    <select class="modifier-select" (change)="addModifier($event)">
-        <option value="" disabled selected>+ Add Modifier</option>
-        @for (opt of availableModifiers(); track opt) {
-        <option [value]="opt">{{ opt }}</option>
-        }
-    </select>
+  <div class="modifier-menu-wrapper">
+    
+    <div class="active-modifiers-preview" (click)="showModifierMenu.set(!showModifierMenu())">
+      @for (mod of annotation().modifiers || []; track mod) {
+        <span class="modifier-chip">{{ mod }}</span>
+      } @empty {
+        <span class="placeholder-text">+ Add Modifier</span>
+      }
     </div>
+
+    @if (showModifierMenu()) {
+      <div class="modifier-overlay" (mouseleave)="showModifierMenu.set(false)">
+        <lib-hpo-modifier-menu
+          [availableModifiers]="formattedModifierOptions()"
+          [selectedModifierIds]="annotation().modifiers || []"
+          (selectedModifierIdsChange)="updateModifiers($event)"
+          (menuClosed)="showModifierMenu.set(false)"
+        />
+      </div>
+    }
+    
+  </div>
 </td>
 
 <td class="action-cell">
