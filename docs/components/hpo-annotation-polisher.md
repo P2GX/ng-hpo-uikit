@@ -34,7 +34,7 @@ export interface HierarchyMapItem {
 
 ### Component Selector
 
-Because the component is configured as an attribute selector to prevent breaking strict native HTML table structures, it must be declared on a <tr> node:
+Because the component is configured as an attribute selector to prevent breaking strict native HTML table structures, it must be declared on a `<tr>` node:
 
 ### Inputs & Models (Signal Architecture)
 
@@ -89,7 +89,9 @@ To embed the polisher row component inside a standard tabular layout using the n
   </table>
 </div>
 ```
+
 and
+
 ```typescript
 import { Component, OnInit } from '@angular/core';
 import { PolishedHpoAnnotation, HierarchyMapItem } from 'ng-hpo-uikit';
@@ -124,7 +126,7 @@ export class CurationPanelComponent implements OnInit {
 
 ## UX & Curatorial Features Built-In
 
-* **Attribute-Targeted Layout Design:** Using selector: '[app-hpo-annotation-polisher]' allows the component to assume the structure of a standard HTML <tr> tag. This eliminates layout breaks caused by invalid tag nestings (like orphan custom components inside <tbody>).
+* **Attribute-Targeted Layout Design:** Using selector: '[app-hpo-annotation-polisher]' allows the component to assume the structure of a standard HTML `<tr>` tag. This eliminates layout breaks caused by invalid tag nestings (like orphan custom components inside `<tbody>`).
 * **Optimistic Local Rendering:** Mutating nested attributes—such as adding a clinical modifier or flipping the observed visibility state—triggers an immediate local model mutation signal update, guaranteeing sub-millisecond interface updates.
 * **Inline Hierarchy Navigation Menu:** If a HierarchyMapItem dataset is provided, an interactive menu toggles inline, enabling quick upstream or downstream clinical precision shifts (e.g., swapping out an annotation to a parent term if data assertions are too broad) without leaving the row context.
 * **Chip-Based Attribute Pruning:** Selected modifiers are displayed as inline badge chips equipped with immediate contextual deletion bounds for seamless attribute pruning.
