@@ -72,10 +72,8 @@ export class PhenotypeEditorComponent {
 
 The template uses a flat, logical CSS class structure designed for flexible layout styling.
 
-onset-select-container: The outer wrapper.
 
-onset-input-row: A flex or grid container holding the dropdown and the action button side-by-side.
-
-onset-select: Applied directly to the HTML <select> element. Includes a hidden placeholder option (Select onset age...).
-
-btn-add-onset: Applied to the action button for easy theme targeting.
+* **onset-select-container:** The outer wrapper.
+* **onset-input-row:** A flex or grid container holding the dropdown and the action button side-by-side.
+* **onset-select:** Applied directly to the HTML `<select>` element. Includes a hidden placeholder option (Select onset age...).
+* **btn-add-onset:** Applied to the action button for easy theme targeting.
