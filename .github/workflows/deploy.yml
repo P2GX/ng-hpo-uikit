@@ -57,6 +57,11 @@ jobs:
       - name: Compile Angular Library Distribution
         run: npx ng build ng-hpo-uikit --configuration production
 
+      - name: Inspect Dist Directory Layout
+        run: |
+          echo "=== Root Contents ==="
+          ls -R dist/ || echo "dist folder not found at root!"
+          
       - name: Deploy Built Library Assets to dist-build Branch
         uses: peaceiris/actions-gh-pages@v4
         with:
