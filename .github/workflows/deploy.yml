@@ -38,6 +38,25 @@ jobs:
           publish_dir: docs/.vitepress/dist
           force_orphan: true
 
+  # --- JOB 2: BUILD AND DEPLOY LIBRARY ARTIFACTS ---
+  deploy-library:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Compile Angular Library Distribution
+        run: npx ng build ng-hpo-uikit --configuration production
+
       - name: Deploy Built Library Assets to dist-build Branch
         uses: peaceiris/actions-gh-pages@v4
         with:
