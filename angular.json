@@ -30,6 +30,52 @@
           "options": {
             "tsConfig": "projects/ng-hpo-uikit/tsconfig.spec.json"
           }
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": "projects/ng-hpo-uikit/.storybook",
+            "browserTarget": "ng-hpo-uikit:storybook-host",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/ng-hpo-uikit"
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": "projects/ng-hpo-uikit/.storybook",
+            "browserTarget": "components-sandbox:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/ng-hpo-uikit"
+            ],
+            "outputDir": "dist/storybook/ng-hpo-uikit"
+          }
+        },
+        "storybook-host": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/ng-hpo-uikit-storybook-host",
+            "index": "projects/ng-hpo-uikit/.storybook/host/index.html",
+            "main": "projects/ng-hpo-uikit/.storybook/host/main.ts",
+            "tsConfig": "projects/ng-hpo-uikit/.storybook/tsconfig.json",
+            "polyfills": ["zone.js"],
+            "styles": [],
+            "assets": []
+          },
+          "configurations": {
+            "development": { "optimization": false, "sourceMap": true }
+          },
+          "defaultConfiguration": "development"
         }
       }
     },
@@ -56,7 +102,9 @@
                 "input": "projects/components-sandbox/public"
               }
             ],
-            "styles": ["projects/components-sandbox/src/styles.scss"]
+            "styles": [
+              "projects/components-sandbox/src/styles.scss"
+            ]
           },
           "configurations": {
             "production": {
@@ -96,6 +144,36 @@
         },
         "test": {
           "builder": "@angular/build:unit-test"
+        },
+        "storybook": {
+          "builder": "@storybook/angular:start-storybook",
+          "options": {
+            "configDir": "projects/components-sandbox/.storybook",
+            "browserTarget": "components-sandbox:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/components-sandbox"
+            ],
+            "port": 6006
+          }
+        },
+        "build-storybook": {
+          "builder": "@storybook/angular:build-storybook",
+          "options": {
+            "configDir": "projects/components-sandbox/.storybook",
+            "browserTarget": "components-sandbox:build",
+            "compodoc": true,
+            "compodocArgs": [
+              "-e",
+              "json",
+              "-d",
+              "projects/components-sandbox"
+            ],
+            "outputDir": "dist/storybook/components-sandbox"
+          }
         }
       }
     }
