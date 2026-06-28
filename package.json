@@ -14,5 +14,8 @@
   "dependencies": {
     "tslib": "^2.3.0"
   },
+  "devDependencies": {
+    "vitepress": "^1.0.0"
+  },
   "sideEffects": false
 }
