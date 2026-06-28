@@ -25,7 +25,10 @@ export default defineConfig({
           { text: 'ORCID Dialog', link: '/components/orcid-dialog' },
           { text: 'Footer', link: '/components/footer' },
           { text: "Ontology Loader", link:  '/components/load-ontology' } ,
-          { text: "Ontology Autocomplete", link:  '/components/ontology-autocomplete' } ,
+          { text: "Ontology Autocomplete", link:  '/components/ontology-autocomplete' },
+          { text: "HPO Annotation Polisher", link: '/components/hpo-annotation-polisher'},
+          { text: "HPO Modifier Selector", link: '/components/hpo-modifier-selector'},
+          { text: "HPO Onset Selector", link: '/components/hpo-onset-selector'},
           { text: "Phenopacket Loader", link:  '/components/phenopacket-loader' } ,
           { text: 'Help button', link: '/components/help-button' }
         ]

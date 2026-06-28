@@ -8,27 +8,11 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { HpoOnsetSelectorComponent } from "../hpo-onset-selector/hpo-onset-selector.component";
 import { HpoModifierMenuComponent } from "../hpo-modifier-menu/hpo-modifier-menu.component";
+import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "./hpo-annotation-polisher.interface"
 
-export interface HpoTermMinimal {
-  termId: string;
-  label: string;
-}
-
-export interface HierarchyMapItem {
-  parents: HpoTermMinimal[];
-  children: HpoTermMinimal[];
-}
-
-export interface PolishedHpoAnnotation {
-  termId: string;
-  label: string;
-  isObserved: boolean;
-  onsetString?: string;
-  modifiers?: string[];
-}
 
 @Component({
-  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>
+  selector: 'tr[lib-hpo-polisher-row]',
   standalone: true,
   imports: [
     CommonModule,
@@ -44,7 +28,7 @@ export interface PolishedHpoAnnotation {
   templateUrl: './hpo-annotation-polisher.component.html',
   styleUrl: './hpo-annotation-polisher.component.scss'
 })
-export class HpoAnnotationPolisherComponent {
+export class HpoPolisherRowComponent {
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = input<HierarchyMapItem | null>(null);
