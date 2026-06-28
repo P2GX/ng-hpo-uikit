@@ -1,0 +1,83 @@
+<td class="font-mono">
+    <a (click)="termClick.emit(annotation().termId)" class="link-text">
+    {{ annotation().termId }}
+    </a>
+</td>
+
+<td class="label-cell">
+    <div class="dropdown-wrapper">
+    <span (click)="toggleHierarchyMenu()" class="dropdown-trigger">
+        {{ annotation().label }} <span class="caret">▼</span>
+    </span>
+
+    @if (showHierarchyMenu()) {
+        <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
+        @if (hierarchy()?.parents?.length) {
+            <div class="menu-section-title">Parents</div>
+            <ul>
+            @for (p of hierarchy()?.parents; track p.termId) {
+                <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
+            }
+            </ul>
+        }
+        @if (hierarchy()?.children?.length) {
+            <div class="menu-section-title">Children</div>
+            <ul>
+            @for (c of hierarchy()?.children; track c.termId) {
+                <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
+            }
+            </ul>
+        }
+        </div>
+    }
+    </div>
+</td>
+
+<td>
+    <span class="badge" [ngClass]="annotation().isObserved ? 'badge-green' : 'badge-red'">
+    {{ annotation().isObserved ? 'OBS' : 'EXC' }}
+    </span>
+</td>
+
+<td class="onset-cell">
+    <div class="onset-inline-group">
+    <select 
+        [ngModel]="annotation().onsetString"
+        (ngModelChange)="changeOnset($event)"
+        class="onset-select"
+    >
+        <option [value]="''">-- No Onset Specified --</option>
+        @for (option of availableOnsets(); track option) {  
+        <option [value]="option">{{ option }}</option>
+        }
+    </select>
+    </div>
+</td>
+
+<td class="modifier-cell">
+    <div class="modifiers-container">
+    @for (mod of annotation().modifiers || []; track mod; let idx = $index) {
+        <span class="modifier-chip">
+        {{ mod }}
+        <button class="remove-mod-btn" (click)="removeModifier(idx)">×</button>
+        </span>
+    }
+    <select class="modifier-select" (change)="addModifier($event)">
+        <option value="" disabled selected>+ Add Modifier</option>
+        @for (opt of availableModifiers(); track opt) {
+        <option [value]="opt">{{ opt }}</option>
+        }
+    </select>
+    </div>
+</td>
+
+<td class="action-cell">
+    <div class="action-group">
+    <button (click)="toggleObserved()" class="btn-icon">
+        <mat-icon>swap_horiz</mat-icon>Toggle
+    </button>
+    <button (click)="deleteRequested.emit()" class="btn-icon btn-delete">
+        <mat-icon>delete</mat-icon>Delete
+    </button>
+    </div>
+</td>

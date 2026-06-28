@@ -21,3 +21,12 @@ Create a file such as `hpo-annotation-polisher.stories.ts` in the same directory
 ```bash
 npx ng run ng-hpo-uikit:storybook
 ```
+
+
+### Exit server
+
+It may be necessary to kill server processes (all related to node).
+
+```bash
+killall node 2>/dev/null
+``` 

@@ -3,12 +3,12 @@
     "interfaces": [
         {
             "name": "HierarchyMapItem",
-            "id": "interface-HierarchyMapItem-d2e21b7dd9a6538384db16fee93d6db5cfcfc054ea859eaf1e26b387b9f82412971e385865b4e9bdb377bdcdb8137cee31fd3664031dcc3d73fec72d88a563a6",
+            "id": "interface-HierarchyMapItem-914d327bf3e7575b668d94fbd5c8441d4a43b900f550958ad180bfdbb9bf8a545574df829a88865efcf6b23a68f71665cc1034af72abf9edd65f62ac02b29391",
             "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  template: `\n    <td class=\"font-mono\">\n      <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n        {{ annotation().termId }}\n      </a>\n    </td>\n\n    <td class=\"label-cell\">\n      <div class=\"dropdown-wrapper\">\n        <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n          {{ annotation().label }} <span class=\"caret\">▼</span>\n        </span>\n\n        @if (showHierarchyMenu()) {\n          <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n            @if (hierarchy()?.parents?.length) {\n              <div class=\"menu-section-title\">Parents</div>\n              <ul>\n                @for (p of hierarchy()?.parents; track p.termId) {\n                  <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n                }\n              </ul>\n            }\n            @if (hierarchy()?.children?.length) {\n              <div class=\"menu-section-title\">Children</div>\n              <ul>\n                @for (c of hierarchy()?.children; track c.termId) {\n                  <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n                }\n              </ul>\n            }\n          </div>\n        }\n      </div>\n    </td>\n\n    <td>\n      <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n        {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n      </span>\n    </td>\n\n    <td class=\"onset-cell\">\n      <div class=\"onset-inline-group\">\n        <select \n          [ngModel]=\"annotation().onsetString\"\n          (ngModelChange)=\"changeOnset($event)\"\n          class=\"onset-select\"\n        >\n          <option [value]=\"''\">-- No Onset Specified --</option>\n          @for (option of availableOnsets(); track option) {  \n            <option [value]=\"option\">{{ option }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"modifier-cell\">\n      <div class=\"modifiers-container\">\n        @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n          <span class=\"modifier-chip\">\n            {{ mod }}\n            <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n          </span>\n        }\n        <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n          <option value=\"\" disabled selected>+ Add Modifier</option>\n          @for (opt of availableModifiers(); track opt) {\n            <option [value]=\"opt\">{{ opt }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"action-cell\">\n      <div class=\"action-group\">\n        <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n          <mat-icon>swap_horiz</mat-icon>Toggle\n        </button>\n        <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n          <mat-icon>delete</mat-icon>Delete\n        </button>\n      </div>\n    </td>\n  `,\n  styles: [`\n    :host { display: table-row; } /* Evaluates smoothly within standard layouts */\n    .label-cell { position: relative; }\n    .dropdown-wrapper { position: relative; display: inline-block; }\n    .dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n    .dropdown-trigger:hover { text-decoration: underline; }\n    \n    /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n    .local-context-menu {\n      position: absolute; top: 100%; left: 0; z-index: 1000;\n      background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n    }\n    .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n    .menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n    .menu-item:hover { background-color: #f1f3f5; }\n\n    /* Modifier configuration layouts */\n    .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n    .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n    .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n    .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n  `]\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
+            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
             "properties": [
                 {
                     "name": "children",
@@ -38,12 +38,12 @@
         },
         {
             "name": "HpoTermMinimal",
-            "id": "interface-HpoTermMinimal-d2e21b7dd9a6538384db16fee93d6db5cfcfc054ea859eaf1e26b387b9f82412971e385865b4e9bdb377bdcdb8137cee31fd3664031dcc3d73fec72d88a563a6",
+            "id": "interface-HpoTermMinimal-914d327bf3e7575b668d94fbd5c8441d4a43b900f550958ad180bfdbb9bf8a545574df829a88865efcf6b23a68f71665cc1034af72abf9edd65f62ac02b29391",
             "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  template: `\n    <td class=\"font-mono\">\n      <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n        {{ annotation().termId }}\n      </a>\n    </td>\n\n    <td class=\"label-cell\">\n      <div class=\"dropdown-wrapper\">\n        <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n          {{ annotation().label }} <span class=\"caret\">▼</span>\n        </span>\n\n        @if (showHierarchyMenu()) {\n          <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n            @if (hierarchy()?.parents?.length) {\n              <div class=\"menu-section-title\">Parents</div>\n              <ul>\n                @for (p of hierarchy()?.parents; track p.termId) {\n                  <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n                }\n              </ul>\n            }\n            @if (hierarchy()?.children?.length) {\n              <div class=\"menu-section-title\">Children</div>\n              <ul>\n                @for (c of hierarchy()?.children; track c.termId) {\n                  <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n                }\n              </ul>\n            }\n          </div>\n        }\n      </div>\n    </td>\n\n    <td>\n      <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n        {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n      </span>\n    </td>\n\n    <td class=\"onset-cell\">\n      <div class=\"onset-inline-group\">\n        <select \n          [ngModel]=\"annotation().onsetString\"\n          (ngModelChange)=\"changeOnset($event)\"\n          class=\"onset-select\"\n        >\n          <option [value]=\"''\">-- No Onset Specified --</option>\n          @for (option of availableOnsets(); track option) {  \n            <option [value]=\"option\">{{ option }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"modifier-cell\">\n      <div class=\"modifiers-container\">\n        @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n          <span class=\"modifier-chip\">\n            {{ mod }}\n            <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n          </span>\n        }\n        <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n          <option value=\"\" disabled selected>+ Add Modifier</option>\n          @for (opt of availableModifiers(); track opt) {\n            <option [value]=\"opt\">{{ opt }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"action-cell\">\n      <div class=\"action-group\">\n        <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n          <mat-icon>swap_horiz</mat-icon>Toggle\n        </button>\n        <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n          <mat-icon>delete</mat-icon>Delete\n        </button>\n      </div>\n    </td>\n  `,\n  styles: [`\n    :host { display: table-row; } /* Evaluates smoothly within standard layouts */\n    .label-cell { position: relative; }\n    .dropdown-wrapper { position: relative; display: inline-block; }\n    .dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n    .dropdown-trigger:hover { text-decoration: underline; }\n    \n    /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n    .local-context-menu {\n      position: absolute; top: 100%; left: 0; z-index: 1000;\n      background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n    }\n    .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n    .menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n    .menu-item:hover { background-color: #f1f3f5; }\n\n    /* Modifier configuration layouts */\n    .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n    .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n    .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n    .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n  `]\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
+            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
             "properties": [
                 {
                     "name": "label",
@@ -73,12 +73,12 @@
         },
         {
             "name": "PolishedHpoAnnotation",
-            "id": "interface-PolishedHpoAnnotation-d2e21b7dd9a6538384db16fee93d6db5cfcfc054ea859eaf1e26b387b9f82412971e385865b4e9bdb377bdcdb8137cee31fd3664031dcc3d73fec72d88a563a6",
+            "id": "interface-PolishedHpoAnnotation-914d327bf3e7575b668d94fbd5c8441d4a43b900f550958ad180bfdbb9bf8a545574df829a88865efcf6b23a68f71665cc1034af72abf9edd65f62ac02b29391",
             "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
             "deprecated": false,
             "deprecationMessage": "",
             "type": "interface",
-            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  template: `\n    <td class=\"font-mono\">\n      <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n        {{ annotation().termId }}\n      </a>\n    </td>\n\n    <td class=\"label-cell\">\n      <div class=\"dropdown-wrapper\">\n        <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n          {{ annotation().label }} <span class=\"caret\">▼</span>\n        </span>\n\n        @if (showHierarchyMenu()) {\n          <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n            @if (hierarchy()?.parents?.length) {\n              <div class=\"menu-section-title\">Parents</div>\n              <ul>\n                @for (p of hierarchy()?.parents; track p.termId) {\n                  <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n                }\n              </ul>\n            }\n            @if (hierarchy()?.children?.length) {\n              <div class=\"menu-section-title\">Children</div>\n              <ul>\n                @for (c of hierarchy()?.children; track c.termId) {\n                  <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n                }\n              </ul>\n            }\n          </div>\n        }\n      </div>\n    </td>\n\n    <td>\n      <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n        {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n      </span>\n    </td>\n\n    <td class=\"onset-cell\">\n      <div class=\"onset-inline-group\">\n        <select \n          [ngModel]=\"annotation().onsetString\"\n          (ngModelChange)=\"changeOnset($event)\"\n          class=\"onset-select\"\n        >\n          <option [value]=\"''\">-- No Onset Specified --</option>\n          @for (option of availableOnsets(); track option) {  \n            <option [value]=\"option\">{{ option }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"modifier-cell\">\n      <div class=\"modifiers-container\">\n        @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n          <span class=\"modifier-chip\">\n            {{ mod }}\n            <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n          </span>\n        }\n        <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n          <option value=\"\" disabled selected>+ Add Modifier</option>\n          @for (opt of availableModifiers(); track opt) {\n            <option [value]=\"opt\">{{ opt }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"action-cell\">\n      <div class=\"action-group\">\n        <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n          <mat-icon>swap_horiz</mat-icon>Toggle\n        </button>\n        <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n          <mat-icon>delete</mat-icon>Delete\n        </button>\n      </div>\n    </td>\n  `,\n  styles: [`\n    :host { display: table-row; } /* Evaluates smoothly within standard layouts */\n    .label-cell { position: relative; }\n    .dropdown-wrapper { position: relative; display: inline-block; }\n    .dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n    .dropdown-trigger:hover { text-decoration: underline; }\n    \n    /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n    .local-context-menu {\n      position: absolute; top: 100%; left: 0; z-index: 1000;\n      background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n    }\n    .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n    .menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n    .menu-item:hover { background-color: #f1f3f5; }\n\n    /* Modifier configuration layouts */\n    .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n    .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n    .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n    .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n  `]\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
+            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
             "properties": [
                 {
                     "name": "isObserved",
@@ -397,7 +397,7 @@
         },
         {
             "name": "HpoAnnotationPolisherComponent",
-            "id": "component-HpoAnnotationPolisherComponent-d2e21b7dd9a6538384db16fee93d6db5cfcfc054ea859eaf1e26b387b9f82412971e385865b4e9bdb377bdcdb8137cee31fd3664031dcc3d73fec72d88a563a6",
+            "id": "component-HpoAnnotationPolisherComponent-914d327bf3e7575b668d94fbd5c8441d4a43b900f550958ad180bfdbb9bf8a545574df829a88865efcf6b23a68f71665cc1034af72abf9edd65f62ac02b29391",
             "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
             "encapsulation": [],
             "entryComponents": [],
@@ -406,11 +406,10 @@
             "providers": [],
             "selector": "[app-hpo-annotation-polisher]",
             "styleUrls": [],
-            "styles": [
-                "\n    :host { display: table-row; } /* Evaluates smoothly within standard layouts */\n    .label-cell { position: relative; }\n    .dropdown-wrapper { position: relative; display: inline-block; }\n    .dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n    .dropdown-trigger:hover { text-decoration: underline; }\n    \n    /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n    .local-context-menu {\n      position: absolute; top: 100%; left: 0; z-index: 1000;\n      background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n    }\n    .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n    .menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n    .menu-item:hover { background-color: #f1f3f5; }\n\n    /* Modifier configuration layouts */\n    .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n    .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n    .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n    .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n  "
+            "styles": [],
+            "templateUrl": [
+                "./hpo-annotation-polisher.component.html"
             ],
-            "template": "<td class=\"font-mono\">\n  <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n    {{ annotation().termId }}\n  </a>\n</td>\n\n<td class=\"label-cell\">\n  <div class=\"dropdown-wrapper\">\n    <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n      {{ annotation().label }} <span class=\"caret\">▼</span>\n    </span>\n\n    @if (showHierarchyMenu()) {\n      <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n        @if (hierarchy()?.parents?.length) {\n          <div class=\"menu-section-title\">Parents</div>\n          <ul>\n            @for (p of hierarchy()?.parents; track p.termId) {\n              <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n            }\n          </ul>\n        }\n        @if (hierarchy()?.children?.length) {\n          <div class=\"menu-section-title\">Children</div>\n          <ul>\n            @for (c of hierarchy()?.children; track c.termId) {\n              <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n            }\n          </ul>\n        }\n      </div>\n    }\n  </div>\n</td>\n\n<td>\n  <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n    {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n  </span>\n</td>\n\n<td class=\"onset-cell\">\n  <div class=\"onset-inline-group\">\n    <select\n      [ngModel]=\"annotation().onsetString\"\n      (ngModelChange)=\"changeOnset($event)\"\n      class=\"onset-select\"\n    >\n      <option [value]=\"''\">-- No Onset Specified --</option>\n      @for (option of availableOnsets(); track option) {\n        <option [value]=\"option\">{{ option }}</option>\n      }\n    </select>\n  </div>\n</td>\n\n<td class=\"modifier-cell\">\n  <div class=\"modifiers-container\">\n    @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n      <span class=\"modifier-chip\">\n        {{ mod }}\n        <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n      </span>\n    }\n    <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n      <option value=\"\" disabled selected>+ Add Modifier</option>\n      @for (opt of availableModifiers(); track opt) {\n        <option [value]=\"opt\">{{ opt }}</option>\n      }\n    </select>\n  </div>\n</td>\n\n<td class=\"action-cell\">\n  <div class=\"action-group\">\n    <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n      <mat-icon>swap_horiz</mat-icon>Toggle\n    </button>\n    <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n      <mat-icon>delete</mat-icon>Delete\n    </button>\n  </div>\n</td>\n",
-            "templateUrl": [],
             "viewProviders": [],
             "hostDirectives": [],
             "inputsClass": [
@@ -422,7 +421,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 139,
+                    "line": 33,
                     "modifierKind": [
                         148
                     ],
@@ -437,7 +436,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 142,
+                    "line": 36,
                     "modifierKind": [
                         148
                     ],
@@ -452,7 +451,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 141,
+                    "line": 35,
                     "modifierKind": [
                         148
                     ],
@@ -467,7 +466,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 140,
+                    "line": 34,
                     "modifierKind": [
                         148
                     ],
@@ -483,7 +482,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 146,
+                    "line": 40,
                     "modifierKind": [
                         148
                     ],
@@ -497,7 +496,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 147,
+                    "line": 41,
                     "modifierKind": [
                         148
                     ],
@@ -511,7 +510,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 145,
+                    "line": 39,
                     "modifierKind": [
                         148
                     ],
@@ -528,7 +527,7 @@
                     "indexKey": "",
                     "optional": false,
                     "description": "",
-                    "line": 149,
+                    "line": 43,
                     "modifierKind": [
                         148
                     ]
@@ -550,7 +549,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 178,
+                    "line": 72,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -582,7 +581,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 171,
+                    "line": 65,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -614,7 +613,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 193,
+                    "line": 87,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -646,7 +645,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 155,
+                    "line": 49,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "jsdoctags": [
@@ -669,7 +668,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 151,
+                    "line": 45,
                     "deprecated": false,
                     "deprecationMessage": ""
                 },
@@ -679,7 +678,7 @@
                     "optional": false,
                     "returnType": "void",
                     "typeParameters": [],
-                    "line": 164,
+                    "line": 58,
                     "deprecated": false,
                     "deprecationMessage": ""
                 }
@@ -706,11 +705,13 @@
             "description": "",
             "rawdescription": "\n",
             "type": "component",
-            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  template: `\n    <td class=\"font-mono\">\n      <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n        {{ annotation().termId }}\n      </a>\n    </td>\n\n    <td class=\"label-cell\">\n      <div class=\"dropdown-wrapper\">\n        <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n          {{ annotation().label }} <span class=\"caret\">▼</span>\n        </span>\n\n        @if (showHierarchyMenu()) {\n          <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n            @if (hierarchy()?.parents?.length) {\n              <div class=\"menu-section-title\">Parents</div>\n              <ul>\n                @for (p of hierarchy()?.parents; track p.termId) {\n                  <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n                }\n              </ul>\n            }\n            @if (hierarchy()?.children?.length) {\n              <div class=\"menu-section-title\">Children</div>\n              <ul>\n                @for (c of hierarchy()?.children; track c.termId) {\n                  <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n                }\n              </ul>\n            }\n          </div>\n        }\n      </div>\n    </td>\n\n    <td>\n      <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n        {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n      </span>\n    </td>\n\n    <td class=\"onset-cell\">\n      <div class=\"onset-inline-group\">\n        <select \n          [ngModel]=\"annotation().onsetString\"\n          (ngModelChange)=\"changeOnset($event)\"\n          class=\"onset-select\"\n        >\n          <option [value]=\"''\">-- No Onset Specified --</option>\n          @for (option of availableOnsets(); track option) {  \n            <option [value]=\"option\">{{ option }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"modifier-cell\">\n      <div class=\"modifiers-container\">\n        @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n          <span class=\"modifier-chip\">\n            {{ mod }}\n            <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n          </span>\n        }\n        <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n          <option value=\"\" disabled selected>+ Add Modifier</option>\n          @for (opt of availableModifiers(); track opt) {\n            <option [value]=\"opt\">{{ opt }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"action-cell\">\n      <div class=\"action-group\">\n        <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n          <mat-icon>swap_horiz</mat-icon>Toggle\n        </button>\n        <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n          <mat-icon>delete</mat-icon>Delete\n        </button>\n      </div>\n    </td>\n  `,\n  styles: [`\n    :host { display: table-row; } /* Evaluates smoothly within standard layouts */\n    .label-cell { position: relative; }\n    .dropdown-wrapper { position: relative; display: inline-block; }\n    .dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n    .dropdown-trigger:hover { text-decoration: underline; }\n    \n    /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n    .local-context-menu {\n      position: absolute; top: 100%; left: 0; z-index: 1000;\n      background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n    }\n    .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n    .menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n    .menu-item:hover { background-color: #f1f3f5; }\n\n    /* Modifier configuration layouts */\n    .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n    .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n    .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n    .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n  `]\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
+            "sourceCode": "import { Component, input, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [CommonModule, FormsModule, MatIconModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  // Inputs via new modern Signal Inputs API\n  readonly annotation = input.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  // Clean event outputs\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  readonly termClick = output<string>();\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n    this.updated.emit({\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    });\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    this.updated.emit({\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    });\n  }\n\n  changeOnset(newOnset: string): void {\n    this.updated.emit({\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    });\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      this.updated.emit({\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      });\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    this.updated.emit({\n      ...this.annotation(),\n      modifiers: updatedMods\n    });\n  }\n}",
+            "styleUrl": "./hpo-annotation-polisher.component.scss",
             "assetsDirs": [],
             "styleUrlsData": "",
-            "stylesData": "\n    :host { display: table-row; } /* Evaluates smoothly within standard layouts */\n    .label-cell { position: relative; }\n    .dropdown-wrapper { position: relative; display: inline-block; }\n    .dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n    .dropdown-trigger:hover { text-decoration: underline; }\n    \n    /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n    .local-context-menu {\n      position: absolute; top: 100%; left: 0; z-index: 1000;\n      background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n    }\n    .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n    .menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n    .menu-item:hover { background-color: #f1f3f5; }\n\n    /* Modifier configuration layouts */\n    .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n    .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n    .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n    .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n  \n",
-            "extends": []
+            "stylesData": "",
+            "extends": [],
+            "templateData": "<td class=\"font-mono\">\n      <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n        {{ annotation().termId }}\n      </a>\n    </td>\n\n    <td class=\"label-cell\">\n      <div class=\"dropdown-wrapper\">\n        <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n          {{ annotation().label }} <span class=\"caret\">▼</span>\n        </span>\n\n        @if (showHierarchyMenu()) {\n          <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n            @if (hierarchy()?.parents?.length) {\n              <div class=\"menu-section-title\">Parents</div>\n              <ul>\n                @for (p of hierarchy()?.parents; track p.termId) {\n                  <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n                }\n              </ul>\n            }\n            @if (hierarchy()?.children?.length) {\n              <div class=\"menu-section-title\">Children</div>\n              <ul>\n                @for (c of hierarchy()?.children; track c.termId) {\n                  <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n                }\n              </ul>\n            }\n          </div>\n        }\n      </div>\n    </td>\n\n    <td>\n      <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n        {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n      </span>\n    </td>\n\n    <td class=\"onset-cell\">\n      <div class=\"onset-inline-group\">\n        <select \n          [ngModel]=\"annotation().onsetString\"\n          (ngModelChange)=\"changeOnset($event)\"\n          class=\"onset-select\"\n        >\n          <option [value]=\"''\">-- No Onset Specified --</option>\n          @for (option of availableOnsets(); track option) {  \n            <option [value]=\"option\">{{ option }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"modifier-cell\">\n      <div class=\"modifiers-container\">\n        @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n          <span class=\"modifier-chip\">\n            {{ mod }}\n            <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n          </span>\n        }\n        <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n          <option value=\"\" disabled selected>+ Add Modifier</option>\n          @for (opt of availableModifiers(); track opt) {\n            <option [value]=\"opt\">{{ opt }}</option>\n          }\n        </select>\n      </div>\n    </td>\n\n    <td class=\"action-cell\">\n      <div class=\"action-group\">\n        <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n          <mat-icon>swap_horiz</mat-icon>Toggle\n        </button>\n        <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n          <mat-icon>delete</mat-icon>Delete\n        </button>\n      </div>\n    </td>"
         },
         {
             "name": "LoadOntologyComponent",
@@ -1398,14 +1399,24 @@
                 "defaultValue": "{\n  // Explicitly target ONLY the src directory contents\n  stories: [\n    '../src/lib/**/*.mdx',\n    '../src/lib/**/*.stories.@(js|jsx|mjs|ts|tsx)'\n  ],\n  addons: [\n    '@storybook/addon-essentials',\n    '@storybook/addon-interactions',\n    '@storybook/addon-links'\n  ],\n  framework: {\n    name: '@storybook/angular',\n    options: {},\n  },\n  // turn off strict external type checking during the indexing pass\n  typescript: {\n    check: false,\n  }\n}"
             },
             {
-                "name": "Default",
+                "name": "DefaultObserved",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
                 "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {},\n}"
+                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      isObserved: true,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+            },
+            {
+                "name": "ExcludedWithNoMetadata",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
             },
             {
                 "name": "meta",
@@ -1415,7 +1426,37 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<HpoAnnotationPolisherComponent>",
-                "defaultValue": "{\n  title: 'Components/HpoAnnotationPolisher',\n  component: HpoAnnotationPolisherComponent,\n  tags: ['autodocs'],\n  argTypes: {},\n}"
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoAnnotationPolisherComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n    // Critical: Wrap the attribute-targeted component inside a valid HTML table context\n    (story) => ({\n      template: `\n        <div style=\"padding: 2rem; background: #f8f9fa;\">\n          <table class=\"data-table\" style=\"width: 100%; border-collapse: collapse; background: white; border: 1px solid #dee2e6;\">\n            <thead>\n              <tr style=\"background: #e9ecef; text-align: left;\">\n                <th style=\"padding: 8px;\">Term ID</th>\n                <th style=\"padding: 8px;\">Label</th>\n                <th style=\"padding: 8px;\">Status</th>\n                <th style=\"padding: 8px;\">Onset</th>\n                <th style=\"padding: 8px;\">Modifiers</th>\n                <th style=\"padding: 8px;\">Actions</th>\n              </tr>\n            </thead>\n            <tbody>\n              <tr app-hpo-annotation-polisher ${story}></tr>\n            </tbody>\n          </table>\n        </div>\n      `,\n    }),\n  ],\n  // Automatically capture your output() events in the Storybook Actions log panel\n  argTypes: {\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+            },
+            {
+                "name": "mockHierarchy",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "object",
+                "defaultValue": "{\n  parents: [\n    { termId: 'HP:0001250', label: 'Seizures' }\n  ],\n  children: [\n    { termId: 'HP:0002069', label: 'Generalized tonic-clonic seizures' },\n    { termId: 'HP:0002123', label: 'Myoclonic seizures' }\n  ]\n}"
+            },
+            {
+                "name": "mockModifiers",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "['Severe', 'Mild', 'Episodic', 'Progressive']"
+            },
+            {
+                "name": "mockOnsets",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Childhood onset']"
             },
             {
                 "name": "preview",
@@ -1470,14 +1511,24 @@
             ],
             "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts": [
                 {
-                    "name": "Default",
+                    "name": "DefaultObserved",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
                     "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {},\n}"
+                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      isObserved: true,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                },
+                {
+                    "name": "ExcludedWithNoMetadata",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
                 },
                 {
                     "name": "meta",
@@ -1487,7 +1538,37 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<HpoAnnotationPolisherComponent>",
-                    "defaultValue": "{\n  title: 'Components/HpoAnnotationPolisher',\n  component: HpoAnnotationPolisherComponent,\n  tags: ['autodocs'],\n  argTypes: {},\n}"
+                    "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoAnnotationPolisherComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n    // Critical: Wrap the attribute-targeted component inside a valid HTML table context\n    (story) => ({\n      template: `\n        <div style=\"padding: 2rem; background: #f8f9fa;\">\n          <table class=\"data-table\" style=\"width: 100%; border-collapse: collapse; background: white; border: 1px solid #dee2e6;\">\n            <thead>\n              <tr style=\"background: #e9ecef; text-align: left;\">\n                <th style=\"padding: 8px;\">Term ID</th>\n                <th style=\"padding: 8px;\">Label</th>\n                <th style=\"padding: 8px;\">Status</th>\n                <th style=\"padding: 8px;\">Onset</th>\n                <th style=\"padding: 8px;\">Modifiers</th>\n                <th style=\"padding: 8px;\">Actions</th>\n              </tr>\n            </thead>\n            <tbody>\n              <tr app-hpo-annotation-polisher ${story}></tr>\n            </tbody>\n          </table>\n        </div>\n      `,\n    }),\n  ],\n  // Automatically capture your output() events in the Storybook Actions log panel\n  argTypes: {\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+                },
+                {
+                    "name": "mockHierarchy",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "object",
+                    "defaultValue": "{\n  parents: [\n    { termId: 'HP:0001250', label: 'Seizures' }\n  ],\n  children: [\n    { termId: 'HP:0002069', label: 'Generalized tonic-clonic seizures' },\n    { termId: 'HP:0002123', label: 'Myoclonic seizures' }\n  ]\n}"
+                },
+                {
+                    "name": "mockModifiers",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "['Severe', 'Mild', 'Episodic', 'Progressive']"
+                },
+                {
+                    "name": "mockOnsets",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Childhood onset']"
                 }
             ],
             ".storybook/preview.ts": [
@@ -1623,7 +1704,17 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "Default",
+                "name": "DefaultObserved",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ExcludedWithNoMetadata",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -1634,6 +1725,36 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockHierarchy",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockModifiers",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockOnsets",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
