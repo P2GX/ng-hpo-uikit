@@ -47,3 +47,11 @@ rm -rf node_modules package-lock.json
 rm -rf .nx/cache
 npm install --legacy-peer-deps
 ```
+
+# Styles
+
+Add this to  the host application's styles.scss
+```css
+@import 'ng-hpo-uikit/styles/styles.scss';
+```
+

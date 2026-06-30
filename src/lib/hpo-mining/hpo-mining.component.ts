@@ -1,8 +1,7 @@
 import { Component, signal, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TextAnnotationDto } from '../models/ontology-dto';
-//import { TextAnnotationDto } from './hpo-wizard.interfaces'; 
+import { FenominalSentence } from '../models/fenominal-models';
 
 @Component({
   selector: 'lib-hpo-mining',
@@ -16,20 +15,21 @@ export class HpoMiningComponent {
   isMining = signal<boolean>(false); // Local loader feedback state
 
   
-  success = output<TextAnnotationDto[]>();
+  success = output<FenominalSentence[]>();
   error = output<string>();
   cancel = output<void>();
 
   // A brand new output that delegates the actual HTTP call to the host application
   miningRequested = output<{ 
     text: string, 
-    callback: (result: TextAnnotationDto[] | string) => void 
+    callback: (result: FenominalSentence[] | string) => void 
   }>();
 
   /**
    * Triggers the text mining pipeline by handing the text off to the host application
    */
   runTextMining(): void {
+    console.log("runTextMining")
     if (!this.pastedText.trim()) return;
 
     this.isMining.set(true);
@@ -39,7 +39,6 @@ export class HpoMiningComponent {
       text: this.pastedText,
       callback: (result) => {
         this.isMining.set(false);
-        
         if (typeof result === 'string') {
           this.error.emit(result);
         } else {

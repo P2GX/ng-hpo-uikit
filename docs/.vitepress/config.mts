@@ -22,6 +22,7 @@ export default defineConfig({
       {
         text: 'UI Components',
         items: [
+           { text: 'Buttons', link: '/components/buttons' },
           { text: 'ORCID Dialog', link: '/components/orcid-dialog' },
           { text: 'Footer', link: '/components/footer' },
           { text: "Ontology Loader", link:  '/components/load-ontology' } ,

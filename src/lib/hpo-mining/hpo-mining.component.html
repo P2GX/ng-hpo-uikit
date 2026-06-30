@@ -1,9 +1,8 @@
 <div class="clinical-text-container">
-  <label class="label-primary">
-    Paste clinical text ...
-  </label>
+  <label for="clinical-text" class="hpo-label">Paste clinical text</label>
   <div class="input-section">
     <textarea
+      id="clinical-text"
       [(ngModel)]="pastedText"
       rows="15"
       placeholder="Paste here with ctrl-V..."

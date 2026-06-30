@@ -40,3 +40,10 @@ Test new documentation locally using
 ```bash
 npm run docs:dev
 ```
+
+
+## Rebuild compodocs database
+
+```bash
+npx compodoc -p .storybook/tsconfig.json
+```

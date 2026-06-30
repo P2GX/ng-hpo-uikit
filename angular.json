@@ -43,7 +43,8 @@
               "-d",
               "."
             ],
-            "port": 6006
+            "port": 6006,
+            "styles": [  "src/lib/styles/styles.scss" ]
           }
         },
         "build-storybook": {
