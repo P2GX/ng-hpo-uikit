@@ -14,7 +14,7 @@ const meta: Meta<HpoPolisherRowComponent> = {
     (story) => {
       const storyInstance = story();
       return {
-        ...storyInstance, // <-- CRITICAL: This passes the mock arguments context to the wrapper template
+        ...storyInstance, //  passes mock arguments context to the wrapper template
         template: `
           <div style="padding: 2rem;">
             <table>

@@ -5,6 +5,7 @@
     "rootDir": "src",
     "declaration": true,
     "declarationMap": true,
+    "module": "es2022", // es2022 is the default for angular 21
     "types": []
   },
   "include": ["src/**/*.ts"],

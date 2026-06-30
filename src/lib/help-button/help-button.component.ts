@@ -23,7 +23,9 @@ export class HelpButtonComponent {
       return;
     }
     try {
-      if ('__TAURI__' in window) {
+      // Use the tauri opener if available in the application, but do not import it in this library
+      // requires that @tauri-apps/plugin-opener be declared optional in package.json
+      if ('__TAURI_INTERNALS__' in window) {
         const { openUrl } = await import('@tauri-apps/plugin-opener');
         await openUrl(url);
       } else {
