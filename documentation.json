@@ -1,1992 +1,15 @@
 {
     "pipes": [],
-    "interfaces": [
-        {
-            "name": "HierarchyMapItem",
-            "id": "interface-HierarchyMapItem-5ba829b95d426635b7368a1db98bf1c720dc5d095f209c2887f9d213a026f94d8af85ecec0649b5941cb075b7130926e4c009a0195e13abb7dcb8726f559e26b",
-            "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-            "deprecated": false,
-            "deprecationMessage": "",
-            "type": "interface",
-            "sourceCode": "import { Component, input, model, computed, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatChipsModule } from '@angular/material/chips';\nimport { MatAutocompleteModule } from '@angular/material/autocomplete';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatFormFieldModule } from '@angular/material/form-field';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [\n    CommonModule, \n    FormsModule, \n    MatChipsModule,\n    MatIconModule,\n    MatAutocompleteModule, \n    MatInputModule, \n    MatFormFieldModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  \n  readonly annotation = model.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  requestNewOnsetCreation = output<void>();\n  readonly termClick = output<string>();\n\n  // Local autocomplete search inputs\n  modifierSearchQuery = signal<string>('');\n  onsetSearchQuery = signal<string>('');\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  filteredModifiers = computed(() => {\n    const query = this.modifierSearchQuery().toLowerCase().trim();\n    const available = this.availableModifiers();\n    const currentSelected = this.annotation().modifiers || [];\n    \n    return available.filter(mod => \n      !currentSelected.includes(mod) && \n      mod.toLowerCase().includes(query)\n    );\n  });\n\n  filteredOnsets = computed(() => {\n    const query = this.onsetSearchQuery().toLowerCase().trim();\n    return this.availableOnsets().filter(onset => \n      onset.toLowerCase().includes(query)\n    );\n  });\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n   const updatedAnnotation = {\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n  }\n\n  changeOnset(newOnset: string): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    };\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      const updatedAnnotation = {\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      };\n      \n      this.annotation.set(updatedAnnotation); // Update local view\n      this.updated.emit(updatedAnnotation);\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    const updatedAnnotation = {\n      ...this.annotation(),\n      modifiers: updatedMods\n    };\n\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n}",
-            "displayName": "HierarchyMapItem",
-            "properties": [
-                {
-                    "name": "children",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "HpoTermMinimal[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 17,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "parents",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "HpoTermMinimal[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 16,
-                    "rawdescription": "\n"
-                }
-            ],
-            "indexSignatures": [],
-            "kind": 172,
-            "methods": [],
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": []
-            }
-        },
-        {
-            "name": "HpoTermMinimal",
-            "id": "interface-HpoTermMinimal-5ba829b95d426635b7368a1db98bf1c720dc5d095f209c2887f9d213a026f94d8af85ecec0649b5941cb075b7130926e4c009a0195e13abb7dcb8726f559e26b",
-            "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-            "deprecated": false,
-            "deprecationMessage": "",
-            "type": "interface",
-            "sourceCode": "import { Component, input, model, computed, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatChipsModule } from '@angular/material/chips';\nimport { MatAutocompleteModule } from '@angular/material/autocomplete';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatFormFieldModule } from '@angular/material/form-field';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [\n    CommonModule, \n    FormsModule, \n    MatChipsModule,\n    MatIconModule,\n    MatAutocompleteModule, \n    MatInputModule, \n    MatFormFieldModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  \n  readonly annotation = model.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  requestNewOnsetCreation = output<void>();\n  readonly termClick = output<string>();\n\n  // Local autocomplete search inputs\n  modifierSearchQuery = signal<string>('');\n  onsetSearchQuery = signal<string>('');\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  filteredModifiers = computed(() => {\n    const query = this.modifierSearchQuery().toLowerCase().trim();\n    const available = this.availableModifiers();\n    const currentSelected = this.annotation().modifiers || [];\n    \n    return available.filter(mod => \n      !currentSelected.includes(mod) && \n      mod.toLowerCase().includes(query)\n    );\n  });\n\n  filteredOnsets = computed(() => {\n    const query = this.onsetSearchQuery().toLowerCase().trim();\n    return this.availableOnsets().filter(onset => \n      onset.toLowerCase().includes(query)\n    );\n  });\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n   const updatedAnnotation = {\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n  }\n\n  changeOnset(newOnset: string): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    };\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      const updatedAnnotation = {\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      };\n      \n      this.annotation.set(updatedAnnotation); // Update local view\n      this.updated.emit(updatedAnnotation);\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    const updatedAnnotation = {\n      ...this.annotation(),\n      modifiers: updatedMods\n    };\n\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n}",
-            "displayName": "HpoTermMinimal",
-            "properties": [
-                {
-                    "name": "label",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 12,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "termId",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 11,
-                    "rawdescription": "\n"
-                }
-            ],
-            "indexSignatures": [],
-            "kind": 172,
-            "methods": [],
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": []
-            }
-        },
-        {
-            "name": "PolishedHpoAnnotation",
-            "id": "interface-PolishedHpoAnnotation-5ba829b95d426635b7368a1db98bf1c720dc5d095f209c2887f9d213a026f94d8af85ecec0649b5941cb075b7130926e4c009a0195e13abb7dcb8726f559e26b",
-            "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-            "deprecated": false,
-            "deprecationMessage": "",
-            "type": "interface",
-            "sourceCode": "import { Component, input, model, computed, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatChipsModule } from '@angular/material/chips';\nimport { MatAutocompleteModule } from '@angular/material/autocomplete';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatFormFieldModule } from '@angular/material/form-field';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [\n    CommonModule, \n    FormsModule, \n    MatChipsModule,\n    MatIconModule,\n    MatAutocompleteModule, \n    MatInputModule, \n    MatFormFieldModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  \n  readonly annotation = model.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  requestNewOnsetCreation = output<void>();\n  readonly termClick = output<string>();\n\n  // Local autocomplete search inputs\n  modifierSearchQuery = signal<string>('');\n  onsetSearchQuery = signal<string>('');\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  filteredModifiers = computed(() => {\n    const query = this.modifierSearchQuery().toLowerCase().trim();\n    const available = this.availableModifiers();\n    const currentSelected = this.annotation().modifiers || [];\n    \n    return available.filter(mod => \n      !currentSelected.includes(mod) && \n      mod.toLowerCase().includes(query)\n    );\n  });\n\n  filteredOnsets = computed(() => {\n    const query = this.onsetSearchQuery().toLowerCase().trim();\n    return this.availableOnsets().filter(onset => \n      onset.toLowerCase().includes(query)\n    );\n  });\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n   const updatedAnnotation = {\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n  }\n\n  changeOnset(newOnset: string): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    };\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      const updatedAnnotation = {\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      };\n      \n      this.annotation.set(updatedAnnotation); // Update local view\n      this.updated.emit(updatedAnnotation);\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    const updatedAnnotation = {\n      ...this.annotation(),\n      modifiers: updatedMods\n    };\n\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n}",
-            "displayName": "PolishedHpoAnnotation",
-            "properties": [
-                {
-                    "name": "isObserved",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "boolean",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 23,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "label",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 22,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "modifiers",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": true,
-                    "description": "",
-                    "line": 25,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "onsetString",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": true,
-                    "description": "",
-                    "line": 24,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "termId",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 21,
-                    "rawdescription": "\n"
-                }
-            ],
-            "indexSignatures": [],
-            "kind": 172,
-            "methods": [],
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": []
-            }
-        }
-    ],
+    "interfaces": [],
     "injectables": [],
     "guards": [],
     "interceptors": [],
     "classes": [],
     "directives": [],
-    "components": [
-        {
-            "name": "FooterComponent",
-            "id": "component-FooterComponent-509b1e5d45e1930866ab95a05c2a253d8d8fef5f26dbbb9a2c659721c1fdc93f87c6c40470d6ad95bac6e0b870599c3a7814befa751cbc94cce08378e9d69c86",
-            "file": "src/lib/footer/footer.component.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "lib-shared-footer",
-            "styleUrls": [
-                "./footer.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./footer.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "appName",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 13,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        125
-                    ],
-                    "required": true
-                },
-                {
-                    "name": "appVersion",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 14,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        125
-                    ],
-                    "required": true
-                },
-                {
-                    "name": "currentYear",
-                    "coverageIgnore": false,
-                    "defaultValue": "2026",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "number",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 16,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        125
-                    ],
-                    "required": false
-                },
-                {
-                    "name": "gitHubIssuesUrl",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 15,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        125
-                    ],
-                    "required": true
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "helpRequested",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "void",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 18,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        125
-                    ],
-                    "required": false
-                }
-            ],
-            "propertiesClass": [
-                {
-                    "name": "sanitizedIssuesUrl",
-                    "coverageIgnore": false,
-                    "defaultValue": "computed(() => \n    this.sanitizer.bypassSecurityTrustUrl(this.gitHubIssuesUrl())\n  )",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 20,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        124
-                    ]
-                },
-                {
-                    "name": "sanitizer",
-                    "coverageIgnore": false,
-                    "defaultValue": "inject(DomSanitizer)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 12,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        123
-                    ]
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "onHelpClick",
-                    "coverageIgnore": false,
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 24,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": ""
-                }
-            ],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, computed, inject, input, output } from '@angular/core';\nimport { DomSanitizer } from '@angular/platform-browser';\n\n\n@Component({\n  selector: 'lib-shared-footer',\n  standalone: true,\n  templateUrl: './footer.component.html',\n  styleUrl: './footer.component.scss'\n})\nexport class FooterComponent {\n  private sanitizer = inject(DomSanitizer);\n  public appName = input.required<string>();\n  public appVersion = input.required<string>();\n  public gitHubIssuesUrl = input.required<string>();\n  public currentYear = input<number>(2026); // Sensible default\n\n  public helpRequested = output<void>();\n\n   protected sanitizedIssuesUrl = computed(() => \n    this.sanitizer.bypassSecurityTrustUrl(this.gitHubIssuesUrl())\n  );\n\n  onHelpClick(): void {\n    this.helpRequested.emit();\n  }\n\n \n}",
-            "styleUrl": "./footer.component.scss",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": ".site-footer {\n  background-color: #f3f4f6; /* bg-gray-100 */\n  text-align: center;\n  padding: 1rem 0; /* py-4 */\n  font-size: 14px; /* text-sm */\n  color: #4b5563; /* text-gray-600 */\n  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05); /* shadow-inner */\n}\n\n.footer-content {\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  gap: 16px; /* gap-4 */\n}\n\n.footer-link {\n  display: flex;\n  align-items: center;\n  gap: 4px; /* gap-1 */\n  color: #2563eb; /* text-blue-600 */\n  text-decoration: underline;\n  background: none;\n  border: none;\n  padding: 0;\n  cursor: pointer;\n  font-size: inherit;\n  transition: color 0.2s ease;\n}\n\n.footer-link:hover {\n  color: #1e40af; /* hover:text-blue-800 */\n}\n\n.site-footer .icon {\n  height: 16px; /* h-4 */\n  width: 16px;  /* w-4 */\n}\n\n/* Maintain consistency with your pubmed component responsive break */\n@media (max-width: 480px) {\n  .footer-content {\n    flex-direction: column;\n    gap: 8px;\n  }\n}",
-                    "styleUrl": "./footer.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": []
-            },
-            "templateData": "<!-- Inside your UI library: shared-footer.component.html -->\n<footer class=\"site-footer\">\n  <div class=\"footer-content\">\n    <p>&copy; {{ currentYear() }} {{ appName() }} v{{ appVersion() }}</p>\n    \n    <button \n      (click)=\"onHelpClick()\"\n      class=\"footer-link\"\n      title=\"Open help documentation\"\n    >\n      <span>Help</span>\n      <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z\" />\n      </svg>\n    </button>\n\n    <!-- The link now uses a reactive input bound to href -->\n    <a\n      [href]=\"sanitizedIssuesUrl()\"\n      target=\"_blank\"\n      rel=\"noopener noreferrer\"\n      class=\"footer-link\"\n      title=\"Report a bug or problem on GitHub\"\n    >\n      <span>Report bug</span>\n      <svg xmlns=\"http://www.w3.org/2000/svg\" class=\"h-4 w-4\" fill=\"none\" viewBox=\"0 0 24 24\" stroke=\"currentColor\">\n        <path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M19 8l1.5-1.5M5 8L3.5 6.5M12 1v2M12 5a4 4 0 00-4 4v2H8 a4 4 0 008 0h0V9a4 4 0 00-4-4zM4 13h16M4 17h16M12 21v2\" />\n      </svg>\n    </a>\n  </div>\n</footer>"
-        },
-        {
-            "name": "HelpButtonComponent",
-            "id": "component-HelpButtonComponent-0d8627d8d919a838bdd8ca2bde62738525b5e195c3c8b5c9d2d2bc447c49d22b1e4e44f42083481087ff456815cdf313ffdeec190358b5d1ec27baec341d8dbf",
-            "file": "src/lib/help-button/help-button.component.ts",
-            "encapsulation": [
-                "ViewEncapsulation.None"
-            ],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "ui-help-button",
-            "styleUrls": [
-                "./help-button.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./help-button.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "helpUrl",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 18,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "lines",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 17,
-                    "rawdescription": "\n",
-                    "required": true
-                },
-                {
-                    "name": "title",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 16,
-                    "rawdescription": "\n",
-                    "required": true
-                }
-            ],
-            "outputsClass": [],
-            "propertiesClass": [],
-            "methodsClass": [
-                {
-                    "name": "openDocs",
-                    "coverageIgnore": false,
-                    "args": [],
-                    "optional": false,
-                    "returnType": "any",
-                    "typeParameters": [],
-                    "line": 21,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "modifierKind": [
-                        134
-                    ]
-                }
-            ],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "MatMenuModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatButtonModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatIconModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, input, ViewEncapsulation } from '@angular/core';\nimport { MatMenuModule } from '@angular/material/menu';\nimport { MatButtonModule } from '@angular/material/button';\nimport { MatIconModule } from '@angular/material/icon';\nimport { openUrl } from '@tauri-apps/plugin-opener'; \n\n@Component({\n  selector: 'ui-help-button', // Generalized for library usage\n  standalone: true,\n  imports: [MatMenuModule, MatButtonModule, MatIconModule],\n  encapsulation: ViewEncapsulation.None, // Essential for styling mat-menu panelClasses globally\n  templateUrl: './help-button.component.html',\n  styleUrl: './help-button.component.scss'\n})\nexport class HelpButtonComponent {\n  title = input.required<string>();\n  lines = input.required<string[]>();\n  helpUrl = input<string>();\n\n  /* Open page safely in system browser via Tauri opener */\n  async openDocs() {\n    const url = this.helpUrl();\n    if (url) {\n      try {\n        await openUrl(url);\n      } catch (err) {\n        console.error(\"Failed to open documentation via Tauri Opener:\", err);\n      }\n    }\n  }\n}",
-            "styleUrl": "./help-button.component.scss",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": "/* Global layer override via ViewEncapsulation.None */\n.help-bubble-menu {\n  max-width: 280px !important;\n  border-radius: 8px !important;\n  background-color: #ffffff;\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n\n  .help-content {\n    padding: 12px 16px;\n\n    .help-title {\n      margin: 0 0 8px 0;\n      font-size: 0.95rem;\n      font-weight: 600;\n      color: #333333;\n    }\n\n    .help-text {\n      margin: 0 0 6px 0;\n      font-size: 0.85rem;\n      line-height: 1.4;\n      color: #555555;\n      \n      &:last-of-type {\n        margin-bottom: 0;\n      }\n    }\n\n    .help-divider {\n      border: 0;\n      border-top: 1px solid #eef0f2;\n      margin: 10px 0;\n    }\n\n    .btn-docs {\n      display: flex;\n      align-items: center;\n      gap: 6px;\n      background: none;\n      border: none;\n      color: #0288d1;\n      font-size: 0.85rem;\n      font-weight: 500;\n      cursor: pointer;\n      padding: 4px 0;\n      width: 100%;\n      text-align: left;\n\n      mat-icon {\n        font-size: 16px;\n        width: 16px;\n        height: 16px;\n      }\n\n      &:hover {\n        color: #01579b;\n        text-decoration: underline;\n      }\n    }\n  }\n}",
-                    "styleUrl": "./help-button.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "extends": [],
-            "relationships": {
-                "incoming": [
-                    {
-                        "name": "LoadOntologyComponent",
-                        "type": "component"
-                    }
-                ],
-                "outgoing": [
-                    {
-                        "name": "MatMenuModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatButtonModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatIconModule",
-                        "type": "module"
-                    }
-                ]
-            },
-            "templateData": "<button mat-icon-button [matMenuTriggerFor]=\"helpMenu\" class=\"help-trigger\" type=\"button\">\n  <mat-icon>help_outline</mat-icon>\n</button>\n\n<mat-menu #helpMenu=\"matMenu\" panelClass=\"help-bubble-menu\">\n  <div class=\"help-content\" (click)=\"$event.stopPropagation()\">\n    <h3 class=\"help-title\">{{ title() }}</h3>\n    \n    @for (line of lines(); track line) {\n      <p class=\"help-text\" [innerHTML]=\"line\"></p>\n    }\n\n    @if (helpUrl()) {\n      <hr class=\"help-divider\">\n      <button class=\"btn-docs\" (click)=\"openDocs()\">\n        <mat-icon>open_in_new</mat-icon>\n        <span>Learn more</span>\n      </button>\n    }\n  </div>\n</mat-menu>"
-        },
-        {
-            "name": "HpoAnnotationPolisherComponent",
-            "id": "component-HpoAnnotationPolisherComponent-5ba829b95d426635b7368a1db98bf1c720dc5d095f209c2887f9d213a026f94d8af85ecec0649b5941cb075b7130926e4c009a0195e13abb7dcb8726f559e26b",
-            "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "[app-hpo-annotation-polisher]",
-            "styleUrls": [
-                "./hpo-annotation-polisher.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./hpo-annotation-polisher.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "annotation",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "PolishedHpoAnnotation",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 44,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": true
-                },
-                {
-                    "name": "availableModifiers",
-                    "coverageIgnore": false,
-                    "defaultValue": "[]",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 47,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                },
-                {
-                    "name": "availableOnsets",
-                    "coverageIgnore": false,
-                    "defaultValue": "[]",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 46,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                },
-                {
-                    "name": "hierarchy",
-                    "coverageIgnore": false,
-                    "defaultValue": "null",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "HierarchyMapItem | null",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 45,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "annotation",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "PolishedHpoAnnotation",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 44,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": true
-                },
-                {
-                    "name": "deleteRequested",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "void",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 50,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                },
-                {
-                    "name": "requestNewOnsetCreation",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "void",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 51,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "termClick",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 52,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                },
-                {
-                    "name": "updated",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "PolishedHpoAnnotation",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 49,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                }
-            ],
-            "propertiesClass": [
-                {
-                    "name": "filteredModifiers",
-                    "coverageIgnore": false,
-                    "defaultValue": "computed(() => {\n    const query = this.modifierSearchQuery().toLowerCase().trim();\n    const available = this.availableModifiers();\n    const currentSelected = this.annotation().modifiers || [];\n    \n    return available.filter(mod => \n      !currentSelected.includes(mod) && \n      mod.toLowerCase().includes(query)\n    );\n  })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 60,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "filteredOnsets",
-                    "coverageIgnore": false,
-                    "defaultValue": "computed(() => {\n    const query = this.onsetSearchQuery().toLowerCase().trim();\n    return this.availableOnsets().filter(onset => \n      onset.toLowerCase().includes(query)\n    );\n  })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 71,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "modifierSearchQuery",
-                    "coverageIgnore": false,
-                    "defaultValue": "signal<string>('')",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 55,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "onsetSearchQuery",
-                    "coverageIgnore": false,
-                    "defaultValue": "signal<string>('')",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 56,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "showHierarchyMenu",
-                    "coverageIgnore": false,
-                    "defaultValue": "signal<boolean>(false)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 58,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ]
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "addModifier",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "event",
-                            "type": "Event",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 111,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "event",
-                            "type": "Event",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "changeOnset",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "newOnset",
-                            "type": "string",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 102,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "newOnset",
-                            "type": "string",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "removeModifier",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "idx",
-                            "type": "number",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 129,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "idx",
-                            "type": "number",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "replaceTerm",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "target",
-                            "type": "HpoTermMinimal",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 82,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "target",
-                            "type": "HpoTermMinimal",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "toggleHierarchyMenu",
-                    "coverageIgnore": false,
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 78,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": ""
-                },
-                {
-                    "name": "toggleObserved",
-                    "coverageIgnore": false,
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 93,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": ""
-                }
-            ],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "CommonModule",
-                    "type": "module"
-                },
-                {
-                    "name": "FormsModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatChipsModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatIconModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatAutocompleteModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatInputModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatFormFieldModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, input, model, computed, output, signal } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\nimport { MatIconModule } from '@angular/material/icon';\nimport { MatChipsModule } from '@angular/material/chips';\nimport { MatAutocompleteModule } from '@angular/material/autocomplete';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatFormFieldModule } from '@angular/material/form-field';\n\nexport interface HpoTermMinimal {\n  termId: string;\n  label: string;\n}\n\nexport interface HierarchyMapItem {\n  parents: HpoTermMinimal[];\n  children: HpoTermMinimal[];\n}\n\nexport interface PolishedHpoAnnotation {\n  termId: string;\n  label: string;\n  isObserved: boolean;\n  onsetString?: string;\n  modifiers?: string[];\n}\n\n@Component({\n  selector: '[app-hpo-annotation-polisher]', // Use attribute selector to render nicely inside <tr>\n  standalone: true,\n  imports: [\n    CommonModule, \n    FormsModule, \n    MatChipsModule,\n    MatIconModule,\n    MatAutocompleteModule, \n    MatInputModule, \n    MatFormFieldModule],\n  templateUrl: './hpo-annotation-polisher.component.html',\n  styleUrl: './hpo-annotation-polisher.component.scss'\n})\nexport class HpoAnnotationPolisherComponent {\n  \n  readonly annotation = model.required<PolishedHpoAnnotation>();\n  readonly hierarchy = input<HierarchyMapItem | null>(null);\n  readonly availableOnsets = input<string[]>([]);\n  readonly availableModifiers = input<string[]>([]);\n\n  readonly updated = output<PolishedHpoAnnotation>();\n  readonly deleteRequested = output<void>();\n  requestNewOnsetCreation = output<void>();\n  readonly termClick = output<string>();\n\n  // Local autocomplete search inputs\n  modifierSearchQuery = signal<string>('');\n  onsetSearchQuery = signal<string>('');\n\n  readonly showHierarchyMenu = signal<boolean>(false);\n\n  filteredModifiers = computed(() => {\n    const query = this.modifierSearchQuery().toLowerCase().trim();\n    const available = this.availableModifiers();\n    const currentSelected = this.annotation().modifiers || [];\n    \n    return available.filter(mod => \n      !currentSelected.includes(mod) && \n      mod.toLowerCase().includes(query)\n    );\n  });\n\n  filteredOnsets = computed(() => {\n    const query = this.onsetSearchQuery().toLowerCase().trim();\n    return this.availableOnsets().filter(onset => \n      onset.toLowerCase().includes(query)\n    );\n  });\n\n  toggleHierarchyMenu(): void {\n    this.showHierarchyMenu.update(v => !v);\n  }\n\n  replaceTerm(target: HpoTermMinimal): void {\n   const updatedAnnotation = {\n      ...this.annotation(),\n      termId: target.termId,\n      label: target.label\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n    this.showHierarchyMenu.set(false);\n  }\n\n  toggleObserved(): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      isObserved: !this.annotation().isObserved\n    };\n    this.annotation.set(updatedAnnotation);\n    this.updated.emit(updatedAnnotation);\n  }\n\n  changeOnset(newOnset: string): void {\n    const updatedAnnotation = {\n      ...this.annotation(),\n      onsetString: newOnset || undefined\n    };\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n\n  addModifier(event: Event): void {\n    const select = event.target as HTMLSelectElement;\n    const value = select.value;\n    if (!value) return;\n\n    const currentMods = this.annotation().modifiers || [];\n    if (!currentMods.includes(value)) {\n      const updatedAnnotation = {\n        ...this.annotation(),\n        modifiers: [...currentMods, value]\n      };\n      \n      this.annotation.set(updatedAnnotation); // Update local view\n      this.updated.emit(updatedAnnotation);\n    }\n    select.value = ''; // Reset select tag view line\n  }\n\n  removeModifier(idx: number): void {\n    const currentMods = this.annotation().modifiers || [];\n    const updatedMods = currentMods.filter((_, i) => i !== idx);\n    const updatedAnnotation = {\n      ...this.annotation(),\n      modifiers: updatedMods\n    };\n\n    this.annotation.set(updatedAnnotation); \n    this.updated.emit(updatedAnnotation);\n  }\n}",
-            "styleUrl": "./hpo-annotation-polisher.component.scss",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": ":host {\n  display: table-row; \n\n  --border-color: #e5e7eb;\n  --bg-gray-light: #f9fafb;\n  --text-gray-dark: #374151;\n  --text-gray-muted: #6b7280;\n  --green-bg: #dcfce7;\n  --green-text: #15803d;\n  --red-bg: #fee2e2;\n  --red-text: #b91c1c;\n  --blue-primary: #2563eb;\n  --blue-hover: #1d4ed8;\n  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);\n}\n.label-cell { position: relative; }\n.dropdown-wrapper { position: relative; display: inline-block; }\n.dropdown-trigger { cursor: pointer; color: #0d6efd; font-weight: 500; }\n.dropdown-trigger:hover { text-decoration: underline; }\n\n/* Scoped to this specific cell, no absolute screen-space coordinate math needed! */\n.local-context-menu {\n    position: absolute; top: 100%; left: 0; z-index: 1000;\n    background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;\n    box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;\n}\n.menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }\n.menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }\n.menu-item:hover { background-color: #f1f3f5; }\n\n/* Modifier configuration layouts */\n.modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }\n.modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }\n.remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }\n.modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }\n\n.badge {\n  padding: 0.125rem 0.375rem;\n  border-radius: 9999px;\n  font-size: 12px;\n  font-weight: 700;\n\n  &.badge-green { background: var(--green-bg); color: var(--green-text); }\n  &.badge-red { background: var(--red-bg); color: var(--red-text); }\n}",
-                    "styleUrl": "./hpo-annotation-polisher.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": [
-                    {
-                        "name": "CommonModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "FormsModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatChipsModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatIconModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatAutocompleteModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatInputModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatFormFieldModule",
-                        "type": "module"
-                    }
-                ]
-            },
-            "templateData": "<td class=\"font-mono\">\n    <a (click)=\"termClick.emit(annotation().termId)\" class=\"link-text\">\n    {{ annotation().termId }}\n    </a>\n</td>\n\n<td class=\"label-cell\">\n    <div class=\"dropdown-wrapper\">\n    <span (click)=\"toggleHierarchyMenu()\" class=\"dropdown-trigger\">\n        {{ annotation().label }} <span class=\"caret\">▼</span>\n    </span>\n\n    @if (showHierarchyMenu()) {\n        <div class=\"local-context-menu\" (mouseleave)=\"showHierarchyMenu.set(false)\">\n        @if (hierarchy()?.parents?.length) {\n            <div class=\"menu-section-title\">Parents</div>\n            <ul>\n            @for (p of hierarchy()?.parents; track p.termId) {\n                <li (click)=\"replaceTerm(p)\" class=\"menu-item\">{{ p.label }} ({{ p.termId }})</li>\n            }\n            </ul>\n        }\n        @if (hierarchy()?.children?.length) {\n            <div class=\"menu-section-title\">Children</div>\n            <ul>\n            @for (c of hierarchy()?.children; track c.termId) {\n                <li (click)=\"replaceTerm(c)\" class=\"menu-item\">{{ c.label }} ({{ c.termId }})</li>\n            }\n            </ul>\n        }\n        </div>\n    }\n    </div>\n</td>\n\n<td>\n    <span class=\"badge\" [ngClass]=\"annotation().isObserved ? 'badge-green' : 'badge-red'\">\n    {{ annotation().isObserved ? 'OBS' : 'EXC' }}\n    </span>\n</td>\n\n<td class=\"onset-cell\">\n    <div class=\"onset-inline-group\">\n    <select \n        [ngModel]=\"annotation().onsetString\"\n        (ngModelChange)=\"changeOnset($event)\"\n        class=\"onset-select\"\n    >\n        <option [value]=\"''\">-- No Onset Specified --</option>\n        @for (option of availableOnsets(); track option) {  \n        <option [value]=\"option\">{{ option }}</option>\n        }\n    </select>\n    </div>\n</td>\n\n<td class=\"modifier-cell\">\n    <div class=\"modifiers-container\">\n    @for (mod of annotation().modifiers || []; track mod; let idx = $index) {\n        <span class=\"modifier-chip\">\n        {{ mod }}\n        <button class=\"remove-mod-btn\" (click)=\"removeModifier(idx)\">×</button>\n        </span>\n    }\n    <select class=\"modifier-select\" (change)=\"addModifier($event)\">\n        <option value=\"\" disabled selected>+ Add Modifier</option>\n        @for (opt of availableModifiers(); track opt) {\n        <option [value]=\"opt\">{{ opt }}</option>\n        }\n    </select>\n    </div>\n</td>\n\n<td class=\"action-cell\">\n    <div class=\"action-group\">\n    <button (click)=\"toggleObserved()\" class=\"btn-icon\">\n        <mat-icon>swap_horiz</mat-icon>Toggle\n    </button>\n    <button (click)=\"deleteRequested.emit()\" class=\"btn-icon btn-delete\">\n        <mat-icon>delete</mat-icon>Delete\n    </button>\n    </div>\n</td>"
-        },
-        {
-            "name": "HpoOnsetSelectorComponent",
-            "id": "component-HpoOnsetSelectorComponent-69408162fc430d5ee1d357b5425b703d3f71d8d4bf4a9bfd3d68f0766ca21ec1b8268787531b003b8a8db5c9cd7cabc0f0cdeb3880eb54ce80fe4c6756c6ac23",
-            "file": "src/lib/hpo-onset-selector/hpo-onset-selector.component.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "lib-hpo-onset-selector",
-            "styleUrls": [
-                "./hpo-onset-selector.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./hpo-onset-selector.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "availableOnsets",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 14,
-                    "rawdescription": "\n",
-                    "required": true
-                },
-                {
-                    "name": "selectedOnset",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string | undefined",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 13,
-                    "rawdescription": "\n",
-                    "required": false
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "onsetChanged",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 17,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "requestNewOnset",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "void",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 16,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "selectedOnset",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string | undefined",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 13,
-                    "rawdescription": "\n",
-                    "required": false
-                }
-            ],
-            "propertiesClass": [],
-            "methodsClass": [
-                {
-                    "name": "onOnsetSelect",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "value",
-                            "type": "string",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 19,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "value",
-                            "type": "string",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "CommonModule",
-                    "type": "module"
-                },
-                {
-                    "name": "FormsModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, input, output, model } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { FormsModule } from '@angular/forms';\n\n@Component({\n  selector: 'lib-hpo-onset-selector',\n  standalone: true,\n  imports: [CommonModule, FormsModule],\n  templateUrl: './hpo-onset-selector.component.html',\n  styleUrls: ['./hpo-onset-selector.component.scss']\n})\nexport class HpoOnsetSelectorComponent {\n  selectedOnset = model<string | undefined>();\n  availableOnsets = input.required<string[]>();\n  \n  requestNewOnset = output<void>();\n  onsetChanged = output<string>();\n\n  onOnsetSelect(value: string): void {\n    this.selectedOnset.set(value);\n    this.onsetChanged.emit(value);\n  }\n}",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": "",
-                    "styleUrl": "./hpo-onset-selector.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": [
-                    {
-                        "name": "CommonModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "FormsModule",
-                        "type": "module"
-                    }
-                ]
-            },
-            "templateData": " <div class=\"onset-select-container\">\n      <div class=\"onset-input-row\">\n        <select \n          [ngModel]=\"selectedOnset()\"\n          (ngModelChange)=\"onOnsetSelect($event)\"\n          class=\"onset-select\">\n          <option value=\"\" disabled selected hidden>Select onset age...</option>\n          <option *ngFor=\"let option of availableOnsets()\" [value]=\"option\">\n            {{ option }}\n          </option>\n        </select>\n\n        <button \n          type=\"button\" \n          class=\"btn-add-onset\" \n          (click)=\"requestNewOnset.emit()\" \n          title=\"Create new age term\">\n          + New\n        </button>\n      </div>\n    </div>"
-        },
-        {
-            "name": "LoadOntologyComponent",
-            "id": "component-LoadOntologyComponent-602446c085a849d50e5fa22ea0094c1fa740c25f613b4da3ddd1378be3d3186e4d5a8304652977fe6afcd316437bd382ffc8caef50a363d05ad08390ea7c4ee1",
-            "file": "src/lib/load-ontology/load-ontology.component.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "ui-load-ontology",
-            "styleUrls": [
-                "./load-ontology.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./load-ontology.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "helpLines",
-                    "coverageIgnore": false,
-                    "defaultValue": "['Select the ontology file.']",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string[]",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 28,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "helpUrl",
-                    "coverageIgnore": false,
-                    "defaultValue": "'https://p2gx.github.io/phenoboard/help/start.html'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 27,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "isLoaded",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "boolean",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 23,
-                    "rawdescription": "\n",
-                    "required": true
-                },
-                {
-                    "name": "isLoading",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "boolean",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 22,
-                    "rawdescription": "\n",
-                    "required": true
-                },
-                {
-                    "name": "label",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 21,
-                    "rawdescription": "\n",
-                    "required": true
-                },
-                {
-                    "name": "statusMessage",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 24,
-                    "rawdescription": "\n",
-                    "required": true
-                },
-                {
-                    "name": "termCount",
-                    "coverageIgnore": false,
-                    "defaultValue": "undefined",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "number | undefined",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 26,
-                    "rawdescription": "\n",
-                    "required": false
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "onLoad",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "void",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 30,
-                    "rawdescription": "\n",
-                    "required": false
-                }
-            ],
-            "propertiesClass": [],
-            "methodsClass": [],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "CommonModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatProgressSpinnerModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatIconModule",
-                    "type": "module"
-                },
-                {
-                    "name": "HelpButtonComponent",
-                    "type": "component"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, input, output } from '@angular/core';\nimport { CommonModule } from '@angular/common';\nimport { MatProgressSpinnerModule } from '@angular/material/progress-spinner';\nimport { MatIconModule } from '@angular/material/icon';\nimport { HelpButtonComponent } from '../help-button/help-button.component';\n\n@Component({\n  selector: 'ui-load-ontology',\n  standalone: true,\n  imports: [\n    CommonModule, \n    MatProgressSpinnerModule, \n    MatIconModule,\n    HelpButtonComponent \n  ],\n  templateUrl: './load-ontology.component.html',\n  styleUrls: ['./load-ontology.component.scss']\n})\nexport class LoadOntologyComponent {\n\n  label = input.required<string>();          // e.g., \"HPO\" or \"MAxO\"\n  isLoading = input.required<boolean>();\n  isLoaded = input.required<boolean>();\n  statusMessage = input.required<string>();\n\n  termCount = input<number | undefined>(undefined);\n  helpUrl = input<string>('https://p2gx.github.io/phenoboard/help/start.html');\n  helpLines = input<string[]>(['Select the ontology file.']);\n\n  onLoad = output<void>();\n}",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": ".home-card__section-label {\n  font-size: 1.1rem;\n  font-weight: 600;\n  margin-bottom: 12px;\n  color: #333333;\n}\n\n.home-card__row {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  gap: 16px;\n  padding: 12px 0;\n}\n\n.action-with-help {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n\n  .home-card__action-btn {\n    display: inline-flex;\n    align-items: center;\n    gap: 8px;\n    min-width: 120px;\n    justify-content: center;\n  }\n}\n\n.ontology-status {\n  display: flex;\n  flex-direction: column;\n  align-items: flex-end;\n  gap: 4px;\n\n  // The '&' nests and compiles to '.ontology-status__text'\n  &__text {\n    display: flex;\n    align-items: center;\n    gap: 6px;\n    font-size: 0.9rem;\n    color: #666666;\n\n    // Compiles to '.ontology-status__text--loading'\n    &--loading {\n      color: #0288d1;\n    }\n\n    // Compiles to '.ontology-status__text--loaded'\n    &--loaded {\n      color: #388e3c;\n      font-weight: 500;\n    }\n  }\n\n  // Compiles to '.ontology-status__icon'\n  &__icon {\n    font-size: 18px;\n    width: 18px;\n    height: 18px;\n  }\n\n  // Compiles to '.ontology-status__terms'\n  &__terms {\n    font-size: 0.8rem;\n    color: #757575;\n  }\n}",
-                    "styleUrl": "./load-ontology.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": [
-                    {
-                        "name": "CommonModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatProgressSpinnerModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatIconModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "HelpButtonComponent",
-                        "type": "component"
-                    }
-                ]
-            },
-            "templateData": "<div class=\"home-card__row\">\n    <div class=\"action-with-help\">\n        <button (click)=\"onLoad.emit()\" [disabled]=\"isLoading()\" class=\"btn-outline-primary home-card__action-btn\">\n            @if (isLoading()) {\n                <mat-spinner diameter=\"15\"></mat-spinner>\n                <span>Loading...</span>\n            } @else {\n                <span>Load {{ label() }}</span>\n            }\n        </button>\n        \n        <ui-help-button \n            [title]=\"'Loading the ' + label()\" \n            [lines]=\"helpLines()\" \n            [helpUrl]=\"helpUrl()\" />\n    </div>\n    \n    <div class=\"ontology-status\">\n        <span [ngClass]=\"{\n            'ontology-status__text--loading': isLoading(), \n            'ontology-status__text--loaded': isLoaded()}\" \n            class=\"ontology-status__text\">\n            @if(isLoaded()) {\n                <mat-icon class=\"ontology-status__icon\">check_circle</mat-icon> \n                {{ statusMessage() }}\n                <span class=\"ontology-status__terms\">{{ termCount() }} terms available</span>\n            }\n        </span>\n    </div>\n</div>"
-        },
-        {
-            "name": "OntologyAutocompleteComponent",
-            "id": "component-OntologyAutocompleteComponent-d6fdedbc8ff14727955c05e1fac8358f0fea786459d73fb1ce7af6f266364aec608c7bed2cb6fbbf9a7ea51505499cd35db97eb9926267e83e789db82a8156c4",
-            "file": "src/lib/ontology-autocomplete/ontology-autocomplete.component.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "ui-ontology-autocomplete",
-            "styleUrls": [
-                "./ontology-autocomplete.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./ontology-autocomplete.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "inputString",
-                    "coverageIgnore": false,
-                    "defaultValue": "''",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 38,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "placeholder",
-                    "coverageIgnore": false,
-                    "defaultValue": "'Search ontology term...'",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 37,
-                    "rawdescription": "\n",
-                    "required": false
-                },
-                {
-                    "name": "searchProvider",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "(query: string) => Observable<OntologyMatch[]>",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 41,
-                    "rawdescription": "\n",
-                    "required": true
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "selected",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "OntologyMatch",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 43,
-                    "rawdescription": "\n",
-                    "required": false
-                }
-            ],
-            "propertiesClass": [
-                {
-                    "name": "control",
-                    "coverageIgnore": false,
-                    "defaultValue": "new FormControl<string | OntologyMatch>('', [ontologyMatchValidator()])",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 46,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "inputElement",
-                    "coverageIgnore": false,
-                    "defaultValue": "viewChild<ElementRef<HTMLInputElement>>('ontologyInput')",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 45,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "isValid",
-                    "coverageIgnore": false,
-                    "defaultValue": "toSignal(this.control.statusChanges.pipe(map(status => status === 'VALID')), { initialValue: false })",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 48,
-                    "rawdescription": "\n"
-                },
-                {
-                    "name": "options",
-                    "coverageIgnore": false,
-                    "defaultValue": "toSignal(\n    this.control.valueChanges.pipe(\n      startWith(this.control.value),\n      debounceTime(300),\n      switchMap((value) => {\n        const query = typeof value === 'string' ? value : value?.label;\n        if (query && query.length > 2) {\n          // Execute the dynamic search provider instead of a hardcoded service\n          return this.searchProvider()(query);\n        }\n        return of([]);\n      })\n    ),\n    { initialValue: [] as OntologyMatch[] }\n  )",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 50,
-                    "rawdescription": "\n"
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "clear",
-                    "coverageIgnore": false,
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 91,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": ""
-                },
-                {
-                    "name": "displayFn",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "option",
-                            "type": "OntologyMatch | string | null",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "string",
-                    "typeParameters": [],
-                    "line": 81,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "option",
-                            "type": "OntologyMatch | string | null",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "onOptionSelected",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "event",
-                            "type": "MatAutocompleteSelectedEvent",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 86,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "event",
-                            "type": "MatAutocompleteSelectedEvent",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "ReactiveFormsModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatFormFieldModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatInputModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatAutocompleteModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatOptionModule",
-                    "type": "module"
-                },
-                {
-                    "name": "MatIconModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, inject, input, output, viewChild, effect, ElementRef } from '@angular/core';\nimport { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';\nimport { debounceTime, switchMap, of, map, startWith, Observable } from 'rxjs';\nimport { MatFormFieldModule } from '@angular/material/form-field';\nimport { MatInputModule } from '@angular/material/input';\nimport { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';\nimport { MatOptionModule } from '@angular/material/core'; \nimport { MatIconModule } from \"@angular/material/icon\";\nimport { toSignal } from '@angular/core/rxjs-interop';\nimport { OntologyMatch } from '../models/ontology-dto'; \n\nexport function ontologyMatchValidator(): ValidatorFn {\n  return (control: AbstractControl): ValidationErrors | null => {\n    const value = control.value;\n    if (typeof value === 'string' && value.length > 0) {\n      return { 'invalidSelection': true };\n    }\n    return null;\n  };\n}\n\n@Component({\n  selector: 'ui-ontology-autocomplete',\n  standalone: true,\n  templateUrl: './ontology-autocomplete.component.html',\n  styleUrl: './ontology-autocomplete.component.scss',\n  imports: [\n    ReactiveFormsModule,\n    MatFormFieldModule,\n    MatInputModule,\n    MatAutocompleteModule,\n    MatOptionModule,\n    MatIconModule\n  ]\n})\nexport class OntologyAutocompleteComponent {\n  placeholder = input<string>('Search ontology term...');\n  inputString = input<string>('');\n  \n  // Provide the query function dynamically from the parent\n  searchProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();\n\n  selected = output<OntologyMatch>();\n\n  inputElement = viewChild<ElementRef<HTMLInputElement>>('ontologyInput');\n  control = new FormControl<string | OntologyMatch>('', [ontologyMatchValidator()]);\n\n  isValid = toSignal(this.control.statusChanges.pipe(map(status => status === 'VALID')), { initialValue: false });\n\n  options = toSignal(\n    this.control.valueChanges.pipe(\n      startWith(this.control.value),\n      debounceTime(300),\n      switchMap((value) => {\n        const query = typeof value === 'string' ? value : value?.label;\n        if (query && query.length > 2) {\n          // Execute the dynamic search provider instead of a hardcoded service\n          return this.searchProvider()(query);\n        }\n        return of([]);\n      })\n    ),\n    { initialValue: [] as OntologyMatch[] }\n  );\n\n  constructor() {\n    effect(() => {\n      const val = this.inputString();\n      const inputRef = this.inputElement();\n\n      if (val && inputRef) {\n        this.control.setValue(val, { emitEvent: true });\n        setTimeout(() => {\n          inputRef.nativeElement.focus();\n          inputRef.nativeElement.select();\n        }, 0);\n      }\n    });\n  }\n\n  displayFn(option: OntologyMatch | string | null): string {\n    if (!option) return '';\n    return typeof option === 'string' ? option : option.label;\n  }\n\n  onOptionSelected(event: MatAutocompleteSelectedEvent) {\n    const selection = event.option.value as OntologyMatch;\n    this.selected.emit(selection);\n  }\n  \n  clear() {\n    this.control.setValue('');\n  }\n}",
-            "styleUrl": "./ontology-autocomplete.component.scss",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": ":host {\n  display: block;\n  width: 100%;\n}\n\n/* Ensure the material form field takes up the full width of whatever container it sits in */\n.full-width-field {\n  width: 100%;\n}\n\n/* Container inside the mat-option */\n.option-container {\n  display: flex;\n  flex-direction: column;\n  line-height: 1.2; \n  padding: 4px 0;   \n}\n\n/* The primary matched text token */\n.option-matched-text {\n  font-size: 0.875rem; \n  font-weight: 500;    \n}\n\n/* The italicized primary label (fallback if matched on a synonym) */\n.option-primary-label {\n  opacity: 0.7;       \n  font-style: italic; \n  font-size: 0.75rem; \n}\n\n/* The namespace/accession ID style (e.g., HP:0001250 or GO:0008150) */\n.option-id {\n  color: #2563eb;     // text-blue-600\n  font-size: 0.75rem; \n}\n\n/* * Overrides Material MDC density rules to allow multiple text rows \n * to expand naturally without clipping.\n */\n::ng-deep .mat-mdc-option {\n  line-height: normal !important;\n  height: auto !important;\n  min-height: 48px;\n  padding-top: 8px !important;\n  padding-bottom: 8px !important;\n}",
-                    "styleUrl": "./ontology-autocomplete.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "constructorObj": {
-                "name": "constructor",
-                "description": "",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "args": [],
-                "line": 64,
-                "rawdescription": "\n"
-            },
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": [
-                    {
-                        "name": "ReactiveFormsModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatFormFieldModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatInputModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatAutocompleteModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatOptionModule",
-                        "type": "module"
-                    },
-                    {
-                        "name": "MatIconModule",
-                        "type": "module"
-                    }
-                ]
-            },
-            "templateData": "<mat-form-field class=\"full-width-field\" appearance=\"outline\">\n  <input type=\"text\"\n    #ontologyInput\n    [placeholder]=\"placeholder()\"\n    matInput\n    [formControl]=\"control\"\n    [matAutocomplete]=\"auto\"\n    spellcheck=\"false\"\n    autocomplete=\"off\">\n\n  @if (control.value) {\n    <button matSuffix mat-icon-button aria-label=\"Clear\" (click)=\"clear()\">\n      <mat-icon>close</mat-icon>\n    </button>\n  }\n  \n  <mat-autocomplete \n    #auto=\"matAutocomplete\" \n    [displayWith]=\"displayFn\" \n    (optionSelected)=\"onOptionSelected($event)\">\n    @for (option of options(); track option.id) {\n      <mat-option [value]=\"option\">\n        <div class=\"option-container\">\n          <span class=\"option-matched-text\">{{ option.matchedText }}</span>\n          @if (option.matchedText !== option.label) {\n            <small class=\"option-primary-label\">Primary: {{ option.label }}</small>\n          }\n          <small class=\"option-id\">{{ option.id }}</small>\n        </div>\n      </mat-option>\n    }\n  </mat-autocomplete>\n  @if (control.hasError('invalidSelection') && control.touched) {\n    <mat-error>Please select a term from the list</mat-error>\n  }\n</mat-form-field>\n"
-        },
-        {
-            "name": "PhenopacketLoaderComponent",
-            "id": "component-PhenopacketLoaderComponent-7ddbef91102e2b97c3193b77772efb327036e33f7788da998b0a822cf0546aceb44c9dad5657a0f8cff4c5f253f935bae4bd2eb4893fcd734a7cf215306efe31",
-            "file": "src/lib/phenopacket-loader/phenopacket-loader.component.ts",
-            "encapsulation": [],
-            "entryComponents": [],
-            "inputs": [],
-            "outputs": [],
-            "providers": [],
-            "selector": "lib-phenopacket-loader",
-            "styleUrls": [
-                "./phenopacket-loader.component.scss"
-            ],
-            "styles": [],
-            "templateUrl": [
-                "./phenopacket-loader.component.html"
-            ],
-            "templateVariables": [],
-            "viewProviders": [],
-            "hostDirectives": [],
-            "inputsClass": [
-                {
-                    "name": "onIngest",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "(payload: string) => Promise<void> | void",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 13,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": true
-                }
-            ],
-            "outputsClass": [
-                {
-                    "name": "ingestError",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "string",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 19,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                },
-                {
-                    "name": "phenopacketIngested",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "any",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 18,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ],
-                    "required": false
-                }
-            ],
-            "propertiesClass": [
-                {
-                    "name": "errorMessage",
-                    "coverageIgnore": false,
-                    "defaultValue": "signal<string | null>(null)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 16,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ]
-                },
-                {
-                    "name": "fileName",
-                    "coverageIgnore": false,
-                    "defaultValue": "signal<string | null>(null)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 15,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ]
-                },
-                {
-                    "name": "isDragging",
-                    "coverageIgnore": false,
-                    "defaultValue": "signal<boolean>(false)",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "unknown",
-                    "indexKey": "",
-                    "optional": false,
-                    "description": "",
-                    "line": 14,
-                    "rawdescription": "\n",
-                    "modifierKind": [
-                        148
-                    ]
-                }
-            ],
-            "methodsClass": [
-                {
-                    "name": "onDragLeave",
-                    "coverageIgnore": false,
-                    "args": [],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 34,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": ""
-                },
-                {
-                    "name": "onDragOver",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "event",
-                            "type": "DragEvent",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 29,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "event",
-                            "type": "DragEvent",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "onDrop",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "event",
-                            "type": "DragEvent",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 38,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "event",
-                            "type": "DragEvent",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "onFileSelected",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "event",
-                            "type": "Event",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 22,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "jsdoctags": [
-                        {
-                            "name": "event",
-                            "type": "Event",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                },
-                {
-                    "name": "processFile",
-                    "coverageIgnore": false,
-                    "args": [
-                        {
-                            "name": "file",
-                            "type": "File",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": ""
-                        }
-                    ],
-                    "optional": false,
-                    "returnType": "void",
-                    "typeParameters": [],
-                    "line": 47,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "\n",
-                    "description": "",
-                    "modifierKind": [
-                        123
-                    ],
-                    "jsdoctags": [
-                        {
-                            "name": "file",
-                            "type": "File",
-                            "optional": false,
-                            "dotDotDotToken": false,
-                            "deprecated": false,
-                            "deprecationMessage": "",
-                            "tagName": {
-                                "text": "param"
-                            }
-                        }
-                    ]
-                }
-            ],
-            "coverageIgnore": false,
-            "deprecated": false,
-            "deprecationMessage": "",
-            "hostBindings": [],
-            "hostListeners": [],
-            "standalone": true,
-            "imports": [
-                {
-                    "name": "CommonModule",
-                    "type": "module"
-                }
-            ],
-            "description": "",
-            "rawdescription": "\n",
-            "type": "component",
-            "sourceCode": "import { Component, signal, output, input } from '@angular/core';\nimport { CommonModule } from '@angular/common';\n\n@Component({\n  selector: 'lib-phenopacket-loader',\n  standalone: true,\n  imports: [CommonModule],\n  styleUrls: ['./phenopacket-loader.component.scss'],\n  templateUrl: './phenopacket-loader.component.html'\n})\nexport class PhenopacketLoaderComponent {\n  readonly onIngest = input.required<(payload: string) => Promise<void> | void>();\n  readonly isDragging = signal<boolean>(false);\n  readonly fileName = signal<string | null>(null);\n  readonly errorMessage = signal<string | null>(null);\n\n  readonly phenopacketIngested = output<any>();\n  readonly ingestError = output<string>();\n\n  \n  onFileSelected(event: Event): void {\n    const inputElement = event.target as HTMLInputElement;\n    if (inputElement.files && inputElement.files[0]) {\n      this.processFile(inputElement.files[0]);\n    }\n  }\n\n  onDragOver(event: DragEvent): void {\n    event.preventDefault();\n    this.isDragging.set(true);\n  }\n\n  onDragLeave(): void {\n    this.isDragging.set(false);\n  }\n\n  onDrop(event: DragEvent): void {\n    event.preventDefault();\n    this.isDragging.set(false);\n    \n    if (event.dataTransfer?.files && event.dataTransfer.files[0]) {\n      this.processFile(event.dataTransfer.files[0]);\n    }\n  }\n\n  private processFile(file: File): void {\n    if (!file.name.endsWith('.json')) {\n      this.errorMessage.set('Invalid file type. Please upload a JSON phenopacket.');\n      return;\n    }\n\n    this.fileName.set(file.name.toLowerCase());\n    this.errorMessage.set(null);\n    \n    const reader = new FileReader();\n    reader.onload = async (e) => {\n      try {\n        const jsonString = e.target?.result as string;\n        \n        // Quick local syntax validation sanity check\n        JSON.parse(jsonString); \n        \n        // Execute the decoupled application callback handler seamlessly\n        await this.onIngest()(jsonString);\n        \n      } catch (err) {\n        this.errorMessage.set('Failed to process file contents. Verify structural validity.');\n        this.fileName.set(null);\n      }\n    };\n\n    reader.readAsText(file);\n  }\n}",
-            "assetsDirs": [],
-            "styleUrlsData": [
-                {
-                    "data": "\n.drop-container {\n  --loader-bg: #ffffff;\n  --loader-border-color: #cbd5e1;\n  --loader-border-active: #3b82f6;\n  --loader-text-primary: #1e293b;\n  --loader-text-secondary: #64748b;\n  --loader-success-bg: #f0fdf4;\n  --loader-success-border: #4ade80;\n\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding: 2.5rem 2rem;\n  border: 2px dashed var(--loader-border-color);\n  border-radius: 12px;\n  background-color: var(--loader-bg);\n  cursor: pointer;\n  transition: all 0.2s ease-in-out;\n  text-align: center;\n  min-height: 200px;\n  position: relative;\n\n  // Hover state\n  &:hover {\n    border-color: var(--loader-text-secondary);\n    background-color: #f8fafc;\n  }\n\n  // Active Drag-and-Drop State managed via Signal class binding\n  &--active {\n    border-color: var(--loader-border-active);\n    background-color: #eff6ff;\n    transform: scale(1.01);\n    \n    .upload-icon {\n      transform: translateY(-4px);\n      color: var(--loader-border-active);\n    }\n  }\n\n  .drop-illustration {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    gap: 0.75rem;\n    margin-bottom: 1.5rem;\n    pointer-events: none; // Prevents nested text from flickering drag events\n\n    .upload-icon {\n      font-size: 2.5rem;\n      transition: transform 0.2s ease;\n    }\n\n    p {\n      margin: 0;\n      font-size: 1rem;\n      color: var(--loader-text-primary);\n      font-weight: 500;\n    }\n\n    .file-status {\n      color: #16a34a;\n      \n      code {\n        background-color: #e2e8f0;\n        padding: 0.2rem 0.4rem;\n        border-radius: 4px;\n        font-family: monospace;\n        font-size: 0.9rem;\n      }\n    }\n  }\n\n  // Native button styles\n  button {\n    background-color: #3b82f6;\n    color: #ffffff;\n    border: none;\n    padding: 0.625rem 1.25rem;\n    font-size: 0.9rem;\n    font-weight: 600;\n    border-radius: 6px;\n    cursor: pointer;\n    transition: background-color 0.15s ease;\n    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);\n\n    &:hover {\n      background-color: #2563eb;\n    }\n\n    &:active {\n      background-color: #1d4ed8;\n    }\n  }\n}\n\n// Error state alerts\n.error-message {\n  margin-top: 1rem;\n  padding: 0.75rem 1rem;\n  background-color: #fef2f2;\n  border: 1px solid #fee2e2;\n  border-radius: 6px;\n  color: #dc2626;\n  font-size: 0.875rem;\n  font-weight: 500;\n  text-align: left;\n  width: 100%;\n  box-sizing: border-box;\n}",
-                    "styleUrl": "./phenopacket-loader.component.scss"
-                }
-            ],
-            "stylesData": "",
-            "extends": [],
-            "relationships": {
-                "incoming": [],
-                "outgoing": [
-                    {
-                        "name": "CommonModule",
-                        "type": "module"
-                    }
-                ]
-            },
-            "templateData": "<div \n  class=\"drop-container\"\n  [class.drop-container--active]=\"isDragging()\"\n  (dragover)=\"onDragOver($event)\"\n  (dragleave)=\"onDragLeave()\"\n  (drop)=\"onDrop($event)\"\n>\n  <div class=\"drop-illustration\">\n    <i class=\"upload-icon\">📄</i>\n    @if (fileName()) {\n      <p class=\"file-status\">Loaded: <code>{{ fileName() }}</code></p>\n    } @else {\n      <p>Drag and drop a Phenopacket file here, or click to browse.</p>\n    }\n  </div>\n\n  <button type=\"button\" (click)=\"fileInput.click()\">\n    Select Phenopacket Profile\n  </button>\n  \n  <input \n    #fileInput \n    type=\"file\" \n    accept=\".json\" \n    (change)=\"onFileSelected($event)\" \n    hidden \n  />\n</div>"
-        }
-    ],
+    "components": [],
     "modules": [],
     "miscellaneous": {
         "variables": [
-            {
-                "name": "config",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": ".storybook/main.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "StorybookConfig",
-                "defaultValue": "{\n  // Explicitly target ONLY the src directory contents\n  stories: [\n    '../src/lib/**/*.mdx',\n    '../src/lib/**/*.stories.@(js|jsx|mjs|ts|tsx)'\n  ],\n\n  addons: ['@storybook/addon-links', '@storybook/addon-docs'],\n\n  framework: {\n    name: '@storybook/angular',\n    options: {},\n  },\n\n  // turn off strict external type checking during the indexing pass\n  typescript: {\n    check: false,\n  },\n\n  docs: {\n    autodocs: true\n  }\n}"
-            },
             {
                 "name": "Default",
                 "ctype": "miscellaneous",
@@ -2032,6 +55,94 @@
                 "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
             },
             {
+                "name": "Large",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/button.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    size: 'large',\n    label: 'Button',\n  },\n}"
+            },
+            {
+                "name": "LoggedIn",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/header.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    user: {\n      name: 'Jane Doe',\n    },\n  },\n}"
+            },
+            {
+                "name": "LoggedIn",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/page.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n    const loginButton = canvas.getByRole('button', { name: /Log in/i });\n    await expect(loginButton).toBeInTheDocument();\n    await userEvent.click(loginButton);\n    await expect(loginButton).not.toBeInTheDocument();\n\n    const logoutButton = canvas.getByRole('button', { name: /Log out/i });\n    await expect(logoutButton).toBeInTheDocument();\n  },\n}"
+            },
+            {
+                "name": "LoggedOut",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/header.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "LoggedOut",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/page.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/button.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<ButtonComponent>",
+                "defaultValue": "{\n  title: 'Example/Button',\n  component: ButtonComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    backgroundColor: {\n      control: 'color',\n    },\n  },\n  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args\n  args: { onClick: fn() },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/header.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HeaderComponent>",
+                "defaultValue": "{\n  title: 'Example/Header',\n  component: HeaderComponent,\n  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs\n  tags: ['autodocs'],\n  parameters: {\n    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout\n    layout: 'fullscreen',\n  },\n  args: {\n    onLogin: fn(),\n    onLogout: fn(),\n    onCreateAccount: fn(),\n  },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/page.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<PageComponent>",
+                "defaultValue": "{\n  title: 'Example/Page',\n  component: PageComponent,\n  parameters: {\n    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout\n    layout: 'fullscreen',\n  },\n}"
+            },
+            {
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -2039,8 +150,8 @@
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<HpoAnnotationPolisherComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoAnnotationPolisherComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n    (story) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, // <-- CRITICAL: This passes the mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table>\n              <tbody>\n                <tr app-hpo-annotation-polisher \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture your output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+                "type": "Meta<HpoPolisherRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolisherRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n    (story) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, // <-- CRITICAL: This passes the mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table>\n              <tbody>\n                <tr app-hpo-annotation-polisher \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture your output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -2095,32 +206,89 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Preview",
-                "defaultValue": "{\n  parameters: {\n    controls: {\n      matchers: {\n        color: /(background|color)$/i,\n        date: /Date$/i,\n      },\n    },\n  },\n}"
-            }
-        ],
-        "functions": [
+                "defaultValue": "{\n  parameters: {\n    controls: {\n      matchers: {\n       color: /(background|color)$/i,\n       date: /Date$/i,\n      },\n    },\n  },\n}"
+            },
             {
-                "name": "ontologyMatchValidator",
-                "file": "src/lib/ontology-autocomplete/ontology-autocomplete.component.ts",
+                "name": "Primary",
                 "ctype": "miscellaneous",
-                "subtype": "function",
+                "subtype": "variable",
+                "file": "src/stories/button.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "displayName": "ontologyMatchValidator",
-                "args": [],
-                "returnType": "ValidatorFn"
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    primary: true,\n    label: 'Button',\n  },\n}"
+            },
+            {
+                "name": "Secondary",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/button.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    label: 'Button',\n  },\n}"
+            },
+            {
+                "name": "Small",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/stories/button.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    size: 'small',\n    label: 'Button',\n  },\n}"
             }
         ],
+        "functions": [],
         "typealiases": [
             {
                 "name": "Story",
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoAnnotationPolisherComponent>",
+                "rawtype": "StoryObj<ButtonComponent>",
+                "file": "src/stories/button.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<HeaderComponent>",
+                "file": "src/stories/header.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<PageComponent>",
+                "file": "src/stories/page.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoPolisherRowComponent>",
                 "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -2144,19 +312,6 @@
         ],
         "enumerations": [],
         "groupedVariables": {
-            ".storybook/main.ts": [
-                {
-                    "name": "config",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": ".storybook/main.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "StorybookConfig",
-                    "defaultValue": "{\n  // Explicitly target ONLY the src directory contents\n  stories: [\n    '../src/lib/**/*.mdx',\n    '../src/lib/**/*.stories.@(js|jsx|mjs|ts|tsx)'\n  ],\n\n  addons: ['@storybook/addon-links', '@storybook/addon-docs'],\n\n  framework: {\n    name: '@storybook/angular',\n    options: {},\n  },\n\n  // turn off strict external type checking during the indexing pass\n  typescript: {\n    check: false,\n  },\n\n  docs: {\n    autodocs: true\n  }\n}"
-                }
-            ],
             "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts": [
                 {
                     "name": "Default",
@@ -2223,8 +378,8 @@
                     "coverageIgnore": false,
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Meta<HpoAnnotationPolisherComponent>",
-                    "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoAnnotationPolisherComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n    (story) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, // <-- CRITICAL: This passes the mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table>\n              <tbody>\n                <tr app-hpo-annotation-polisher \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture your output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+                    "type": "Meta<HpoPolisherRowComponent>",
+                    "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolisherRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n    (story) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, // <-- CRITICAL: This passes the mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table>\n              <tbody>\n                <tr app-hpo-annotation-polisher \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture your output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
                 },
                 {
                     "name": "mockHierarchy",
@@ -2260,6 +415,133 @@
                     "defaultValue": "['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Childhood onset']"
                 }
             ],
+            "src/stories/button.stories.ts": [
+                {
+                    "name": "Large",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/button.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    size: 'large',\n    label: 'Button',\n  },\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/button.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<ButtonComponent>",
+                    "defaultValue": "{\n  title: 'Example/Button',\n  component: ButtonComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    backgroundColor: {\n      control: 'color',\n    },\n  },\n  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args\n  args: { onClick: fn() },\n}"
+                },
+                {
+                    "name": "Primary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/button.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    primary: true,\n    label: 'Button',\n  },\n}"
+                },
+                {
+                    "name": "Secondary",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/button.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    label: 'Button',\n  },\n}"
+                },
+                {
+                    "name": "Small",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/button.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    size: 'small',\n    label: 'Button',\n  },\n}"
+                }
+            ],
+            "src/stories/header.stories.ts": [
+                {
+                    "name": "LoggedIn",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/header.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    user: {\n      name: 'Jane Doe',\n    },\n  },\n}"
+                },
+                {
+                    "name": "LoggedOut",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/header.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/header.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HeaderComponent>",
+                    "defaultValue": "{\n  title: 'Example/Header',\n  component: HeaderComponent,\n  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs\n  tags: ['autodocs'],\n  parameters: {\n    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout\n    layout: 'fullscreen',\n  },\n  args: {\n    onLogin: fn(),\n    onLogout: fn(),\n    onCreateAccount: fn(),\n  },\n}"
+                }
+            ],
+            "src/stories/page.stories.ts": [
+                {
+                    "name": "LoggedIn",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/page.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n    const loginButton = canvas.getByRole('button', { name: /Log in/i });\n    await expect(loginButton).toBeInTheDocument();\n    await userEvent.click(loginButton);\n    await expect(loginButton).not.toBeInTheDocument();\n\n    const logoutButton = canvas.getByRole('button', { name: /Log out/i });\n    await expect(logoutButton).toBeInTheDocument();\n  },\n}"
+                },
+                {
+                    "name": "LoggedOut",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/page.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/stories/page.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<PageComponent>",
+                    "defaultValue": "{\n  title: 'Example/Page',\n  component: PageComponent,\n  parameters: {\n    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout\n    layout: 'fullscreen',\n  },\n}"
+                }
+            ],
             ".storybook/preview.ts": [
                 {
                     "name": "preview",
@@ -2270,37 +552,65 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Preview",
-                    "defaultValue": "{\n  parameters: {\n    controls: {\n      matchers: {\n        color: /(background|color)$/i,\n        date: /Date$/i,\n      },\n    },\n  },\n}"
+                    "defaultValue": "{\n  parameters: {\n    controls: {\n      matchers: {\n       color: /(background|color)$/i,\n       date: /Date$/i,\n      },\n    },\n  },\n}"
                 }
             ]
         },
-        "groupedFunctions": {
-            "src/lib/ontology-autocomplete/ontology-autocomplete.component.ts": [
+        "groupedFunctions": {},
+        "groupedEnumerations": {},
+        "groupedTypeAliases": {
+            "src/stories/button.stories.ts": [
                 {
-                    "name": "ontologyMatchValidator",
-                    "file": "src/lib/ontology-autocomplete/ontology-autocomplete.component.ts",
+                    "name": "Story",
                     "ctype": "miscellaneous",
-                    "subtype": "function",
+                    "subtype": "typealias",
                     "coverageIgnore": false,
+                    "rawtype": "StoryObj<ButtonComponent>",
+                    "file": "src/stories/button.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
                     "description": "",
-                    "displayName": "ontologyMatchValidator",
-                    "args": [],
-                    "returnType": "ValidatorFn"
+                    "kind": 184
                 }
-            ]
-        },
-        "groupedEnumerations": {},
-        "groupedTypeAliases": {
+            ],
+            "src/stories/header.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HeaderComponent>",
+                    "file": "src/stories/header.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/stories/page.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<PageComponent>",
+                    "file": "src/stories/page.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoAnnotationPolisherComponent>",
+                    "rawtype": "StoryObj<HpoPolisherRowComponent>",
                     "file": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
@@ -2336,16 +646,6 @@
         "status": "low",
         "files": [
             {
-                "filePath": ".storybook/main.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "config",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
                 "filePath": ".storybook/preview.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
@@ -2353,60 +653,6 @@
                 "name": "preview",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/footer/footer.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "FooterComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/9",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/help-button/help-button.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "HelpButtonComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/5",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "HpoAnnotationPolisherComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/21",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-                "type": "interface",
-                "linktype": "interface",
-                "name": "HierarchyMapItem",
-                "coveragePercent": 0,
-                "coverageCount": "0/3",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-                "type": "interface",
-                "linktype": "interface",
-                "name": "HpoTermMinimal",
-                "coveragePercent": 0,
-                "coverageCount": "0/3",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-annotation-polisher/hpo-annotation-polisher.component.ts",
-                "type": "interface",
-                "linktype": "interface",
-                "name": "PolishedHpoAnnotation",
-                "coveragePercent": 0,
-                "coverageCount": "0/6",
                 "status": "low"
             },
             {
@@ -2480,15 +726,6 @@
                 "status": "low"
             },
             {
-                "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "HpoOnsetSelectorComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/7",
-                "status": "low"
-            },
-            {
                 "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                 "type": "variable",
                 "linktype": "miscellaneous",
@@ -2529,40 +766,143 @@
                 "status": "low"
             },
             {
-                "filePath": "src/lib/load-ontology/load-ontology.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "LoadOntologyComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/9",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/ontology-autocomplete/ontology-autocomplete.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "OntologyAutocompleteComponent",
-                "coveragePercent": 0,
-                "coverageCount": "0/13",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/ontology-autocomplete/ontology-autocomplete.component.ts",
-                "type": "function",
+                "filePath": "src/stories/button.stories.ts",
+                "type": "variable",
                 "linktype": "miscellaneous",
-                "linksubtype": "function",
-                "name": "ontologyMatchValidator",
+                "linksubtype": "variable",
+                "name": "Large",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
             },
             {
-                "filePath": "src/lib/phenopacket-loader/phenopacket-loader.component.ts",
-                "type": "component",
-                "linktype": "component",
-                "name": "PhenopacketLoaderComponent",
+                "filePath": "src/stories/button.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
                 "coveragePercent": 0,
-                "coverageCount": "0/12",
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/button.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Primary",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/button.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Secondary",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/button.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Small",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/button.stories.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/header.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedIn",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/header.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedOut",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/header.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/header.stories.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/page.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedIn",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/page.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LoggedOut",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/page.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/stories/page.stories.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
                 "status": "low"
             }
         ]

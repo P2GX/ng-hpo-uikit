@@ -4,13 +4,15 @@
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
-    "docs:preview": "vitepress preview docs"
+    "docs:preview": "vitepress preview docs",
+    "storybook": "ng run ng-hpo-uikit:storybook",
+    "build-storybook": "ng run ng-hpo-uikit:build-storybook"
   },
   "peerDependencies": {
-    "@angular/common": "^22.0.0",
-    "@angular/core": "^22.0.0",
-    "@angular/material": "^22.0.0",
-    "@angular/platform-browser": "^22.0.0",
+    "@angular/common": ">=21 <23",
+    "@angular/core": ">=21 <23",
+    "@angular/material": ">=21 <23",
+    "@angular/platform-browser": ">=21 <23",
     "@tauri-apps/plugin-opener": "^2.0.0"
   },
   "dependencies": {
@@ -18,22 +20,28 @@
   },
   "devDependencies": {
     "@angular-devkit/architect": "^0.2200.4",
-    "@angular-devkit/build-angular": "^22.0.4",
-    "@angular/cdk": "^22.0.0",
-    "@angular/cli": "^22.0.4",
-    "@angular/common": "^22.0.0",
-    "@angular/compiler": "^22.0.0",
-    "@angular/compiler-cli": "^22.0.0",
-    "@angular/core": "^22.0.0",
-    "@angular/forms": "^22.0.0",
-    "@angular/material": "^22.0.0",
-    "@angular/platform-browser": "^22.0.0",
+    "@angular-devkit/build-angular": "^21.2.17",
+    "@angular-devkit/core": "^22.0.0",
+    "@angular/animations": "^21.2.17",
+    "@angular/cdk": "^21.2.14",
+    "@angular/cli": "^21.2.17",
+    "@angular/common": "^21.2.17",
+    "@angular/compiler": "^21.2.17",
+    "@angular/compiler-cli": "^21.2.17",
+    "@angular/core": "^21.2.17",
+    "@angular/forms": "^21.2.17",
+    "@angular/material": "^21.2.14",
+    "@angular/platform-browser": "^21.2.17",
+    "@angular/platform-browser-dynamic": "^22.0.0",
     "@compodoc/compodoc": "^2.0.0",
+    "@storybook/addon-a11y": "^10.4.6",
+    "@storybook/addon-docs": "^10.4.6",
+    "@storybook/addon-links": "^10.4.6",
     "@storybook/angular": "^10.4.6",
     "@tauri-apps/plugin-opener": "^2.5.4",
-    "ng-packagr": "^22.0.0",
+    "ng-packagr": "^21.2.5",
     "storybook": "^10.4.6",
-    "typescript": "^6.0.3",
+    "typescript": "~5.9",
     "vitepress": "^1.6.4"
   },
   "overrides": {
@@ -42,7 +50,7 @@
   "sideEffects": false,
   "peerDependenciesMeta": {
     "@tauri-apps/plugin-opener": {
-      "optional": "true"
+      "optional": true
     }
   }
 }

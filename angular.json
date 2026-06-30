@@ -35,11 +35,9 @@
           "builder": "@storybook/angular:start-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "ng-hpo-uikit:storybook-host",
+            "browserTarget": "ng-hpo-uikit:build",
             "compodoc": true,
             "compodocArgs": [
-              "-p",
-              ".storybook/tsconfig.json",
               "-e",
               "json",
               "-d",
@@ -52,36 +50,16 @@
           "builder": "@storybook/angular:build-storybook",
           "options": {
             "configDir": ".storybook",
-            "browserTarget": "ng-hpo-uikit:storybook-host",
+            "browserTarget": "ng-hpo-uikit:build",
             "compodoc": true,
             "compodocArgs": [
-              "-p",
-              ".storybook/tsconfig.json",
               "-e",
               "json",
               "-d",
               "."
             ],
-            "outputDir": "dist/storybook/ng-hpo-uikit"
+            "outputDir": "storybook-static"
           }
-        },
-        "storybook-host": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/ng-hpo-uikit-storybook-host",
-            "index": ".storybook/host/index.html",
-            "main": ".storybook/preview.ts",
-            "tsConfig": ".storybook/tsconfig.json",
-            "styles": [],
-            "assets": []
-          },
-          "configurations": {
-            "development": {
-              "optimization": false,
-              "sourceMap": true
-            }
-          },
-          "defaultConfiguration": "development"
         }
       }
     }
