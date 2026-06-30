@@ -1,6 +1,6 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.1.5",
+  "version": "0.2.1",
   "scripts": {
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
@@ -39,7 +39,11 @@
     "@storybook/addon-links": "^10.4.6",
     "@storybook/angular": "^10.4.6",
     "@tauri-apps/plugin-opener": "^2.5.4",
+    "@types/chai": "^5.2.3",
+    "@types/react": "^19.2.17",
+    "chai": "^6.2.2",
     "ng-packagr": "^21.2.5",
+    "react": "^19.2.7",
     "storybook": "^10.4.6",
     "typescript": "~5.9",
     "vitepress": "^1.6.4"

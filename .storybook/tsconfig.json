@@ -2,6 +2,7 @@
   "extends": "../tsconfig.lib.json",
   "compilerOptions": {
       "rootDir": "..",
+      "skipLibCheck": true,
     "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true
