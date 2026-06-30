@@ -1,4 +1,3 @@
-@use '../styles/buttons' as *;
 
 :host {
   display: block;
@@ -68,13 +67,4 @@ mat-dialog-content.dialog-content {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
-  .btn-secondary {
-    @extend .hpo-btn-secondary;
-    min-width: 100px; // Component-specific override
-  }
-
-  .btn-primary {
-    @extend .hpo-btn-primary;
-    min-width: 100px;
-  }
 }
