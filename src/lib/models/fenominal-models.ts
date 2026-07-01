@@ -25,8 +25,8 @@ export interface UiHitWrapper {
   /** Clinical modifiers that can be toggled by the user or refined later */
   modifiers?: {
     severity?: string;
-    modifiers: string[];
     onset?: string;
-    excluded?: boolean;
+    excluded: boolean;
+    modifiers: string[];
   };
 }

@@ -1,7 +1,7 @@
 <div class="text-mining-workspace">
   
   @for (sentence of sentences(); track sentence.start) {
-    <div class="sentence-row" [class.is-collapsed-view]="sentence.start < collapsedUntilIndex()">
+    <div class="sentence-row" [class.is-collapsed-view]="isSentenceCollapsed(sentence.start)">
       
       @if (isSentenceCollapsed(sentence.start)) {
         <div class="compact-token-line">
