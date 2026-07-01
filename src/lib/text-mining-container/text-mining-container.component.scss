@@ -1,0 +1,187 @@
+.text-mining-workspace {
+  line-height: 0.8; // Normal, readable paragraph breathing room
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #1e293b;
+  padding: 12px;
+  background: #ffffff;
+}
+
+.sentence-row {
+  transition: opacity 0.2s ease;
+  
+  // Style changes when a block becomes archived history
+  &.is-collapsed-view {
+    opacity: 0.6; // Softens the visual weight of completed segments
+    margin-bottom: 4px;
+    border-left: 2px solid #e2e8f0;
+    padding-left: 8px;
+  }
+}
+
+.compact-token-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  
+  .compact-token {
+    font-size: 0.75rem;
+    padding: 1px 4px;
+    background-color: #f1f5f9; // Neutral grey background since it is curated
+    color: #475569;
+    border-bottom: none;
+    cursor: default;
+  }
+}
+
+/* Floating controller bubble sitting directly above the target text */
+.badge-overlay-controls {
+  display: none; // Hidden by default
+  position: absolute;
+  top: -28px; // Positioned above the text
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 3px 6px;
+  border-radius: 4px;
+  align-items: center;
+  gap: 6px;
+  z-index: 20;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+
+  // THE FIX: An invisible bridge connecting the badge text to the menu box
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -8px; // Extends down past the menu bottom to cover the empty air gap
+    left: 0;
+    width: 100%;
+    height: 8px; // Fills the exact whitespace tracking zone
+    background: transparent; // Invisible to the user, but keeps hover active!
+  }
+}
+
+/* Ensure the main badge maintains a rock-solid relative hit box context */
+.annotation-badge {
+  position: relative;
+  display: inline;
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 2px 0;
+  border-radius: 2px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  cursor: help;
+
+  // Triggers state display layout smoothly
+  &:hover {
+    background-color: #bae6fd;
+    
+    .badge-overlay-controls {
+      display: inline-flex; // Shows the controls bar cleanly
+    }
+  }
+}
+
+/* Floating button at the bottom to expand back if needed */
+.reset-view-btn {
+  margin-top: 16px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #64748b;
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.1s ease;
+
+  &:hover {
+    background: #f8fafc;
+    color: #334155;
+    border-color: #94a3b8;
+  }
+}
+
+.sentence-line {
+  margin-bottom: 4;
+  display: block; // Ensures the paragraph behaves like text flow, not a flex container
+}
+
+.plain-text {
+  color: #334155;
+  white-space: pre-wrap;
+}
+
+/* Changed to inline so text flows and wraps perfectly */
+.annotation-badge {
+  position: relative;
+  display: inline; 
+  background-color: #e0f2fe;
+  color: #0369a1;
+  padding: 2px 0; // Padding only vertically to prevent horizontal spacing glitches
+  border-radius: 2px;
+  box-decoration-break: clone; // Splendid modern rule: maintains styles if word wraps across lines
+  -webkit-box-decoration-break: clone;
+  cursor: help;
+
+  &:hover {
+    background-color: #bae6fd;
+    
+    .badge-overlay-controls {
+      display: inline-flex;
+    }
+  }
+
+  &.is-excluded {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    .annotated-text {
+      text-decoration: line-through;
+    }
+  }
+}
+
+.annotated-text {
+  font-weight: 500;
+}
+
+/* Floating controller bubble sitting directly above the target text */
+.badge-overlay-controls {
+  display: none; // Hidden by default
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 2px 4px;
+  border-radius: 4px;
+  align-items: center;
+  gap: 4px;
+  z-index: 20;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  white-space: nowrap; // Keeps buttons on a single control bar line
+
+  .span-handle {
+    font-size: 0.6rem;
+    color: #38bdf8;
+    cursor: pointer;
+    padding: 0 2px;
+    user-select: none;
+
+    &:hover { color: #bae6fd; }
+  }
+
+  .shift-btn {
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: 0.65rem;
+    cursor: pointer;
+    padding: 0 2px;
+
+    &:hover { color: #38bdf8; }
+  }
+}

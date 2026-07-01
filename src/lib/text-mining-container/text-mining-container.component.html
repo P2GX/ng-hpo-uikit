@@ -1,0 +1,55 @@
+<div class="text-mining-workspace">
+  
+  @for (sentence of sentences(); track sentence.start) {
+    <div class="sentence-row" [class.is-collapsed-view]="sentence.start < collapsedUntilIndex()">
+      
+      @if (isSentenceCollapsed(sentence.start)) {
+        <div class="compact-token-line">
+          @for (segment of sentence.segments; track $index) {
+            @if (segment.kind === 'hit') {
+              <span class="annotation-badge compact-token" [class.is-excluded]="getWrapper(segment.hit)?.modifiers?.excluded" [attr.title]="getTooltipText(segment.hit)">
+                <span class="annotated-text">{{ segment.text }}</span>
+              </span>
+            }
+          }
+        </div>
+      } @else {
+        <p class="sentence-line">
+          @for (segment of sentence.segments; track $index) {
+            @if (segment.kind === 'text') {
+              <span class="plain-text">{{ segment.text }}</span>
+            } @else if (segment.kind === 'hit') {
+              <span 
+                class="annotation-badge"
+                [class.is-excluded]="getWrapper(segment.hit)?.modifiers?.excluded"
+                [attr.data-term-id]="segment.hit.term_id"
+                [attr.title]="getTooltipText(segment.hit)">
+                
+                <span class="annotated-text">{{ segment.text }}</span>
+
+                @if (!readOnly()) {
+                  <span class="badge-overlay-controls">
+                    <span class="span-handle left-handle" (click)="adjustBoundary(sentence, segment, 'start', -1); $event.stopPropagation()">◀</span>
+                    <button class="shift-btn" (click)="shiftBadge(sentence, segment, -1); $event.stopPropagation()">←</button>
+                    
+                    <button class="collapse-above-btn" (click)="collapseUpTo(sentence.start); $event.stopPropagation()" title="Collapse all text above this line">
+                      Collapse Above 
+                    </button>
+
+                    <button class="shift-btn" (click)="shiftBadge(sentence, segment, 1); $event.stopPropagation()">→</button>
+                    <span class="span-handle right-handle" (click)="adjustBoundary(sentence, segment, 'end', 1); $event.stopPropagation()">▶</span>
+                  </span>
+                }
+              </span>
+            }
+          }
+        </p>
+      }
+
+    </div>
+  }
+
+  @if (collapsedUntilIndex() !== null) {
+    <button class="reset-view-btn" (click)="resetCollapse()">Show Full Document</button>
+  }
+</div>

@@ -29,6 +29,7 @@ export default defineConfig({
           { text: "Ontology Autocomplete", link:  '/components/ontology-autocomplete' },
           { text: "HPO Annotation Polisher", link: '/components/hpo-annotation-polisher'},
           { text: "HPO Modifier Selector", link: '/components/hpo-modifier-selector'},
+          { text: "HPO Text Mining Container", link: '/components/hpo-text-mining-container'},
           { text: "HPO Onset Selector", link: '/components/hpo-onset-selector'},
           { text: "Phenopacket Loader", link:  '/components/phenopacket-loader' } ,
           { text: 'Help button', link: '/components/help-button' }

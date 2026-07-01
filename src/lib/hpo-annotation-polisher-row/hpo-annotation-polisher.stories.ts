@@ -9,17 +9,17 @@ const meta: Meta<HpoPolisherRowComponent> = {
   component: HpoPolisherRowComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, FormsModule, MatIconModule],
+      imports: [CommonModule, FormsModule, MatIconModule, HpoPolisherRowComponent],
     }),
-    (story) => {
+    (story, context) => {
       const storyInstance = story();
       return {
         ...storyInstance, //  passes mock arguments context to the wrapper template
         template: `
           <div style="padding: 2rem;">
-            <table>
+            <table style="width: 100%; border-collapse: collapse; background: white;">
               <tbody>
-                <tr app-hpo-annotation-polisher 
+                <tr lib-hpo-polisher-row 
                     [annotation]="annotation"
                     [hierarchy]="hierarchy"
                     [availableOnsets]="availableOnsets"
@@ -36,7 +36,7 @@ const meta: Meta<HpoPolisherRowComponent> = {
       };
     },
   ],
-  // Automatically capture your output() events in the Storybook Actions log panel
+  // Automatically capture output() events in the Storybook Actions log panel
   argTypes: {
     annotationChange: { action: 'annotationChange' },
     updated: { action: 'updated' },
