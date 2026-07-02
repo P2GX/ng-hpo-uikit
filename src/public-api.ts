@@ -7,6 +7,7 @@ export * from './lib/ng-hpo-uikit';
 export * from './lib/footer/footer.component';
 export * from './lib/help-button/help-button.component';
 export * from './lib/hpo-annotation-polisher-row/hpo-annotation-polisher.component';
+export * from './lib/hpo-polishing-workspace/hpo-polishing-workspace.component';
 export { PolishedHpoAnnotation } from './lib/hpo-annotation-polisher-row/hpo-annotation-polisher.interface';
 export * from './lib/hpo-onset-selector/hpo-onset-selector.component';
 export * from './lib/hpo-mining/hpo-mining.component';
