@@ -1,0 +1,88 @@
+/* src/lib/styles/_buttons.scss */
+@use 'tokens'; // <-- This gives this file access to your variables
+
+/* 1. Base Button Setup */
+.btn-hpo-base {
+  /* Notice we use tokens. followed by the variable name if using standard Sass variables, 
+     but since we are using native CSS variables (:root), we can keep var() exactly as is! */
+  font-family: var(--hpo-font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: var(--hpo-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: var(--hpo-transition);
+  white-space: nowrap;
+
+  &:disabled {
+    background-color: var(--hpo-disabled-bg) !important;
+    color: var(--hpo-disabled-text) !important;
+    border-color: transparent !important;
+    cursor: not-allowed;
+    box-shadow: none !important;
+  }
+}
+
+/* 2. Specific Button Variants */
+.btn-outline-primary {
+  @extend .btn-hpo-base;
+  background-color: transparent;
+  color: var(--hpo-primary);
+  border-color: var(--hpo-primary);
+
+  &:hover:not(:disabled) {
+    background-color: rgba(30, 58, 138, 0.05);
+    border-color: var(--hpo-primary-hover);
+    color: var(--hpo-primary-hover);
+  }
+}
+
+.btn-outline-cancel {
+  @extend .btn-hpo-base;
+  background-color: transparent;
+  color: var(--hpo-cancel);
+  border-color: var(--hpo-cancel);
+
+  &:hover:not(:disabled) {
+    background-color: rgba(100, 116, 139, 0.05);
+    border-color: var(--hpo-cancel-hover);
+    color: var(--hpo-cancel-hover);
+  }
+}
+
+
+/* Core layout for buttons containing material icons */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* Clean spacing between the icon graphic and the text label */
+  
+  font-family: var(--hpo-font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 6px 12px;
+  background-color: transparent;
+  color: #475569; /* Slate gray styling */
+  border: 1px solid #cbd5e1;
+  border-radius: var(--hpo-radius);
+  cursor: pointer;
+  transition: var(--hpo-transition);
+
+  /* Force the Mat Icon to match layout text dimensions */
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    background-color: #f8fafc;
+    color: var(--hpo-primary);
+    border-color: var(--hpo-primary);
+  }
+}
