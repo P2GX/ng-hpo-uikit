@@ -3,7 +3,10 @@
   "version": 1,
   "cli": {
     "packageManager": "npm",
-    "analytics": "21122ed2-d3c4-451a-aa44-ed314d6adc8e"
+    "analytics": "21122ed2-d3c4-451a-aa44-ed314d6adc8e",
+    "schematicCollections": [
+      "angular-eslint"
+    ]
   },
   "newProjectRoot": ".",
   "projects": {
@@ -44,7 +47,9 @@
               "."
             ],
             "port": 6006,
-            "styles": [  "src/lib/styles/styles.scss" ]
+            "styles": [
+              "src/lib/styles/styles.scss"
+            ]
           }
         },
         "build-storybook": {
@@ -60,6 +65,15 @@
               "."
             ],
             "outputDir": "storybook-static"
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }

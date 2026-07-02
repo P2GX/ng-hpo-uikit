@@ -1,0 +1,78 @@
+<div class="workspace-layout">
+  
+  <div class="document-preview-pane">
+    <div class="annotation-text-wrapper">
+      @for (sentence of localSentences(); track sentence.start) {
+        <p class="sentence-flow-line">
+          @for (seg of sentence.segments; track $index) {
+            @if (seg.kind === 'text') {
+              <span class="plain-text">{{ seg.text }}</span>
+            } @else if (seg.kind === 'hit') {
+              <span class="highlight-token" [class.is-excluded]="!seg.hit.is_observed">
+                {{ seg.text }}
+              </span>
+            }
+          }
+        </p>
+      }
+    </div>
+  </div>
+
+  <div class="table-viewport">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th class="col-id">Ontology ID</th>
+          <th class="col-label">Phenotypic Term Label</th>
+          <th class="col-status">Status</th>
+          <th class="col-onset">Onset</th>
+          <th class="col-modifiers">Clinical Modifiers</th>
+          <th class="col-actions">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (rowItem of uniqueTableAnnotations(); track rowItem.termId) {
+          <tr 
+            lib-hpo-polisher-row
+            [annotation]="rowItem"
+            [hierarchy]="hierarchyCache()[rowItem.termId] || null"
+            [availableOnsets]="availableOnsets()"
+            [availableModifiers]="availableModifiers()"
+            (termClick)="handleHierarchyRequest(rowItem)"
+            (updated)="handleBadgeUpdated($event, rowItem.termId)"
+            (createOnsetRequested)="createOnsetRequested.emit(rowItem)"
+            (deleteRequested)="deleteAnnotationEverywhere(rowItem.termId)">
+          </tr>
+        } @empty {
+          <tr>
+            <td colspan="6" class="empty-table-state">
+              No clinical features currently parsed inside this annotation scope.
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="workspace-footer">
+    <div class="autocomplete-injection-box">
+      <ui-ontology-autocomplete
+        [inputString]="hpoInputString"
+        [searchProvider]="searchProvider()"
+        (selected)="handleAutocompleteSelection($event)">
+      </ui-ontology-autocomplete>
+      <button 
+        (click)="injectManualHpoToken()"
+        [disabled]="!selectedHpoMatch()"
+        class="btn-workspace-add">
+        <mat-icon>add</mat-icon> Inject Term
+      </button>
+    </div>
+    
+    <div class="action-btn-cluster">
+      <button class="btn-workspace-cancel" (click)="cancel.emit()">Discard</button>
+      <button class="btn-workspace-finish" (click)="saveAndFinish()">Commit Curation Changes</button>
+    </div>
+  </div>
+
+</div>

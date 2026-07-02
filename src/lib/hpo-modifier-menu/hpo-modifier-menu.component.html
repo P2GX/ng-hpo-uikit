@@ -4,7 +4,8 @@
   </div>
 
   <div class="modifier-options-list">
-    <label *ngFor="let option of availableModifiers()" class="modifier-option-item">
+  @for (option of availableModifiers(); track option.id) {
+    <label class="modifier-option-item">
       <input 
         type="checkbox"
         [checked]="isModifierSelected(option.id)"
@@ -13,7 +14,10 @@
       <span class="modifier-label">{{ option.label }}</span>
       <span class="modifier-id-badge">{{ option.id }}</span>
     </label>
-  </div>
+  } @empty {
+    <span class="no-modifiers-placeholder">No modifiers available.</span>
+  }
+</div>
 
   <div class="modifier-menu-footer">
     <button 

@@ -14,7 +14,7 @@ The HelpButtonComponent provides consistent, contextual interactive help micro-d
 * Selector
 
 ```typescript
-<hpo-ui-help-button></hpo-ui-help-button>
+<lib-help-button></lib-help-button>
 ```
 
 ### Inputs
@@ -34,7 +34,7 @@ The HelpButtonComponent provides consistent, contextual interactive help micro-d
 For a simple structural notification block with raw text instructions:
 
 ```html
-<ui-help-button 
+<lib-help-button 
   title="Phenotype Matching" 
   [lines]="['Select a valid HPO term to begin analysis.', 'Matches require an active network hook.']" />
 ```
@@ -44,7 +44,7 @@ For a simple structural notification block with raw text instructions:
 For complex clinical curation notes requiring hyperlinks and text emphasis:
 
 ```html
-<ui-help-button 
+<lib-help-button 
   title="ORCID Authentication" 
   [lines]="[
     'An <strong>ORCID iD</strong> ensures correct author curation attribution.',

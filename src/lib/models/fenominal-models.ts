@@ -15,18 +15,32 @@ export interface FenominalSentence {
   segments: FenominalSegment[];
 }
 
-/** * UI Wrapper to extend the backend Hit model with local UI states or clinical modifiers
- */
-export interface UiHitWrapper {
-  rawHit: FenominalHit;
-  /** UI state tracking */
+export interface UiFenominalHit {
+  // Unique local ID so you can track this specific hit across drag/drop/delete operations
+  id: string; 
+  termId: string;
+  label: string;
+  span: { start: number; end: number };
+  
+  // Interactive UI properties
   isDragging?: boolean;
   isSelected?: boolean;
-  /** Clinical modifiers that can be toggled by the user or refined later */
-  modifiers?: {
+  
+  // Modifiers
+  modifiers: {
     severity?: string;
     onset?: string;
     excluded: boolean;
     modifiers: string[];
   };
+}
+
+export type UiFenominalSegment = 
+  | { kind: 'text'; text: string; span: { start: number; end: number } }
+  | { kind: 'hit'; text: string; hit: UiFenominalHit };
+
+export interface UiFenominalSentence {
+  start: number;
+  original_text: string;
+  segments: UiFenominalSegment[];
 }

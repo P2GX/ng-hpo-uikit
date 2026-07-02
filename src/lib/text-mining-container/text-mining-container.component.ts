@@ -1,9 +1,9 @@
 import { Component, input, output, booleanAttribute, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FenominalSentence, UiHitWrapper, FenominalHit, FenominalSegment } from '../models/fenominal-models';
+import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fenominal-models';
 
 @Component({
-  selector: 'hpo-text-mining-container',
+  selector: 'lib-text-mining-container',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './text-mining-container.component.html',
@@ -81,37 +81,10 @@ export class TextMiningContainerComponent {
     this.hitUpdated.emit({ action: 'SPAN_POSITION_SHIFTED', sentence });
   }
 
-  protected getWrapper(hit: any): UiHitWrapper {
-    return {
-      rawHit: hit,
-      modifiers: { excluded: !hit.is_observed, modifiers: [] }
-    };
+
+  protected getTooltipText(hit: FenominalHit): string {
+    return `ID: ${hit.term_id}\nSpan: [${hit.span.start}, ${hit.span.end}]`;
   }
 
-protected getTooltipText(hit: FenominalHit): string {
-  const wrapper = this.getWrapper(hit);
-  const lines: string[] = [
-    `Term: ${hit.label}`,
-    `ID: ${hit.term_id}`,
-    `Span: [${hit.span.start}, ${hit.span.end}]`,
-    `Status: ${hit.is_observed ? 'Observed' : 'Excluded'}`
-  ];
-
-  // Append clinical modifiers if your wrapper has them populated
-  if (wrapper?.modifiers) {
-    const mods = wrapper.modifiers;
-    if (mods.severity) lines.push(`Severity: ${mods.severity}`);
-    if (mods.onset) lines.push(`Onset: ${mods.onset}`);
-    if (mods.modifiers && mods.modifiers.length > 0) {
-      lines.push(`Modifiers: ${mods.modifiers.join(', ')}`);
-    }
-  }
-
-  return lines.join('\n');
-}
-
-  private getHitUniqueKey(hit: FenominalHit): string {
-    return `${hit.term_id}-${hit.span.start}-${hit.span.end}`;
-  }
 
 }

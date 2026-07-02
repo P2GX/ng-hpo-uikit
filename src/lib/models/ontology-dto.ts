@@ -32,14 +32,3 @@ export interface OntologyMatch {
 }
 
 
-/** We use this scheme to transport fenominal hits from the backend to frontend and back again */
-export interface TextAnnotationDto {
-    isFenominalHit: boolean,
-    termId: string,
-    label: string,
-    start: number,
-    end: number,
-    isObserved: boolean,
-    originalText: string,
-    onsetString: string,
-}

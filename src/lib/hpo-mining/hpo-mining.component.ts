@@ -12,7 +12,7 @@ import { FenominalSentence } from '../models/fenominal-models';
 })
 export class HpoMiningComponent {
   pastedText = '';
-  isMining = signal<boolean>(false); // Local loader feedback state
+  isMining = signal<boolean>(false); 
 
   
   success = output<FenominalSentence[]>();
