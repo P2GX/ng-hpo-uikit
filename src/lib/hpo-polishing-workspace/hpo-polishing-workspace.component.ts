@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 
-import { FenominalSentence, FenominalHit } from '../models/fenominal-models';
+import { FenominalSentence, FenominalHit, UiFenominalHit, ui_from_fenominal } from '../models/fenominal-models';
 import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
@@ -52,29 +52,36 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
 
  // Computed state to extract unique table annotations dynamically from sentence arrays
   protected uniqueTableAnnotations = computed(() => {
-      const uniqueMap = new Map<string, PolishedHpoAnnotation>();
-      
-      for (const sentence of this.localSentences()) {
-        for (const segment of sentence.segments) {
-          if (segment.kind === 'hit') {
-            const hit = segment.hit;
-            // Intersection type lets TS know this runtime object might carry UI modifiers
-            const uiHit = hit as FenominalHit & { clinical_modifiers?: { onset?: string; modifiers?: string[] } };
-            
-            if (!uniqueMap.has(uiHit.term_id)) {
-              uniqueMap.set(uiHit.term_id, {
-                termId: uiHit.term_id,
-                label: uiHit.label,
-                isObserved: uiHit.is_observed ?? true,
-                onsetString: uiHit.clinical_modifiers?.onset,
-                modifiers: uiHit.clinical_modifiers?.modifiers || []
-              });
-            }
-          }
+  const uniqueMap = new Map<string, PolishedHpoAnnotation>();
+  
+  for (const sentence of this.localSentences()) {
+    for (const segment of sentence.segments) {
+      if (segment.kind === 'hit') {
+        const hit = segment.hit;
+        
+        // Fallback if segment.hit is missing
+        if (!hit) continue;
+
+        // If you haven't mapped the data yet in onTextMiningSuccess, map it here
+        // Note: Using a fixed/stable seed or fallback instead of a fresh randomUUID here is highly recommended
+        const hit_id = (hit as any).id || 'stable-fallback'; 
+        const uiHit: UiFenominalHit = ui_from_fenominal(hit, hit_id);
+        
+        if (!uniqueMap.has(uiHit.termId)) {
+          uniqueMap.set(uiHit.termId, {
+            termId: uiHit.termId,
+            label: uiHit.label,
+            // Correctly access properties nested inside the modifiers object
+            isObserved: !uiHit.excluded,
+            onsetString: uiHit.onset,
+            modifiers: uiHit.modifiers || []
+          });
         }
       }
-      return Array.from(uniqueMap.values());
-    });
+    }
+  }
+  return Array.from(uniqueMap.values());
+});
 
     /** Emits when a badge is moved, passing the target element context and 
      * the text window string to analyze */

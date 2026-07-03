@@ -25,14 +25,27 @@ export interface UiFenominalHit {
   // Interactive UI properties
   isDragging?: boolean;
   isSelected?: boolean;
+  severity?: string;
+  onset?: string;
+  excluded: boolean;
+  modifiers: string[];
   
-  // Modifiers
-  modifiers: {
-    severity?: string;
-    onset?: string;
-    excluded: boolean;
-    modifiers: string[];
+}
+
+export function ui_from_fenominal(hit: FenominalHit, id: string): UiFenominalHit {
+  const ui_hit: UiFenominalHit = {
+    id: id,
+    termId: hit.term_id,
+    label: hit.label,
+    span: hit.span,
+    modifiers: {
+      severity: undefined,
+      onset: undefined,
+      excluded: false,
+      modifiers: []
+    }
   };
+  return ui_hit;
 }
 
 export type UiFenominalSegment = 
