@@ -84,7 +84,7 @@ export class TextMiningContainerComponent {
 
 
   protected getTooltipText(hit: FenominalHit): string {
-    return `ID: ${hit.term_id}\nSpan: [${hit.span.start}, ${hit.span.end}]`;
+    return `ID: ${hit.termId}\nSpan: [${hit.span.start}, ${hit.span.end}]`;
   }
 
 

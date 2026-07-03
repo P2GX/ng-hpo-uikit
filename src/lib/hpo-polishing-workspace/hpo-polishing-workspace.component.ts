@@ -100,7 +100,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
       sentences.map(s => ({
         ...s,
         segments: s.segments.map(seg => {
-          if (seg.kind === 'hit' && seg.hit.term_id === originalTermId) {
+          if (seg.kind === 'hit' && seg.hit.termId === originalTermId) {
             // Convert it to a temporary placeholder asset or plain text while waiting
             return {
               kind: 'text',
@@ -145,7 +145,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
       sentences.map(s => ({
         ...s,
         segments: s.segments.map(seg => {
-          if (seg.kind === 'hit' && seg.hit.term_id === originalTermId) {
+          if (seg.kind === 'hit' && seg.hit.termId === originalTermId) {
             return {
               ...seg,
               text: updatedRow.label,
@@ -171,7 +171,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
     this.localSentences.update(sentences =>
       sentences.map(s => ({
         ...s,
-        segments: s.segments.filter(seg => seg.kind !== 'hit' || seg.hit.term_id !== termId)
+        segments: s.segments.filter(seg => seg.kind !== 'hit' || seg.hit.termId !== termId)
       }))
     );
   }
@@ -226,7 +226,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
       ...list,
       {
         start: Date.now(),
-        original_text: match.label,
+        originalText: match.label,
         segments: [{ kind: 'hit', text: match.label, hit: newHit }]
       }
     ]);

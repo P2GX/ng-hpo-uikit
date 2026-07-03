@@ -3,15 +3,15 @@ export type FenominalSegment =
   | { kind: 'text'; text: string; span: { start: number; end: number } };
 
 export interface FenominalHit {
-  term_id: string;
+  termId: string;
   label: string;
   span: { start: number; end: number };
-  is_observed: boolean;
+  isObserved: boolean;
 }
 
 export interface FenominalSentence {
   start: number;
-  original_text: string;
+  originalText: string;
   segments: FenominalSegment[];
 }
 
@@ -35,7 +35,7 @@ export interface UiFenominalHit {
 export function ui_from_fenominal(hit: FenominalHit, id: string): UiFenominalHit {
   const ui_hit: UiFenominalHit = {
     id: id,
-    termId: hit.term_id,
+    termId: hit.termId,
     label: hit.label,
     span: hit.span,
     severity: undefined,
@@ -52,6 +52,6 @@ export type UiFenominalSegment =
 
 export interface UiFenominalSentence {
   start: number;
-  original_text: string;
+  originalText: string;
   segments: UiFenominalSegment[];
 }

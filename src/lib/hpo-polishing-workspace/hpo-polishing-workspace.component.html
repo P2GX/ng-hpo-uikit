@@ -8,7 +8,7 @@
             @if (seg.kind === 'text') {
               <span class="plain-text">{{ seg.text }}</span>
             } @else if (seg.kind === 'hit') {
-              <span class="highlight-token" [class.is-excluded]="!seg.hit.is_observed">
+              <span class="highlight-token" [class.is-excluded]="!seg.hit.excluded">
                 {{ seg.text }}
               </span>
             }
