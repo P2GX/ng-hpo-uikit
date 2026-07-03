@@ -50,7 +50,7 @@ Clinicians can look up non-extracted terms using an inline search box. Injecting
  * Orchestrates document layout text visualization alongside interactive HPO concept metadata tuning tables.
  */
 @Component({
-  selector: 'lib-hpo-polishing-workspace',
+  selector: 'hpo-polishing-workspace',
   templateUrl: './hpo-polishing-workspace.component.html',
   styleUrls: ['./hpo-polishing-workspace.component.scss']
 })

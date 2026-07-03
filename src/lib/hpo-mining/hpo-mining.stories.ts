@@ -37,12 +37,12 @@ export const InteractiveMiningSimulation: Story = {
       }
     },
     template: `
-      <lib-hpo-mining 
+      <hpo-mining-workspace
         [pastedText]="pastedText"
         (miningRequested)="onMiningRequested($event)"
         (success)="success($event)"
         (cancel)="cancel()">
-      </lib-hpo-mining>
+      </hpo-mining-workspace>
     `
   })
 };

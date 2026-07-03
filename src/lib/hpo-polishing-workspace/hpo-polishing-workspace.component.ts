@@ -17,7 +17,7 @@ export interface ParentChildDto {
 }
 
 @Component({
-  selector: 'lib-hpo-polishing-workspace',
+  selector: 'hpo-polishing-workspace',
   standalone: true,
   imports: [
     CommonModule, 

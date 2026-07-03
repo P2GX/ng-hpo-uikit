@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { FenominalSentence } from '../models/fenominal-models';
 
 @Component({
-  selector: 'lib-hpo-mining',
+  selector: 'hpo-mining-workspace',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './hpo-mining.component.html',
@@ -13,7 +13,7 @@ import { FenominalSentence } from '../models/fenominal-models';
 export class HpoMiningComponent {
   pastedText = '';
   isMining = signal<boolean>(false); 
-
+  
   
   success = output<FenominalSentence[]>();
   error = output<string>();

@@ -8,7 +8,7 @@ export interface ModifierOption {
 }
 
 @Component({
-  selector: 'lib-hpo-modifier-menu',
+  selector: 'hpo-modifier-menu',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './hpo-modifier-menu.component.html',
