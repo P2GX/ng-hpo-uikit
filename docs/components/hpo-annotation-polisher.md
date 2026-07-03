@@ -79,7 +79,7 @@ To embed the polisher row component inside a standard tabular layout using the n
     <tbody>
       @for (item of annotations(); track item.termId; let idx = $index) {
         <tr 
-          lib-hpo-polisher-row
+          hpo-polisher-row
           [annotation]="item"
           [availableOnsets]="ageTerms()"
           [availableModifiers]="modifierTerms()"

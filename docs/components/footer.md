@@ -17,7 +17,7 @@ The `FooterComponent` provides a unified, responsive structural footer for layou
 import { Component, input, output } from '@angular/core';
 
 @Component({
-  selector: 'lib-shared-footer',
+  selector: 'hpo-shared-footer',
   standalone: true,
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
@@ -130,12 +130,12 @@ export class AppComponent {
   <router-outlet></router-outlet>
 </main>
 
-<lib-shared-footer
+<hpo-shared-footer
   appName="Phenoboard"
   appVersion="1.4.0"
   gitHubIssuesUrl="[https://github.com/P2GX/phenoboard/issues/new](https://github.com/P2GX/phenoboard/issues/new)"
   (helpRequested)="handleHelpNavigation()"
-></lib-shared-footer>
+></hpo-shared-footer>
 ```
 
 ## API Reference Matrix

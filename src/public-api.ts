@@ -17,6 +17,7 @@ export * from './lib/orcid-dialog/orcid-dialog';
 export * from './lib/phenopacket-loader/phenopacket-loader.component';
 export * from './lib/models/fenominal-models';
 export * from './lib/models/ontology-dto';
+export * from './lib/text-mining-container/text-mining-container.component';
 
 
 /* services */

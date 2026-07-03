@@ -33,7 +33,7 @@
       <tbody>
         @for (rowItem of uniqueTableAnnotations(); track rowItem.termId) {
           <tr 
-            lib-hpo-polisher-row
+            hpo-polisher-row
             [annotation]="rowItem"
             [hierarchy]="hierarchyCache()[rowItem.termId] || null"
             [availableOnsets]="availableOnsets()"
@@ -56,11 +56,11 @@
 
   <div class="workspace-footer">
     <div class="autocomplete-injection-box">
-      <ui-ontology-autocomplete
+      <hpo-ontology-autocomplete
         [inputString]="hpoInputString"
         [searchProvider]="searchProvider()"
         (selected)="handleAutocompleteSelection($event)">
-      </ui-ontology-autocomplete>
+      </hpo-ontology-autocomplete>
       <button 
         (click)="injectManualHpoToken()"
         [disabled]="!selectedHpoMatch()"

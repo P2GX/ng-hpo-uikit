@@ -11,7 +11,7 @@ export interface OrcidDialogData {
 }
 
 @Component({
-  selector: 'lib-orcid-dialog',
+  selector: 'hpo-orcid-dialog',
   standalone: true,
   imports: [
     CommonModule, 

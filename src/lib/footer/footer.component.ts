@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
-  selector: 'lib-shared-footer',
+  selector: 'hpo-shared-footer',
   standalone: true,
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'

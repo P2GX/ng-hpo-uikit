@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `lib-text-mining-container` component functions as a pure, presentation-layer text annotation interface. It accepts an array of FenominalSentence structures and captures user span adjustments via the hitUpdated output.
+The `hpo-text-mining-container` component functions as a pure, presentation-layer text annotation interface. It accepts an array of FenominalSentence structures and captures user span adjustments via the hitUpdated output.
 
 When a user alters a badge boundary or shifts its location, the parent container must intercept the event, modify the character index boundaries against the immutable state, slice the raw text string, and pass a new array back down into the component input.
 
@@ -87,9 +87,9 @@ export class TextMiningStateService {
 Once this service state machine is configured, your parent orchestrator stays clean and simply pipelines the data downwards, avoiding any dirty local component state inside your UI library:
 
 ```typescript
-<lib-text-mining-container
+<hpo-text-mining-container
   [sentences]="stateService.sentences()"
   (hitUpdated)="stateService.handleHitUpdate($event)">
-</lib-text-mining-container>
+</hpo-text-mining-container>
 ```
 

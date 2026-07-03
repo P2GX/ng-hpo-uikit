@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'lib-help-button', // Generalized for library usage
+  selector: 'hpo-help-button',
   standalone: true,
   imports: [MatMenuModule, MatButtonModule, MatIconModule],
   encapsulation: ViewEncapsulation.None, // Essential for styling mat-menu panelClasses globally

@@ -14,7 +14,7 @@
       "projectType": "library",
       "root": "",
       "sourceRoot": "src",
-      "prefix": "lib",
+      "prefix": "hpo",
       "architect": {
         "build": {
           "builder": "@angular/build:ng-packagr",

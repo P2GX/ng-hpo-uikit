@@ -27,7 +27,7 @@ module.exports = defineConfig([
         "error",
         {
           type: "element",
-          prefix: "lib",
+          prefix: "hpo",
           style: "kebab-case",
         },
       ],

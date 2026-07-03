@@ -1,4 +1,4 @@
-# Ontology Autocomplete (ui-ontology-autocomplete)
+# Ontology Autocomplete (hpo-ontology-autocomplete)
 The OntologyAutocompleteComponent is a highly reusable, accessible, and generic lookup widget designed to fetch and display search term selections from any medical or biological ontology schema (e.g., Human Phenotype Ontology, Gene Ontology).
 
 It decouples the UI layer from your application services by using a dynamic search provider input stream.
@@ -12,7 +12,7 @@ The widget expects all option suggestions to implement the [OntologyMatch](./mod
 Component Selector
 
 ```typescript
-<ui-ontology-autocomplete />
+<hpo-ontology-autocomplete />
 ```
 
 ### Inputs (Signal Inputs)
@@ -37,7 +37,7 @@ To integrate the component into your workspace layout view:
 
 ```html
 <div class="search-section-card">
-  <ui-ontology-autocomplete
+  <hpo-ontology-autocomplete
     placeholder="Search clinical phenotypes (e.g., Seizures)..."
     [searchProvider]="hpoSearcher"
     (selected)="onHpoTermSelected($event)" />

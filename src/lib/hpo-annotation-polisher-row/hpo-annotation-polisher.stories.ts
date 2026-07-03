@@ -19,7 +19,7 @@ const meta: Meta<HpoPolisherRowComponent> = {
           <div style="padding: 2rem;">
             <table style="width: 100%; border-collapse: collapse; background: white;">
               <tbody>
-                <tr lib-hpo-polisher-row 
+                <tr hpo-polisher-row 
                     [annotation]="annotation"
                     [hierarchy]="hierarchy"
                     [availableOnsets]="availableOnsets"

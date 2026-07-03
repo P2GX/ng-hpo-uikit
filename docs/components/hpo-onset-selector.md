@@ -37,12 +37,12 @@ import { HpoOnsetSelectorComponent } from 'your-library-path';
   standalone: true,
   imports: [HpoOnsetSelectorComponent],
   template: `
-    <lib-hpo-onset-selector
+    <hpo-hpo-onset-selector
       [(selectedOnset)]="currentOnset"
       [availableOnsets]="ageOptions()"
       (onsetChanged)="handleOnsetChange($event)"
       (requestNewOnset)="openNewOnsetModal()">
-    </lib-hpo-onset-selector>
+    </hpo-hpo-onset-selector>
   `
 })
 export class PhenotypeEditorComponent {

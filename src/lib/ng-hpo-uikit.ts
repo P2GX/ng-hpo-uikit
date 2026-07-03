@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'lib-ng-hpo-uikit',
+  selector: 'hpo-ng-hpo-uikit',
   imports: [],
-  template: ` <p>ng-hpo-uikit works!</p> `,
+  template: ` <p>hpo-ng-uikit works!</p> `,
   styles: ``,
 })
 export class NgHpoUikit {}

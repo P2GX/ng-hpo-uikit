@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'lib-hpo-onset-selector',
+  selector: 'hpo-hpo-onset-selector',
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './hpo-onset-selector.component.html',

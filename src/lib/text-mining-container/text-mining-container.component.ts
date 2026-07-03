@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fenominal-models';
 
 @Component({
-  selector: 'lib-text-mining-container',
+  selector: 'hpo-text-mining-container',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './text-mining-container.component.html',
@@ -12,14 +12,15 @@ import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fen
 export class TextMiningContainerComponent {
   sentences = input<FenominalSentence[]>([]);
   readOnly = input(false, { transform: booleanAttribute });
+  hitUpdated = output<{ action: string; sentence: FenominalSentence }>();
+
   displayMode = input<'default' | 'compact', string>('default', {
     transform: (v: string) => (v?.toLowerCase() as 'default' | 'compact') || 'default'
   });
 
   /* Show sentences above this index in collapsed mode to save space */
   protected collapsedUntilIndex = signal<number | null>(null);
-  hitUpdated = output<{ action: string; sentence: FenominalSentence }>();
-
+  
   protected collapseUpTo(sentenceStart: number): void {
     this.collapsedUntilIndex.set(sentenceStart);
   }

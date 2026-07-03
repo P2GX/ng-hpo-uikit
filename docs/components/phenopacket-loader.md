@@ -51,9 +51,9 @@ export class NewCaseWorkspaceComponent {
 <div class="workspace-panel">
   <h2>Import Case Data</h2>
   
-  <lib-phenopacket-loader 
+  <hpo-phenopacket-loader 
     [onIngest]="handleBackendIngest">
-  </lib-phenopacket-loader>
+  </hpo-phenopacket-loader>
 
   @if (statusMessage()) {
     <div class="feedback-toast" [class.loading]="isProcessing()">

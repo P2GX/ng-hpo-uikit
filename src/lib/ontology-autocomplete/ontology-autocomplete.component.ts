@@ -20,7 +20,7 @@ export function ontologyMatchValidator(): ValidatorFn {
 }
 
 @Component({
-  selector: 'ui-ontology-autocomplete',
+  selector: 'hpo-ontology-autocomplete',
   standalone: true,
   templateUrl: './ontology-autocomplete.component.html',
   styleUrl: './ontology-autocomplete.component.scss',

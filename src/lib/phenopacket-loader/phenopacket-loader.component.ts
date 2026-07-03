@@ -3,7 +3,7 @@ import { Component, signal, output, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'lib-phenopacket-loader',
+  selector: 'hpo-phenopacket-loader',
   standalone: true,
   imports: [CommonModule],
   styleUrls: ['./phenopacket-loader.component.scss'],

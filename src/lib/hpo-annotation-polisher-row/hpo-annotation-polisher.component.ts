@@ -12,7 +12,7 @@ import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "./hpo-a
 
 
 @Component({
-  selector: 'tr[lib-hpo-polisher-row]',
+  selector: 'tr[hpo-polisher-row]',
   standalone: true,
   imports: [
     CommonModule,
