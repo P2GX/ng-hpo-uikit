@@ -38,12 +38,10 @@ export function ui_from_fenominal(hit: FenominalHit, id: string): UiFenominalHit
     termId: hit.term_id,
     label: hit.label,
     span: hit.span,
-    modifiers: {
-      severity: undefined,
-      onset: undefined,
-      excluded: false,
-      modifiers: []
-    }
+    severity: undefined,
+    onset: undefined,
+    excluded: false,
+    modifiers: []
   };
   return ui_hit;
 }
