@@ -3,6 +3,7 @@
     "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true, /* do not type check external files inside node_modules */
     "moduleResolution": "bundler"
   },
   "exclude": [
