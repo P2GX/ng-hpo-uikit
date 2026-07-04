@@ -30,7 +30,7 @@ import { Observable } from 'rxjs';
   templateUrl: './hpo-polishing-workspace.component.html',
   styleUrls: ['./hpo-polishing-workspace.component.scss']
 })
-export class HpoPolishingWorkspaceComponent implements OnInit {
+export class HpoPolishingWorkspaceComponent {
   private notificationService = inject(NotificationService);
   
   sentences = input<FenominalSentence[]>([]);
@@ -80,7 +80,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
     }
     return Array.from(uniqueMap.values());
   });
-
+  private hasInitialized = false;
   constructor() {
     effect(() => {
       const update = this.hierarchyUpdate();
@@ -91,29 +91,32 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
         }));
       }
     });
+    effect(() => {
+       // convert from FenominalSentence to UiFenominalSentence
+      const rawSentences = this.sentences();
+      if (rawSentences && rawSentences.length > 0 && !this.hasInitialized) {
+      const uiSentences: UiFenominalSentence[] = rawSentences.map((s, sIdx) => ({
+        start: s.start,
+        originalText: s.originalText,
+        segments: s.segments.map((seg, segIdx) => {
+          if (seg.kind === 'hit') {
+            const trackingId = `hit-${sIdx}-${segIdx}-${seg.hit.termId}`;
+            return {
+              kind: 'hit',
+              text: seg.text,
+              hit: ui_from_fenominal(seg.hit, trackingId)
+            };
+          }
+          return seg;
+        })
+      }));
+      
+      this.localSentences.set(uiSentences);
+      this.hasInitialized = true;// Prevents subsequent internal mutations from being overwritten
+    }
+    });
   }
 
-  ngOnInit(): void {
-    // convert from FenominalSentence to UiFenominalSentence
-    const rawSentences = this.sentences();
-    const uiSentences: UiFenominalSentence[] = rawSentences.map((s,sIdx) => ({
-      start: s.start,
-      originalText: s.originalText,
-      segments: s.segments.map((seg, segIdx)=> {
-        if (seg.kind === 'hit') {
-          const trackingId = `hit-${sIdx}-${segIdx}-${seg.hit.termId}`;
-          return {
-            kind: 'hit',
-            text: seg.text,
-            hit: ui_from_fenominal(seg.hit, trackingId)
-          };
-        }
-        return seg;
-      })
-    }));
-    this.localSentences.set(uiSentences);
-    this.notificationService.showSuccess(`On init, we got ${this.localSentences().length} local sentences`)
-  }
 
 
   protected handleBadgeMoved(

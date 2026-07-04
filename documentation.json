@@ -27,23 +27,23 @@
                 "name": "Default",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
-            },
-            {
-                "name": "Default",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  args: { pastedText: '' }\n}"
+            },
+            {
+                "name": "Default",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
             },
             {
                 "name": "DefaultLayout",
@@ -78,7 +78,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    sentences: mockSentences, // Correctly accepts raw shapes; internal conversion happens inside ngOnInit\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    \n    // Actions accurately log events\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(), // Now registers PolishedHpoAnnotation[] tracking vectors\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (args.searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetRequested)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
             },
             {
                 "name": "EmptySelection",
@@ -139,12 +139,12 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<HpoPolisherRowComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolisherRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolisherRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+                "type": "Meta<HpoMiningComponent>",
+                "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
             },
             {
                 "name": "meta",
@@ -161,12 +161,12 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<HpoMiningComponent>",
-                "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                "type": "Meta<HpoPolisherRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolisherRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolisherRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -321,8 +321,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolisherRowComponent>",
-                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
+                "rawtype": "StoryObj<HpoMiningComponent>",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -347,8 +347,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoMiningComponent>",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "rawtype": "StoryObj<HpoPolisherRowComponent>",
+                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -447,41 +447,6 @@
                     "description": "<p>ReadOnly protection view</p>\n"
                 }
             ],
-            "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts": [
-                {
-                    "name": "Default",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
-                },
-                {
-                    "name": "EmptySelection",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: {\n    selectedOnset: undefined,\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Neonatal onset (HP:0003623)',\n    ],\n  },\n}"
-                },
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<HpoOnsetSelectorComponent>",
-                    "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
-                }
-            ],
             "src/lib/hpo-mining/hpo-mining.stories.ts": [
                 {
                     "name": "Default",
@@ -515,6 +480,41 @@
                     "deprecationMessage": "",
                     "type": "Meta<HpoMiningComponent>",
                     "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                }
+            ],
+            "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts": [
+                {
+                    "name": "Default",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
+                },
+                {
+                    "name": "EmptySelection",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    selectedOnset: undefined,\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Neonatal onset (HP:0003623)',\n    ],\n  },\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HpoOnsetSelectorComponent>",
+                    "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
                 }
             ],
             "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
@@ -595,7 +595,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {\n    sentences: mockSentences, // Correctly accepts raw shapes; internal conversion happens inside ngOnInit\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    \n    // Actions accurately log events\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(), // Now registers PolishedHpoAnnotation[] tracking vectors\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                    "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (args.searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetRequested)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
                 },
                 {
                     "name": "EmptyWorkspace",
@@ -705,14 +705,14 @@
         "groupedFunctions": {},
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
+            "src/lib/hpo-mining/hpo-mining.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolisherRowComponent>",
-                    "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
+                    "rawtype": "StoryObj<HpoMiningComponent>",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -735,14 +735,14 @@
                     "kind": 184
                 }
             ],
-            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+            "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoMiningComponent>",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "rawtype": "StoryObj<HpoPolisherRowComponent>",
+                    "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",

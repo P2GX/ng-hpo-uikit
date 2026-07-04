@@ -7,7 +7,7 @@
         <div class="compact-token-line">
           @for (segment of sentence.segments; track $index) {
             @if (segment.kind === 'hit') {
-              <span class="annotation-badge compact-token" [class.is-excluded]="getWrapper(segment.hit)?.modifiers?.excluded" [attr.title]="getTooltipText(segment.hit)">
+              <span class="annotation-badge compact-token" [class.is-excluded]="!segment.hit?.isObserved" [attr.title]="getTooltipText(segment.hit)">
                 <span class="annotated-text">{{ segment.text }}</span>
               </span>
             }
@@ -21,8 +21,8 @@
             } @else if (segment.kind === 'hit') {
               <span 
                 class="annotation-badge"
-                [class.is-excluded]="getWrapper(segment.hit)?.modifiers?.excluded"
-                [attr.data-term-id]="segment.hit.term_id"
+                [class.is-excluded]="!segment.hit?.isObserved"
+                [attr.data-term-id]="segment.hit.termId"
                 [attr.title]="getTooltipText(segment.hit)">
                 
                 <span class="annotated-text">{{ segment.text }}</span>
