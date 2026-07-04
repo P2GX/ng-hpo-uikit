@@ -51,6 +51,7 @@ type Story = StoryObj<HpoPolisherRowComponent>;
 // --- Mock Data States ---
 
 const mockHierarchy = {
+  currentTermId: 'HP:0020219', // Motor seizure 
   parents: [
     { termId: 'HP:0001250', label: 'Seizures' }
   ],
@@ -64,6 +65,14 @@ const mockOnsets = ['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Chi
 const mockModifiers = ['Severe', 'Mild', 'Episodic', 'Progressive'];
 
 // --- Stories ---
+
+/*
+export interface HierarchyMapItem {
+  currentTermId: string;
+  parents: HpoTermMinimal[];
+  children: HpoTermMinimal[];
+}
+  */
 
 export const DefaultObserved: Story = {
   args: {
@@ -88,7 +97,7 @@ export const ExcludedWithNoMetadata: Story = {
       isObserved: false,
       modifiers: []
     },
-    hierarchy: { parents: [], children: [] },
+    hierarchy: { currentTermId:'', parents: [], children: [] },
     availableOnsets: mockOnsets,
     availableModifiers: mockModifiers
   }

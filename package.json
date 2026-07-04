@@ -1,6 +1,6 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.2.10",
+  "version": "0.2.11",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -11,6 +11,7 @@
     "docs:preview": "vitepress preview docs",
     "storybook": "ng run ng-hpo-uikit:storybook",
     "build-storybook": "ng run ng-hpo-uikit:build-storybook",
+    "compodoc": "compodoc -p tsconfig.json -d dist/documentation -e json",
     "lint": "ng lint ng-hpo-uikit"
   },
   "peerDependencies": {
@@ -44,6 +45,7 @@
     "@storybook/addon-docs": "^10.4.6",
     "@storybook/addon-links": "^10.4.6",
     "@storybook/angular": "^10.4.6",
+    "@storybook/test": "^8.6.15",
     "@tauri-apps/plugin-opener": "^2.5.4",
     "@types/chai": "^5.2.3",
     "@types/react": "^19.2.17",

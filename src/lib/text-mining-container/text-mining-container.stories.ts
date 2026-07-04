@@ -6,7 +6,7 @@ import { FenominalSentence } from '../models/fenominal-models';
 const mockSentences: FenominalSentence[] = [
   {
     start: 0,
-    original_text: 'The patient presents with severe macrocephaly and recurrent seizures.',
+    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',
     segments: [
       { 
         kind: 'text', 
@@ -16,7 +16,7 @@ const mockSentences: FenominalSentence[] = [
       { 
         kind: 'hit', 
         text: 'macrocephaly', 
-        hit: { term_id: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, is_observed: true } 
+        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, isObserved: true } 
       },
       { 
         kind: 'text', 
@@ -26,7 +26,7 @@ const mockSentences: FenominalSentence[] = [
       { 
         kind: 'hit', 
         text: 'seizures', 
-        hit: { term_id: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, is_observed: true } 
+        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, isObserved: true } 
       },
       { 
         kind: 'text', 
@@ -37,7 +37,7 @@ const mockSentences: FenominalSentence[] = [
   },
   {
     start: 70,
-    original_text: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',
+    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',
     segments: [
       { 
         kind: 'text', 
@@ -47,7 +47,7 @@ const mockSentences: FenominalSentence[] = [
       { 
         kind: 'hit', 
         text: 'hypertrophic cardiomyopathy', 
-        hit: { term_id: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, is_observed: false } 
+        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, isObserved: false } 
       },
       { 
         kind: 'text', 

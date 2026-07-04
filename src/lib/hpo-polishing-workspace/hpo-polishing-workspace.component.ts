@@ -1,9 +1,15 @@
 import { Component, OnInit, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 import { MatIcon } from '@angular/material/icon';
 
-import { FenominalSentence, FenominalHit, UiFenominalHit, ui_from_fenominal } from '../models/fenominal-models';
+import { 
+  FenominalSentence, 
+  FenominalHit, 
+  UiFenominalSentence,
+  UiFenominalHit, 
+  ui_from_fenominal } from '../models/fenominal-models';
 import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
@@ -11,10 +17,6 @@ import { HpoPolisherRowComponent } from '../hpo-annotation-polisher-row/hpo-anno
 import { HierarchyMapItem, PolishedHpoAnnotation } from '../hpo-annotation-polisher-row/hpo-annotation-polisher.interface';
 import { Observable } from 'rxjs';
 
-export interface ParentChildDto {
-  parents: FenominalHit[];
-  children: FenominalHit[];
-}
 
 @Component({
   selector: 'hpo-polishing-workspace',
@@ -40,10 +42,16 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
   
   requestHierarchy = output<PolishedHpoAnnotation>();
   createOnsetRequested = output<PolishedHpoAnnotation>();
-  complete = output<FenominalSentence[]>();
+  complete = output<PolishedHpoAnnotation[]>();
   cancel = output<void>();
+  badgeMoved = output<{
+    originalTermId: string;
+    newTextWindow: string;
+    newSpan: { start: number; end: number };
+  }>();
 
-  protected localSentences = signal<FenominalSentence[]>([]);
+
+  protected localSentences = signal<UiFenominalSentence[]>([]);
 
   // Autocomplete variables
   protected hpoInputString = '';
@@ -51,45 +59,61 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
   searchProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();
 
  // Computed state to extract unique table annotations dynamically from sentence arrays
+ // TODO check if there are conflicting UiHits, e.g., observed/excluded
   protected uniqueTableAnnotations = computed(() => {
-  const uniqueMap = new Map<string, PolishedHpoAnnotation>();
-  
-  for (const sentence of this.localSentences()) {
-    for (const segment of sentence.segments) {
-      if (segment.kind === 'hit') {
-        const hit = segment.hit;
-        
-        // Fallback if segment.hit is missing
-        if (!hit) continue;
-
-        // If you haven't mapped the data yet in onTextMiningSuccess, map it here
-        // Note: Using a fixed/stable seed or fallback instead of a fresh randomUUID here is highly recommended
-        const hit_id = (hit as any).id || 'stable-fallback'; 
-        const uiHit: UiFenominalHit = ui_from_fenominal(hit, hit_id);
-        
-        if (!uniqueMap.has(uiHit.termId)) {
-          uniqueMap.set(uiHit.termId, {
-            termId: uiHit.termId,
-            label: uiHit.label,
-            // Correctly access properties nested inside the modifiers object
-            isObserved: !uiHit.excluded,
-            onsetString: uiHit.onset,
-            modifiers: uiHit.modifiers || []
-          });
+    const uniqueMap = new Map<string, PolishedHpoAnnotation>();
+    for (const sentence of this.localSentences()) {
+      for (const segment of sentence.segments) {
+        if (segment.kind === 'hit') {
+          const uiHit = segment.hit;
+          if (!uniqueMap.has(uiHit.termId)) {
+            uniqueMap.set(uiHit.termId, {
+              termId: uiHit.termId,
+              label: uiHit.label,
+              isObserved: !uiHit.excluded,
+              onsetString: uiHit.onset,
+              modifiers: uiHit.modifiers || []
+            });
+          }
         }
       }
     }
-  }
-  return Array.from(uniqueMap.values());
-});
+    return Array.from(uniqueMap.values());
+  });
 
-    /** Emits when a badge is moved, passing the target element context and 
-     * the text window string to analyze */
-  badgeMoved = output<{
-    originalTermId: string;
-    newTextWindow: string;
-    newSpan: { start: number; end: number };
-  }>();
+  constructor() {
+    effect(() => {
+      const update = this.hierarchyUpdate();
+      if (update) {
+        this.hierarchyCache.update(cache => ({ 
+          ...cache, 
+          [update.currentTermId]: update 
+        }));
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    // convert from FenominalSentence to UiFenominalSentence
+    const rawSentences = this.sentences();
+    const uiSentences: UiFenominalSentence[] = rawSentences.map((s,sIdx) => ({
+      start: s.start,
+      originalText: s.originalText,
+      segments: s.segments.map((seg, segIdx)=> {
+        if (seg.kind === 'hit') {
+          const trackingId = `hit-${sIdx}-${segIdx}-${seg.hit.termId}`;
+          return {
+            kind: 'hit',
+            text: seg.text,
+            hit: ui_from_fenominal(seg.hit, trackingId)
+          };
+        }
+        return seg;
+      })
+    }));
+    this.localSentences.set(uiSentences);
+  }
+
 
   protected handleBadgeMoved(
     originalTermId: string, 
@@ -101,7 +125,6 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
         ...s,
         segments: s.segments.map(seg => {
           if (seg.kind === 'hit' && seg.hit.termId === originalTermId) {
-            // Convert it to a temporary placeholder asset or plain text while waiting
             return {
               kind: 'text',
               text: textSnippet,
@@ -121,23 +144,6 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
     });
   }
 
-  constructor() {
-    // Intercept active async hierarchy updates dynamically using an active Reactive Effect context
-    effect(() => {
-      const update = this.hierarchyUpdate();
-      if (update) {
-        this.hierarchyCache.update(cache => ({ 
-          ...cache, 
-          [update.currentTermId]: update 
-        }));
-      }
-    });
-  }
-
-  ngOnInit(): void {
-    // Protect parent state context references via complete structural detachment
-    this.localSentences.set(JSON.parse(JSON.stringify(this.sentences())));
-  }
 
   /** This is called when the user moves a badge, which deletes the origal */
   protected handleBadgeUpdated(updatedRow: PolishedHpoAnnotation, originalTermId: string): void {
@@ -146,19 +152,18 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
         ...s,
         segments: s.segments.map(seg => {
           if (seg.kind === 'hit' && seg.hit.termId === originalTermId) {
+            const updatedHit: UiFenominalHit = {
+              ...seg.hit,
+              termId: updatedRow.termId,
+              label: updatedRow.label,
+              excluded: !updatedRow.isObserved,
+              onset: updatedRow.onsetString,
+              modifiers: updatedRow.modifiers || []
+            };
             return {
               ...seg,
               text: updatedRow.label,
-              hit: {
-                term_id: updatedRow.termId,
-                label: updatedRow.label,
-                is_observed: true, 
-                span: { ...seg.hit.span }, 
-                clinical_modifiers: {
-                  onset: undefined, 
-                  modifiers: []     
-                }
-              } as any 
+              hit: updatedHit
             };
           }
           return seg;
@@ -210,16 +215,15 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
     if (!match) return;
 
     // Build the hit structure matching how handleBadgeUpdated handles UI additions
-    const newHit = {
-      term_id: match.id,
+    const newUiHit: UiFenominalHit = {
+      id: `manual-${Date.now()}-${match.id}`,
+      termId: match.id,
       label: match.label,
-      is_observed: true,
+      excluded: false,
       span: { start: 0, end: match.label.length },
-      clinical_modifiers: {
-        onset: undefined,
-        modifiers: []
-      }
-    } as any; // Cast safely past your backend contract wrapper
+      modifiers:  []
+    };
+  
 
     // Append a synthetic sentence block to display the new manual inject token
     this.localSentences.update(list => [
@@ -227,7 +231,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
       {
         start: Date.now(),
         originalText: match.label,
-        segments: [{ kind: 'hit', text: match.label, hit: newHit }]
+        segments: [{ kind: 'hit', text: match.label, hit: newUiHit }]
       }
     ]);
 
@@ -237,6 +241,6 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
   }
 
   protected saveAndFinish(): void {
-    this.complete.emit(this.localSentences());
+    this.complete.emit(this.uniqueTableAnnotations());
   }
 }

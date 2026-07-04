@@ -27,23 +27,23 @@
                 "name": "Default",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  args: { pastedText: '' }\n}"
-            },
-            {
-                "name": "Default",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
+            },
+            {
+                "name": "Default",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: { pastedText: '' }\n}"
             },
             {
                 "name": "DefaultLayout",
@@ -70,6 +70,17 @@
                 "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      isObserved: true,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
             },
             {
+                "name": "DefaultWorkspace",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    sentences: mockSentences, // Correctly accepts raw shapes; internal conversion happens inside ngOnInit\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    \n    // Actions accurately log events\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(), // Now registers PolishedHpoAnnotation[] tracking vectors\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+            },
+            {
                 "name": "EmptySelection",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -81,6 +92,17 @@
                 "defaultValue": "{\n  args: {\n    selectedOnset: undefined,\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Neonatal onset (HP:0003623)',\n    ],\n  },\n}"
             },
             {
+                "name": "EmptyWorkspace",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    ...DefaultWorkspace.args,\n    sentences: [],\n  }\n}"
+            },
+            {
                 "name": "ExcludedWithNoMetadata",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -89,7 +111,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { currentTermId:'', parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
             },
             {
                 "name": "Gallery",
@@ -111,18 +133,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <lib-hpo-mining \n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </lib-hpo-mining>\n    `\n  })\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoMiningComponent>",
-                "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
             },
             {
                 "name": "meta",
@@ -139,23 +150,45 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<TextMiningContainerComponent>",
-                "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    displayMode: {\n      control: 'select',\n      options: ['default', 'compact'],\n      description: 'Changes layout rendering behavior of text blocks'\n    },\n    readOnly: {\n      control: 'boolean',\n      description: 'Toggles interaction utilities and drag indicators'\n    }\n  }\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<HpoOnsetSelectorComponent>",
                 "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoMiningComponent>",
+                "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoPolishingWorkspaceComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    searchProvider: {\n      table: { disable: true }\n    }\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<TextMiningContainerComponent>",
+                "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    displayMode: {\n      control: 'select',\n      options: ['default', 'compact'],\n      description: 'Changes layout rendering behavior of text blocks'\n    },\n    readOnly: {\n      control: 'boolean',\n      description: 'Toggles interaction utilities and drag indicators'\n    }\n  }\n}"
             },
             {
                 "name": "mockHierarchy",
@@ -166,7 +199,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "object",
-                "defaultValue": "{\n  parents: [\n    { termId: 'HP:0001250', label: 'Seizures' }\n  ],\n  children: [\n    { termId: 'HP:0002069', label: 'Generalized tonic-clonic seizures' },\n    { termId: 'HP:0002123', label: 'Myoclonic seizures' }\n  ]\n}"
+                "defaultValue": "{\n  currentTermId: 'HP:0020219', // Motor seizure \n  parents: [\n    { termId: 'HP:0001250', label: 'Seizures' }\n  ],\n  children: [\n    { termId: 'HP:0002069', label: 'Generalized tonic-clonic seizures' },\n    { termId: 'HP:0002123', label: 'Myoclonic seizures' }\n  ]\n}"
             },
             {
                 "name": "mockModifiers",
@@ -180,6 +213,17 @@
                 "defaultValue": "['Severe', 'Mild', 'Episodic', 'Progressive']"
             },
             {
+                "name": "mockModifiers",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "['Severe', 'Mild', 'Progressive', 'Recurrent', 'Intermittent']"
+            },
+            {
                 "name": "mockOnsets",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -191,6 +235,39 @@
                 "defaultValue": "['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Childhood onset']"
             },
             {
+                "name": "mockOnsets",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "[]",
+                "defaultValue": "['Congenital onset', 'Antenatal onset', 'Neonatal onset', 'Infantile onset']"
+            },
+            {
+                "name": "mockSearchProvider",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "unknown",
+                "defaultValue": "(query: string) => {\n  const mockDatabase: OntologyMatch[] = [\n    { id: 'HP:0001250', label: 'Seizure', matchedText: 'Epilepsy' },\n    { id: 'HP:0000256', label: 'Macrocephaly', matchedText: 'Macrocephaly' },\n    { id: 'HP:0001263', label: 'Global developmental delay', matchedText: 'Developmental delay' },\n    { id: 'HP:0002019', label: 'Hyperreflexia', matchedText: 'Increased reflexes' }\n  ];\n\n  const filtered = mockDatabase.filter(item =>\n    item.label.toLowerCase().includes(query.toLowerCase()) ||\n    item.id.toLowerCase().includes(query.toLowerCase()) ||\n    item.matchedText.toLowerCase().includes(query.toLowerCase())\n  );\n\n  return of(filtered).pipe(delay(200));\n}"
+            },
+            {
+                "name": "mockSentences",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "FenominalSentence[]",
+                "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          isObserved: true,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          isObserved: true,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          isObserved: false,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
+            },
+            {
                 "name": "mockSentences",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -199,7 +276,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "FenominalSentence[]",
-                "defaultValue": "[\n  {\n    start: 0,\n    original_text: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { term_id: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, is_observed: true } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { term_id: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, is_observed: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    original_text: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { term_id: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, is_observed: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
+                "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, isObserved: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
             },
             {
                 "name": "preview",
@@ -224,23 +301,21 @@
                 "defaultValue": "{\n  args: {\n    ...DefaultLayout.args,\n    readOnly: true\n  }\n}",
                 "rawdescription": "ReadOnly protection view",
                 "description": "<p>ReadOnly protection view</p>\n"
+            },
+            {
+                "name": "WithActiveHierarchyCache",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    ...DefaultWorkspace.args,\n    hierarchyUpdate: {\n      currentTermId: 'HP:0000256',\n      parents: [{ termId: 'HP:0000240', label: 'Abnormality of the skull shape' }],\n      children: [{ termId: 'HP:0000270', label: 'Frontal bossing' }]\n    } as any\n  }\n}"
             }
         ],
         "functions": [],
         "typealiases": [
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoMiningComponent>",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
             {
                 "name": "Story",
                 "ctype": "miscellaneous",
@@ -259,8 +334,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<TextMiningContainerComponent>",
-                "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
+                "rawtype": "StoryObj<HpoOnsetSelectorComponent>",
+                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -272,8 +347,34 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoOnsetSelectorComponent>",
-                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
+                "rawtype": "StoryObj<HpoMiningComponent>",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<TextMiningContainerComponent>",
+                "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -330,7 +431,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "FenominalSentence[]",
-                    "defaultValue": "[\n  {\n    start: 0,\n    original_text: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { term_id: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, is_observed: true } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { term_id: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, is_observed: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    original_text: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { term_id: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, is_observed: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
+                    "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, isObserved: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
                 },
                 {
                     "name": "ReadOnlyState",
@@ -344,41 +445,6 @@
                     "defaultValue": "{\n  args: {\n    ...DefaultLayout.args,\n    readOnly: true\n  }\n}",
                     "rawdescription": "ReadOnly protection view",
                     "description": "<p>ReadOnly protection view</p>\n"
-                }
-            ],
-            "src/lib/hpo-mining/hpo-mining.stories.ts": [
-                {
-                    "name": "Default",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: { pastedText: '' }\n}"
-                },
-                {
-                    "name": "InteractiveMiningSimulation",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <lib-hpo-mining \n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </lib-hpo-mining>\n    `\n  })\n}"
-                },
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<HpoMiningComponent>",
-                    "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
                 }
             ],
             "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts": [
@@ -416,6 +482,41 @@
                     "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
                 }
             ],
+            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+                {
+                    "name": "Default",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: { pastedText: '' }\n}"
+                },
+                {
+                    "name": "InteractiveMiningSimulation",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HpoMiningComponent>",
+                    "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                }
+            ],
             "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "DefaultObserved",
@@ -437,7 +538,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { currentTermId:'', parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
                 },
                 {
                     "name": "meta",
@@ -459,7 +560,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "object",
-                    "defaultValue": "{\n  parents: [\n    { termId: 'HP:0001250', label: 'Seizures' }\n  ],\n  children: [\n    { termId: 'HP:0002069', label: 'Generalized tonic-clonic seizures' },\n    { termId: 'HP:0002123', label: 'Myoclonic seizures' }\n  ]\n}"
+                    "defaultValue": "{\n  currentTermId: 'HP:0020219', // Motor seizure \n  parents: [\n    { termId: 'HP:0001250', label: 'Seizures' }\n  ],\n  children: [\n    { termId: 'HP:0002069', label: 'Generalized tonic-clonic seizures' },\n    { termId: 'HP:0002123', label: 'Myoclonic seizures' }\n  ]\n}"
                 },
                 {
                     "name": "mockModifiers",
@@ -482,6 +583,96 @@
                     "deprecationMessage": "",
                     "type": "[]",
                     "defaultValue": "['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Childhood onset']"
+                }
+            ],
+            "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
+                {
+                    "name": "DefaultWorkspace",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    sentences: mockSentences, // Correctly accepts raw shapes; internal conversion happens inside ngOnInit\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    \n    // Actions accurately log events\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(), // Now registers PolishedHpoAnnotation[] tracking vectors\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                },
+                {
+                    "name": "EmptyWorkspace",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    ...DefaultWorkspace.args,\n    sentences: [],\n  }\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HpoPolishingWorkspaceComponent>",
+                    "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    searchProvider: {\n      table: { disable: true }\n    }\n  }\n}"
+                },
+                {
+                    "name": "mockModifiers",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "['Severe', 'Mild', 'Progressive', 'Recurrent', 'Intermittent']"
+                },
+                {
+                    "name": "mockOnsets",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "[]",
+                    "defaultValue": "['Congenital onset', 'Antenatal onset', 'Neonatal onset', 'Infantile onset']"
+                },
+                {
+                    "name": "mockSearchProvider",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "unknown",
+                    "defaultValue": "(query: string) => {\n  const mockDatabase: OntologyMatch[] = [\n    { id: 'HP:0001250', label: 'Seizure', matchedText: 'Epilepsy' },\n    { id: 'HP:0000256', label: 'Macrocephaly', matchedText: 'Macrocephaly' },\n    { id: 'HP:0001263', label: 'Global developmental delay', matchedText: 'Developmental delay' },\n    { id: 'HP:0002019', label: 'Hyperreflexia', matchedText: 'Increased reflexes' }\n  ];\n\n  const filtered = mockDatabase.filter(item =>\n    item.label.toLowerCase().includes(query.toLowerCase()) ||\n    item.id.toLowerCase().includes(query.toLowerCase()) ||\n    item.matchedText.toLowerCase().includes(query.toLowerCase())\n  );\n\n  return of(filtered).pipe(delay(200));\n}"
+                },
+                {
+                    "name": "mockSentences",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "FenominalSentence[]",
+                    "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          isObserved: true,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          isObserved: true,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          isObserved: false,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
+                },
+                {
+                    "name": "WithActiveHierarchyCache",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    ...DefaultWorkspace.args,\n    hierarchyUpdate: {\n      currentTermId: 'HP:0000256',\n      parents: [{ termId: 'HP:0000240', label: 'Abnormality of the skull shape' }],\n      children: [{ termId: 'HP:0000270', label: 'Frontal bossing' }]\n    } as any\n  }\n}"
                 }
             ],
             "src/lib/styles/button.stories.ts": [
@@ -514,21 +705,6 @@
         "groupedFunctions": {},
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-mining/hpo-mining.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoMiningComponent>",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
             "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
@@ -537,21 +713,6 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoPolisherRowComponent>",
                     "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
-            "src/lib/text-mining-container/text-mining-container.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<TextMiningContainerComponent>",
-                    "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -573,6 +734,51 @@
                     "description": "",
                     "kind": 184
                 }
+            ],
+            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoMiningComponent>",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/lib/text-mining-container/text-mining-container.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<TextMiningContainerComponent>",
+                    "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
             ]
         }
     },
@@ -582,7 +788,7 @@
         "children": []
     },
     "coverage": {
-        "count": 13,
+        "count": 9,
         "status": "low",
         "files": [
             {
@@ -737,6 +943,96 @@
             },
             {
                 "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "DefaultWorkspace",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "EmptyWorkspace",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockModifiers",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockOnsets",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockSearchProvider",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "mockSentences",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "WithActiveHierarchyCache",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "type": "type alias",
                 "linktype": "miscellaneous",
                 "linksubtype": "typealias",
