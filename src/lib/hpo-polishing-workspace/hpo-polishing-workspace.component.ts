@@ -112,6 +112,7 @@ export class HpoPolishingWorkspaceComponent implements OnInit {
       })
     }));
     this.localSentences.set(uiSentences);
+    this.notificationService.showSuccess(`On init, we got ${this.localSentences().length} local sentences`)
   }
 
 

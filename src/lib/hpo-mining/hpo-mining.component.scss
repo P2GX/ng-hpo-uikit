@@ -52,6 +52,30 @@
 
 .actions-footer {
   display: flex;
-  align-items: center; // Keeps the buttons vertically aligned
-  gap: 4px;            // Perfectly forces 4px of horizontal space between them
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.btn-cluster {
+  display: flex;
+  gap: 8px;
+}
+
+.example-text-link {
+  font-size: 0.85rem;
+  color: #6c757d;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.example-text-link:hover {
+  color: #0d6efd;
+}
+
+.example-text-link.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  text-decoration: none;
 }

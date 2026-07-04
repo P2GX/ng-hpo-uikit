@@ -48,6 +48,10 @@ export class HpoMiningComponent {
     });
   }
 
+  loadExampleText(): void {
+    this.pastedText = `The patient presents with severe macrocephaly and global developmental delay. There is no history of seizures.`;
+  }
+
   onCancel(): void {
     this.cancel.emit();
   }
