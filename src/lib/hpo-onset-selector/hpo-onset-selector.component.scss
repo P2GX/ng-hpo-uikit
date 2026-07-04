@@ -1,0 +1,74 @@
+.onset-select-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px; /* Adjust or remove depending on layout needs */
+  font-family: inherit;
+}
+
+.onset-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* Matches your old gap-2 setup */
+}
+
+.onset-select {
+  flex-grow: 1;
+  height: 40px; /* Clean, slightly dense height matching modern fields */
+  padding: 0 0.75rem;
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: none; /* Removes default native arrow for styling freedom if desired */
+  
+  /* Standard native dropdown arrow fallback styling */
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3商务%3Cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3E%3C/svg%3E");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25rem;
+  padding-right: 2rem;
+
+  &:focus {
+    outline: none;
+    border-color: #2563eb; /* Matches old vibrant highlight blue */
+    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  }
+
+  &:disabled {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+}
+
+.btn-add-onset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 1rem;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+  background-color: #f3f4f6; /* Soft tag gray */
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #2563eb; /* Transition to high-contrast blue */
+    color: #fff;
+    border-color: #2563eb;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

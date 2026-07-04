@@ -117,7 +117,7 @@ export const DefaultWorkspace: Story = {
           [availableModifiers]="availableModifiers"
           [searchProvider]="searchProvider"
           (requestHierarchy)="requestHierarchy($event)"
-          (createOnsetRequested)="createOnsetRequested($event)"
+          (createOnsetProvider)="createOnsetRequested($event)"
           (complete)="complete($event)"
           (cancel)="cancel()"
           (badgeMoved)="badgeMoved($event)">
@@ -131,7 +131,7 @@ export const DefaultWorkspace: Story = {
     availableModifiers: mockModifiers,
     searchProvider: mockSearchProvider,
     hierarchyProvider: fn(),
-    createOnsetRequested: fn(),
+    createOnsetProvider: fn(),
     complete: fn(),
     cancel: fn(),
     badgeMoved: fn()
