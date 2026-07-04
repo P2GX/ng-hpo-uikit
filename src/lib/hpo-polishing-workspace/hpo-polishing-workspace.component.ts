@@ -1,7 +1,7 @@
-import { Component, OnInit, computed, effect, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { of } from 'rxjs';
+
 import { MatIcon } from '@angular/material/icon';
 
 import { 
@@ -37,10 +37,8 @@ export class HpoPolishingWorkspaceComponent {
   sentences = input<FenominalSentence[]>([]);
   availableOnsets = input<string[]>([]);
   availableModifiers = input<string[]>([]);
-
-  protected hierarchyCache = signal<Record<string, HierarchyMapItem>>({});
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
-  requestHierarchy = output<PolishedHpoAnnotation>();
+  
   createOnsetRequested = output<PolishedHpoAnnotation>();
   complete = output<PolishedHpoAnnotation[]>();
   cancel = output<void>();
@@ -51,6 +49,7 @@ export class HpoPolishingWorkspaceComponent {
   }>();
 
 
+  protected hierarchyCache = signal<Record<string, HierarchyMapItem>>({});
   protected localSentences = signal<UiFenominalSentence[]>([]);
 
   // Autocomplete variables

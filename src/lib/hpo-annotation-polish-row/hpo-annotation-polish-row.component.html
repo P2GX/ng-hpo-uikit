@@ -6,7 +6,7 @@
 
 <td class="label-cell">
     <div class="dropdown-wrapper">
-    <span (click)="toggleHierarchyMenu()" class="dropdown-trigger">
+    <span (click)="toggleHierarchyMenu(); termClick.emit(annotation().termId)" class="dropdown-trigger">
         {{ annotation().label }} <span class="caret">▼</span>
     </span>
 

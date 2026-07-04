@@ -130,7 +130,7 @@ export const DefaultWorkspace: Story = {
     availableOnsets: mockOnsets,
     availableModifiers: mockModifiers,
     searchProvider: mockSearchProvider,
-    requestHierarchy: fn(),
+    hierarchyProvider: fn(),
     createOnsetRequested: fn(),
     complete: fn(),
     cancel: fn(),
@@ -142,16 +142,5 @@ export const EmptyWorkspace: Story = {
   args: {
     ...DefaultWorkspace.args,
     sentences: [],
-  }
-};
-
-export const WithActiveHierarchyCache: Story = {
-  args: {
-    ...DefaultWorkspace.args,
-    hierarchyUpdate: {
-      currentTermId: 'HP:0000256',
-      parents: [{ termId: 'HP:0000240', label: 'Abnormality of the skull shape' }],
-      children: [{ termId: 'HP:0000270', label: 'Frontal bossing' }]
-    } as any
   }
 };
