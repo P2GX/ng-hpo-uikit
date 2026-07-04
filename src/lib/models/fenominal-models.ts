@@ -1,14 +1,23 @@
-export type FenominalSegment = 
-  | { kind: 'hit'; text: string; hit: FenominalHit }
-  | { kind: 'text'; text: string; span: { start: number; end: number } };
+/** Mirrors Rust's `std::ops::Range<usize>`, which serde serializes as `{ start, end }`. */
+export interface Span {
+  start: number;
+  end: number;
+}
 
+/** A named entity identified by text mining. */
 export interface FenominalHit {
   termId: string;
   label: string;
-  span: { start: number; end: number };
-  isObserved: boolean;
+  span: Span;
+  excluded: boolean;
 }
 
+/** A contiguous piece of a sentence: either a recognized entity or plain text. */
+export type FenominalSegment =
+  | { kind: 'hit'; text: string; hit: FenominalHit }
+  | { kind: 'text'; text: string; span: Span };
+
+/** A sentence of the original text. */
 export interface FenominalSentence {
   start: number;
   originalText: string;
@@ -20,7 +29,7 @@ export interface UiFenominalHit {
   id: string; 
   termId: string;
   label: string;
-  span: { start: number; end: number };
+  span: Span;
   
   // Interactive UI properties
   isDragging?: boolean;
@@ -40,7 +49,7 @@ export function ui_from_fenominal(hit: FenominalHit, id: string): UiFenominalHit
     span: hit.span,
     severity: undefined,
     onset: undefined,
-    excluded: false,
+    excluded: hit.excluded,
     modifiers: []
   };
   return ui_hit;

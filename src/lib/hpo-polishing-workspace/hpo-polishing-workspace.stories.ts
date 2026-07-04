@@ -23,7 +23,7 @@ const mockSentences: FenominalSentence[] = [
         hit: {
           termId: 'HP:0000256',
           label: 'Macrocephaly',
-          isObserved: true,
+          excluded: false,
           span: { start: 33, end: 45 }
         }
       },
@@ -34,7 +34,7 @@ const mockSentences: FenominalSentence[] = [
         hit: {
           termId: 'HP:0001263',
           label: 'Global developmental delay',
-          isObserved: true,
+          excluded: false,
           span: { start: 50, end: 69 }
         }
       },
@@ -52,7 +52,7 @@ const mockSentences: FenominalSentence[] = [
         hit: {
           termId: 'HP:0001250',
           label: 'Seizure',
-          isObserved: false,
+          excluded: true,
           span: { start: 23, end: 31 }
         }
       },
