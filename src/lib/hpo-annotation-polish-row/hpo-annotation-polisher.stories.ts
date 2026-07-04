@@ -2,14 +2,14 @@ import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { HpoPolisherRowComponent } from './hpo-annotation-polisher.component';
+import { HpoPolishRowComponent } from './hpo-annotation-polish-row.component';
 
-const meta: Meta<HpoPolisherRowComponent> = {
+const meta: Meta<HpoPolishRowComponent> = {
   title: 'Components/HPO Annotation Polisher',
-  component: HpoPolisherRowComponent,
+  component: HpoPolishRowComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, FormsModule, MatIconModule, HpoPolisherRowComponent],
+      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],
     }),
     (story, context) => {
       const storyInstance = story();
@@ -46,7 +46,7 @@ const meta: Meta<HpoPolisherRowComponent> = {
 };
 
 export default meta;
-type Story = StoryObj<HpoPolisherRowComponent>;
+type Story = StoryObj<HpoPolishRowComponent>;
 
 // --- Mock Data States ---
 

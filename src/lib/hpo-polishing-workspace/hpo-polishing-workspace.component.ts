@@ -13,8 +13,8 @@ import {
 import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
-import { HpoPolisherRowComponent } from '../hpo-annotation-polisher-row/hpo-annotation-polisher.component';
-import { HierarchyMapItem, PolishedHpoAnnotation } from '../hpo-annotation-polisher-row/hpo-annotation-polisher.interface';
+import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
+import { HierarchyMapItem, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { Observable } from 'rxjs';
 import { UrlCodec } from '@angular/common/upgrade';
 
@@ -27,7 +27,7 @@ import { UrlCodec } from '@angular/common/upgrade';
     FormsModule, 
     MatIcon, 
     OntologyAutocompleteComponent,
-    HpoPolisherRowComponent],
+    HpoPolishRowComponent],
   templateUrl: './hpo-polishing-workspace.component.html',
   styleUrls: ['./hpo-polishing-workspace.component.scss']
 })

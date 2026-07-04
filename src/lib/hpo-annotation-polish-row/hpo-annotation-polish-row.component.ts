@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { HpoOnsetSelectorComponent } from "../hpo-onset-selector/hpo-onset-selector.component";
 import { HpoModifierMenuComponent } from "../hpo-modifier-menu/hpo-modifier-menu.component";
-import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "./hpo-annotation-polisher.interface"
+import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 
 
 @Component({
@@ -25,10 +25,10 @@ import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "./hpo-a
     HpoOnsetSelectorComponent,
     HpoModifierMenuComponent
 ],
-  templateUrl: './hpo-annotation-polisher.component.html',
-  styleUrl: './hpo-annotation-polisher.component.scss'
+  templateUrl: './hpo-annotation-polish-row.component.html',
+  styleUrl: './hpo-annotation-polish-row.component.scss'
 })
-export class HpoPolisherRowComponent {
+export class HpoPolishRowComponent {
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = input<HierarchyMapItem | null>(null);

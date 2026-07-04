@@ -61,7 +61,7 @@
 
     @if (showModifierMenu()) {
       <div class="modifier-overlay" (mouseleave)="showModifierMenu.set(false)">
-        <lib-hpo-modifier-menu
+        <hpo-modifier-menu
           [availableModifiers]="formattedModifierOptions()"
           [selectedModifierIds]="annotation().modifiers || []"
           (selectedModifierIdsChange)="updateModifiers($event)"
