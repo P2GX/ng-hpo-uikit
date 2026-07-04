@@ -16,6 +16,7 @@ import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology
 import { HpoPolisherRowComponent } from '../hpo-annotation-polisher-row/hpo-annotation-polisher.component';
 import { HierarchyMapItem, PolishedHpoAnnotation } from '../hpo-annotation-polisher-row/hpo-annotation-polisher.interface';
 import { Observable } from 'rxjs';
+import { UrlCodec } from '@angular/common/upgrade';
 
 
 @Component({
@@ -110,7 +111,7 @@ export class HpoPolishingWorkspaceComponent {
           return seg;
         })
       }));
-      
+      console.log("In effect for raw Setence, ui=", uiSentences);
       this.localSentences.set(uiSentences);
       this.hasInitialized = true;// Prevents subsequent internal mutations from being overwritten
     }
