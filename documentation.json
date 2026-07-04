@@ -67,7 +67,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      isObserved: true,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      excluded: false,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
             },
             {
                 "name": "DefaultWorkspace",
@@ -78,7 +78,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (args.searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetRequested)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetRequested)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
             },
             {
                 "name": "EmptySelection",
@@ -111,7 +111,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { currentTermId:'', parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      excluded: true,\n      modifiers: []\n    },\n    hierarchy: { currentTermId:'', parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
             },
             {
                 "name": "Gallery",
@@ -139,6 +139,17 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoPolisherRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolisherRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolisherRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -156,17 +167,6 @@
                 "deprecationMessage": "",
                 "type": "Meta<HpoOnsetSelectorComponent>",
                 "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoPolisherRowComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolisherRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolisherRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -265,7 +265,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "FenominalSentence[]",
-                "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          isObserved: true,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          isObserved: true,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          isObserved: false,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
+                "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          excluded: false,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          excluded: false,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          excluded: true,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
             },
             {
                 "name": "mockSentences",
@@ -276,7 +276,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "FenominalSentence[]",
-                "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, isObserved: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
+                "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, excluded: false } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, excluded: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, excluded: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
             },
             {
                 "name": "preview",
@@ -321,6 +321,19 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoPolisherRowComponent>",
+                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoMiningComponent>",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "deprecated": false,
@@ -336,19 +349,6 @@
                 "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoOnsetSelectorComponent>",
                 "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolisherRowComponent>",
-                "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -431,7 +431,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "FenominalSentence[]",
-                    "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, isObserved: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, isObserved: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
+                    "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, excluded: false } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, excluded: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, excluded: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
                 },
                 {
                     "name": "ReadOnlyState",
@@ -527,7 +527,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      isObserved: true,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0001250',\n      label: 'Seizure',\n      excluded: false,\n      onsetString: 'Infantile onset',\n      modifiers: ['Severe']\n    },\n    hierarchy: mockHierarchy,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
                 },
                 {
                     "name": "ExcludedWithNoMetadata",
@@ -538,7 +538,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      isObserved: false,\n      modifiers: []\n    },\n    hierarchy: { currentTermId:'', parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
+                    "defaultValue": "{\n  args: {\n    annotation: {\n      termId: 'HP:0000707',\n      label: 'Abnormality of the nervous system',\n      excluded: true,\n      modifiers: []\n    },\n    hierarchy: { currentTermId:'', parents: [], children: [] },\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers\n  }\n}"
                 },
                 {
                     "name": "meta",
@@ -595,7 +595,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (args.searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetRequested)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                    "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetRequested)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    requestHierarchy: fn(),\n    createOnsetRequested: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
                 },
                 {
                     "name": "EmptyWorkspace",
@@ -661,7 +661,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "FenominalSentence[]",
-                    "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          isObserved: true,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          isObserved: true,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          isObserved: false,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
+                    "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          excluded: false,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          excluded: false,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          excluded: true,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
                 },
                 {
                     "name": "WithActiveHierarchyCache",
@@ -705,6 +705,21 @@
         "groupedFunctions": {},
         "groupedEnumerations": {},
         "groupedTypeAliases": {
+            "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoPolisherRowComponent>",
+                    "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/hpo-mining/hpo-mining.stories.ts": [
                 {
                     "name": "Story",
@@ -728,21 +743,6 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoOnsetSelectorComponent>",
                     "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
-            "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolisherRowComponent>",
-                    "file": "src/lib/hpo-annotation-polisher-row/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",

@@ -1,6 +1,4 @@
 <div class="workspace-layout">
-  <p>DEBUG localSentences: {{ localSentences().length }}</p>
-<p>DEBUG uniqueTableAnnotations: {{ uniqueTableAnnotations().length }}</p>
   <div class="document-preview-pane">
     <div class="annotation-text-wrapper">
       @for (sentence of localSentences(); track sentence.start) {
@@ -56,12 +54,11 @@
   </div>
 
   <div class="workspace-footer">
-    <!-- Defend against the instantiation race condition (it takes time to construct the autocompleter!) -->
-    @if (searchProvider()) {
+    @if (searchProvider(); as provider) {
       <div class="autocomplete-injection-box">
         <hpo-ontology-autocomplete
           [inputString]="hpoInputString"
-          [searchProvider]="searchProvider()"
+          [searchProvider]="provider"
           (selected)="handleAutocompleteSelection($event)">
         </hpo-ontology-autocomplete>
         <button 

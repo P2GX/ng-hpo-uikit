@@ -17,7 +17,7 @@ export const mockFenominalSuccessResponse: FenominalSentence[] = [
           termId: "HP:0001166", 
           label: "Arachnodactyly", 
           span: { start: 21, end: 35 }, 
-          isObserved: true 
+          excluded: false 
         } 
       },
       {

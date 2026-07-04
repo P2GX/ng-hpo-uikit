@@ -13,7 +13,7 @@ export interface HierarchyMapItem {
 export interface PolishedHpoAnnotation {
   termId: string;
   label: string;
-  isObserved: boolean;
+  excluded: boolean;
   onsetString?: string;
   modifiers?: string[];
 }

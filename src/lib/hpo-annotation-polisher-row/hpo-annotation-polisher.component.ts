@@ -96,9 +96,9 @@ export class HpoPolisherRowComponent {
   }
 
   toggleObserved(): void {
-    const updatedAnnotation = {
+    const updatedAnnotation: PolishedHpoAnnotation = {
       ...this.annotation(),
-      isObserved: !this.annotation().isObserved
+      excluded: !this.annotation().excluded
     };
     this.annotation.set(updatedAnnotation);
     this.updated.emit(updatedAnnotation);

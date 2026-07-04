@@ -110,7 +110,7 @@ export const DefaultWorkspace: Story = {
   render: (args) => ({
     props: args,
     template: `
-      @if (args.searchProvider) {
+      @if (searchProvider) {
         <hpo-polishing-workspace
           [sentences]="sentences"
           [availableOnsets]="availableOnsets"

@@ -57,7 +57,9 @@ export class HpoPolishingWorkspaceComponent {
   // Autocomplete variables
   protected hpoInputString = '';
   protected selectedHpoMatch = signal<OntologyMatch | null>(null);
-  searchProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();
+  //searchProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();
+  searchProvider = input<((query: string) => Observable<OntologyMatch[]>) | null>(null);
+
 
  // Computed state to extract unique table annotations dynamically from sentence arrays
  // TODO check if there are conflicting UiHits, e.g., observed/excluded
@@ -71,7 +73,7 @@ export class HpoPolishingWorkspaceComponent {
             uniqueMap.set(uiHit.termId, {
               termId: uiHit.termId,
               label: uiHit.label,
-              isObserved: !uiHit.excluded,
+              excluded: uiHit.excluded,
               onsetString: uiHit.onset,
               modifiers: uiHit.modifiers || []
             });
@@ -161,7 +163,7 @@ export class HpoPolishingWorkspaceComponent {
               ...seg.hit,
               termId: updatedRow.termId,
               label: updatedRow.label,
-              excluded: !updatedRow.isObserved,
+              excluded: updatedRow.excluded,
               onset: updatedRow.onsetString,
               modifiers: updatedRow.modifiers || []
             };

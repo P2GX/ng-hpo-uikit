@@ -34,8 +34,8 @@
 </td>
 
 <td>
-    <span class="badge" [ngClass]="annotation().isObserved ? 'badge-green' : 'badge-red'">
-    {{ annotation().isObserved ? 'OBS' : 'EXC' }}
+    <span class="badge" [ngClass]="annotation().excluded ?  'badge-red' : 'badge-green'">
+    {{ annotation().excluded ?  'EXC' : 'OBS' }}
     </span>
 </td>
 

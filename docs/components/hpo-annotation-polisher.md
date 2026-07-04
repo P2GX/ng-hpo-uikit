@@ -14,7 +14,7 @@ The widget interacts with core ontological and annotation schemas. It expects da
 export interface PolishedHpoAnnotation {
   termId: string;
   label: string;
-  isObserved: boolean;
+  excluded: boolean;
   onsetString?: string;
   modifiers?: string[];
 }
@@ -110,7 +110,7 @@ import { HpoPolisherRowComponent } from './hpo-polisher-row.component'; // Your 
 export interface PhenotypeAnnotation {
   termId: string;
   label: string;
-  isObserved: boolean;
+  excluded: boolean;
   onsetString?: string;
   modifiers?: string[];
 }
@@ -128,14 +128,14 @@ export class PhenotypeManagerComponent {
     { 
       termId: 'HP:0000175', 
       label: 'Cleft palate', 
-      isObserved: true, 
+      excluded: false, 
       onsetString: 'Congenital onset', 
       modifiers: ['Severe'] 
     },
     { 
       termId: 'HP:0001249', 
       label: 'Intellectual disability', 
-      isObserved: true, 
+      excluded: false, 
       onsetString: 'Infantile onset', 
       modifiers: [] 
     }

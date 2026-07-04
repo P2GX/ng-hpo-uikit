@@ -79,7 +79,7 @@ export const DefaultObserved: Story = {
     annotation: {
       termId: 'HP:0001250',
       label: 'Seizure',
-      isObserved: true,
+      excluded: false,
       onsetString: 'Infantile onset',
       modifiers: ['Severe']
     },
@@ -94,7 +94,7 @@ export const ExcludedWithNoMetadata: Story = {
     annotation: {
       termId: 'HP:0000707',
       label: 'Abnormality of the nervous system',
-      isObserved: false,
+      excluded: true,
       modifiers: []
     },
     hierarchy: { currentTermId:'', parents: [], children: [] },

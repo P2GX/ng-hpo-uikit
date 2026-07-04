@@ -16,7 +16,7 @@ const mockSentences: FenominalSentence[] = [
       { 
         kind: 'hit', 
         text: 'macrocephaly', 
-        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, isObserved: true } 
+        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, excluded: false } 
       },
       { 
         kind: 'text', 
@@ -26,7 +26,7 @@ const mockSentences: FenominalSentence[] = [
       { 
         kind: 'hit', 
         text: 'seizures', 
-        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, isObserved: true } 
+        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, excluded: false } 
       },
       { 
         kind: 'text', 
@@ -47,7 +47,7 @@ const mockSentences: FenominalSentence[] = [
       { 
         kind: 'hit', 
         text: 'hypertrophic cardiomyopathy', 
-        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, isObserved: false } 
+        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, excluded: true } 
       },
       { 
         kind: 'text', 
