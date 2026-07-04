@@ -39,7 +39,7 @@
             [availableModifiers]="availableModifiers()"
             (termClick)="handleHierarchyRequest(rowItem)"
             (updated)="handleBadgeUpdated($event, rowItem.termId)"
-            (createOnsetRequested)="createOnsetRequested.emit(rowItem)"
+            (createOnsetRequested)="handleCreateOnsetRequest(rowItem)"
             (deleteRequested)="deleteAnnotationEverywhere(rowItem.termId)">
           </tr>
         } @empty {
