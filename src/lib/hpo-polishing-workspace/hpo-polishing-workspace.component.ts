@@ -16,7 +16,7 @@ import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
 import { HierarchyMapItem, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { Observable } from 'rxjs';
-import { UrlCodec } from '@angular/common/upgrade';
+
 
 
 @Component({
@@ -38,9 +38,8 @@ export class HpoPolishingWorkspaceComponent {
   availableOnsets = input<string[]>([]);
   availableModifiers = input<string[]>([]);
 
-  hierarchyUpdate = input<HierarchyMapItem | null>(null);
   protected hierarchyCache = signal<Record<string, HierarchyMapItem>>({});
-  
+  hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
   requestHierarchy = output<PolishedHpoAnnotation>();
   createOnsetRequested = output<PolishedHpoAnnotation>();
   complete = output<PolishedHpoAnnotation[]>();
@@ -85,15 +84,6 @@ export class HpoPolishingWorkspaceComponent {
   });
   private hasInitialized = false;
   constructor() {
-    effect(() => {
-      const update = this.hierarchyUpdate();
-      if (update) {
-        this.hierarchyCache.update(cache => ({ 
-          ...cache, 
-          [update.currentTermId]: update 
-        }));
-      }
-    });
     effect(() => {
        // convert from FenominalSentence to UiFenominalSentence
       const rawSentences = this.sentences();
@@ -189,8 +179,17 @@ export class HpoPolishingWorkspaceComponent {
   }
 
   protected handleHierarchyRequest(annotation: PolishedHpoAnnotation): void {
-    if (!this.hierarchyCache()[annotation.termId]) {
-      this.requestHierarchy.emit(annotation);
+    const termId = annotation.termId;
+    if (!this.hierarchyCache()[termId]) {
+      const provider = this.hierarchyProvider();
+      if (provider) {
+        provider(termId).then(data => {
+          this.hierarchyCache.update(cache => ({
+            ...cache,
+            [termId]: data
+          }));
+        });
+      }
     }
   }
 
