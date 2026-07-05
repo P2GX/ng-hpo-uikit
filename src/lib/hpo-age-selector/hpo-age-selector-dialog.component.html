@@ -1,0 +1,62 @@
+<h2 mat-dialog-title class="dialog-title">Select Age</h2>
+
+<mat-dialog-content class="dialog-content">
+  <div class="dialog-stack">
+    
+    <!-- Quick Cloud Layout Selection Slot -->
+    @if (existingAgeStrings().length > 0) {
+      <div class="selection-section">
+        <label class="section-label">Choose Existing</label>
+        <div class="age-tag-cloud">
+          @for (term of existingAgeStrings(); track term) {
+            <button 
+              type="button"
+              (click)="onSelectExisting(term)"
+              class="age-tag">
+              {{ term }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="divider">
+          <div class="divider-line"></div>
+          <span class="divider-text">OR CREATE NEW</span>
+          <div class="divider-line"></div>
+      </div>
+    }
+
+    <!-- Manual Entry Layout -->
+    <div class="manual-entry">
+      <mat-form-field appearance="outline" class="flex-grow dense-field" [subscriptSizing]="hasError() ? 'fixed' : 'dynamic'">
+        <mat-label>New Age String</mat-label>
+        <input matInput 
+              [ngModel]="customAge()" 
+              (ngModelChange)="customAge.set($event)"
+              [matAutocomplete]="auto"
+              (keyup.enter)="onSubmitCustom()"
+              autofocus
+              autocapitalize="none"
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="e.g. P35Y">
+        @if (hasError()) {
+          <mat-error>Invalid format (e.g., ISO8601 'P1Y' or Gestational 'G20w')</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectExisting($event.option.value)">
+        @for (term of filteredTerms(); track term) {
+          <mat-option [value]="term">{{ term }}</mat-option>
+        }
+      </mat-autocomplete>
+      <div class="action-row">
+        <button type="button" class="btn-outline-primary" (click)="onUseAge()">Use</button>
+        <button type="button" class="btn-outline-cancel" (click)="cancel.emit()">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</mat-dialog-content>
+
+  

@@ -6,7 +6,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { HpoOnsetSelectorComponent } from "../hpo-onset-selector/hpo-onset-selector.component";
+import { HpoAgeSelectorDialogComponent } from "../hpo-age-selector/hpo-age-selector-dialog.component";
 import { HpoModifierMenuComponent } from "../hpo-modifier-menu/hpo-modifier-menu.component";
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 
@@ -22,7 +22,7 @@ import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../mode
     MatAutocompleteModule,
     MatInputModule,
     MatFormFieldModule,
-    HpoOnsetSelectorComponent,
+    HpoAgeSelectorDialogComponent,
     HpoModifierMenuComponent
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
@@ -104,14 +104,6 @@ export class HpoPolishRowComponent {
     this.updated.emit(updatedAnnotation);
   }
 
-  changeOnset(newOnset: string): void {
-    const updatedAnnotation = {
-      ...this.annotation(),
-      onsetString: newOnset || undefined
-    };
-    this.annotation.set(updatedAnnotation); 
-    this.updated.emit(updatedAnnotation);
-  }
 
   addModifier(event: Event): void {
     const select = event.target as HTMLSelectElement;

@@ -1,85 +1,86 @@
-<td class="font-mono">
-    <a (click)="termClick.emit(annotation().termId)" class="link-text">
-    {{ annotation().termId }}
-    </a>
-</td>
+  <td class="font-mono">
+      <a (click)="termClick.emit(annotation().termId)" class="link-text">
+      {{ annotation().termId }}
+      </a>
+  </td>
 
-<td class="label-cell">
-    <div class="dropdown-wrapper">
-    <span (click)="toggleHierarchyMenu(); termClick.emit(annotation().termId)" class="dropdown-trigger">
-        {{ annotation().label }} <span class="caret">▼</span>
-    </span>
+  <td class="label-cell">
+      <div class="dropdown-wrapper">
+      <span (click)="toggleHierarchyMenu(); termClick.emit(annotation().termId)" class="dropdown-trigger">
+          {{ annotation().label }} <span class="caret">▼</span>
+      </span>
 
-    @if (showHierarchyMenu()) {
-        <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
-        @if (hierarchy()?.parents?.length) {
-            <div class="menu-section-title">Parents</div>
-            <ul>
-            @for (p of hierarchy()?.parents; track p.termId) {
-                <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
-            }
-            </ul>
-        }
-        @if (hierarchy()?.children?.length) {
-            <div class="menu-section-title">Children</div>
-            <ul>
-            @for (c of hierarchy()?.children; track c.termId) {
-                <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
-            }
-            </ul>
-        }
-        </div>
-    }
-    </div>
-</td>
-
-<td>
-    <span class="badge" [ngClass]="annotation().excluded ?  'badge-red' : 'badge-green'">
-    {{ annotation().excluded ?  'EXC' : 'OBS' }}
-    </span>
-</td>
-
-<td class="onset-cell">
-  <hpo-hpo-onset-selector
-    [selectedOnset]="annotation().onsetString"
-    [availableOnsets]="availableOnsets()"
-    (onsetChanged)="changeOnset($event)"
-    (requestNewOnset)="onRequestNewOnset()"
-  />
-</td>
-
-<td class="modifier-cell">
-  <div class="modifier-menu-wrapper">
-    
-    <div class="active-modifiers-preview" (click)="showModifierMenu.set(!showModifierMenu())">
-      @for (mod of annotation().modifiers || []; track mod) {
-        <span class="modifier-chip">{{ mod }}</span>
-      } @empty {
-        <span class="placeholder-text">+ Add Modifier</span>
+      @if (showHierarchyMenu()) {
+          <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
+          @if (hierarchy()?.parents?.length) {
+              <div class="menu-section-title">Parents</div>
+              <ul>
+              @for (p of hierarchy()?.parents; track p.termId) {
+                  <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
+              }
+              </ul>
+          }
+          @if (hierarchy()?.children?.length) {
+              <div class="menu-section-title">Children</div>
+              <ul>
+              @for (c of hierarchy()?.children; track c.termId) {
+                  <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
+              }
+              </ul>
+          }
+          </div>
       }
-    </div>
-
-    @if (showModifierMenu()) {
-      <div class="modifier-overlay" (mouseleave)="showModifierMenu.set(false)">
-        <hpo-modifier-menu
-          [availableModifiers]="formattedModifierOptions()"
-          [selectedModifierIds]="annotation().modifiers || []"
-          (selectedModifierIdsChange)="updateModifiers($event)"
-          (menuClosed)="showModifierMenu.set(false)"
-        />
       </div>
-    }
-    
-  </div>
-</td>
+  </td>
 
-<td class="action-cell">
-    <div class="action-group">
-    <button (click)="toggleObserved()" class="btn-icon">
-        <mat-icon>swap_horiz</mat-icon>Toggle
-    </button>
-    <button (click)="deleteRequested.emit()" class="btn-icon btn-delete">
-        <mat-icon>delete</mat-icon>Delete
-    </button>
+  <td>
+      <span class="badge" [ngClass]="annotation().excluded ?  'badge-red' : 'badge-green'">
+      {{ annotation().excluded ?  'EXC' : 'OBS' }}
+      </span>
+  </td>
+
+  <td class="onset-cell">
+    <td class="onset-cell">
+    <hpo-age-selector
+      [selectedOnset]="annotation().onsetString || null"
+      [availableOnsets]="availableOnsets()"
+      (onsetChanged)="changeOnset($event)"
+    />
+  </td>
+  </td>
+
+  <td class="modifier-cell">
+    <div class="modifier-menu-wrapper">
+      
+      <div class="active-modifiers-preview" (click)="showModifierMenu.set(!showModifierMenu())">
+        @for (mod of annotation().modifiers || []; track mod) {
+          <span class="modifier-chip">{{ mod }}</span>
+        } @empty {
+          <span class="placeholder-text">+ Add Modifier</span>
+        }
+      </div>
+
+      @if (showModifierMenu()) {
+        <div class="modifier-overlay" (mouseleave)="showModifierMenu.set(false)">
+          <hpo-modifier-menu
+            [availableModifiers]="formattedModifierOptions()"
+            [selectedModifierIds]="annotation().modifiers || []"
+            (selectedModifierIdsChange)="updateModifiers($event)"
+            (menuClosed)="showModifierMenu.set(false)"
+          />
+        </div>
+      }
+      
     </div>
-</td>
+  </td>
+
+  <td class="action-cell">
+      <div class="action-group">
+      <button (click)="toggleObserved()" class="btn-icon">
+          <mat-icon>swap_horiz</mat-icon>Toggle
+      </button>
+      <button (click)="deleteRequested.emit()" class="btn-icon btn-delete">
+          <mat-icon>delete</mat-icon>Delete
+      </button>
+      </div>
+  </td>

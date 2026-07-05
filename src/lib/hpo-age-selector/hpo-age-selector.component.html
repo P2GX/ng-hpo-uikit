@@ -1,0 +1,10 @@
+<button 
+  type="button" 
+  class="age-picker-trigger" 
+  (click)="openSelectorDialog()">
+  @if (selectedOnset()) {
+    <span class="age-value">{{ selectedOnset() }}</span>
+  } @else {
+    <span class="placeholder-text">+ Add Age of Onset</span>
+  }
+</button>

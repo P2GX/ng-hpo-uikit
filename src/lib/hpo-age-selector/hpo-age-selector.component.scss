@@ -1,0 +1,25 @@
+.age-picker-trigger {
+  background: transparent;
+  border: none;
+  padding: 4px 8px;
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  font-size: 13px;
+  border-radius: 4px;
+  width: 100%;
+  
+  &:hover {
+    background-color: #f3f4f6;
+  }
+}
+
+.age-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.placeholder-text {
+  color: #9ca3af;
+  font-style: italic;
+}

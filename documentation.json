@@ -27,23 +27,23 @@
                 "name": "Default",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    existingAgeStrings: ['P1Y', 'P3M', 'G20w', 'P45Y'],\n    allAvailableTerms: [\n      'P1Y', 'P2Y', 'P3Y', 'P5Y', 'P10Y', 'P15Y', 'P20Y', 'P35Y', 'P45Y',\n      'P1M', 'P2M', 'P3M', 'P6M',\n      'G20w', 'G24w', 'G36w', 'G40w'\n    ],\n    hasError: false\n  }\n}"
+            },
+            {
+                "name": "Default",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  args: { pastedText: '' }\n}"
-            },
-            {
-                "name": "Default",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
             },
             {
                 "name": "DefaultLayout",
@@ -79,17 +79,6 @@
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableOnsets: mockOnsets,\n    availableModifiers: mockModifiers,\n    searchProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    createOnsetProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
-            },
-            {
-                "name": "EmptySelection",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  args: {\n    selectedOnset: undefined,\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Neonatal onset (HP:0003623)',\n    ],\n  },\n}"
             },
             {
                 "name": "EmptyWorkspace",
@@ -139,6 +128,17 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoAgeSelectorComponent>",
+                "defaultValue": "{\n  title: 'HPO/AgeSelector',\n  component: HpoAgeSelectorComponent,\n  tags: ['autodocs'],\n  decorators: [\n    moduleMetadata({\n      providers: [\n        provideAnimations() // Smooth dropdown and material overlay animations\n      ]\n    }),\n    // Simulates the physical boundaries of a Material Dialog box frame\n    (story) => ({\n      ...story(),\n      template: `\n        <div style=\"max-width: 440px; margin: 2rem auto; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); background: #fff; overflow: hidden;\">\n          ${story().template}\n        </div>\n      `\n    })\n  ],\n  argTypes: {\n    existingAgeStrings: {\n      control: 'object',\n      description: 'Quick-select history tags displaying ages already chosen in this session',\n    },\n    allAvailableTerms: {\n      control: 'object',\n      description: 'The master list of valid HPO/ISO age strings used for filtering autocomplete matches',\n    },\n    hasError: {\n      control: 'boolean',\n      description: 'Triggers the compact, dynamic inline validation error text below the input field',\n    },\n    selectTerm: { action: 'selectTerm (Existing Chosen)' },\n    createCustomTerm: { action: 'createCustomTerm (New Created)' },\n    cancel: { action: 'cancel clicked' }\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -156,17 +156,6 @@
                 "deprecationMessage": "",
                 "type": "Meta<HpoMiningComponent>",
                 "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoOnsetSelectorComponent>",
-                "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -279,6 +268,17 @@
                 "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and recurrent seizures.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'The patient presents with severe ', \n        span: { start: 0, end: 33 } \n      },\n      { \n        kind: 'hit', \n        text: 'macrocephaly', \n        hit: { termId: 'HP:0000256', label: 'Macrocephaly', span: { start: 33, end: 45 }, excluded: false } \n      },\n      { \n        kind: 'text', \n        text: ' and recurrent ', \n        span: { start: 45, end: 60 } \n      },\n      { \n        kind: 'hit', \n        text: 'seizures', \n        hit: { termId: 'HP:0001250', label: 'Seizures', span: { start: 60, end: 68 }, excluded: false } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 68, end: 69 } \n      }\n    ]\n  },\n  {\n    start: 70,\n    originalText: 'Cardiological evaluation rules out hypertrophic cardiomyopathy.',\n    segments: [\n      { \n        kind: 'text', \n        text: 'Cardiological evaluation rules out ', \n        span: { start: 70, end: 105 } \n      },\n      { \n        kind: 'hit', \n        text: 'hypertrophic cardiomyopathy', \n        hit: { termId: 'HP:0001639', label: 'Hypertrophic cardiomyopathy', span: { start: 105, end: 132 }, excluded: true } \n      },\n      { \n        kind: 'text', \n        text: '.', \n        span: { start: 132, end: 133 } \n      }\n    ]\n  }\n]"
             },
             {
+                "name": "NoHistoryTags",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    existingAgeStrings: [],\n    allAvailableTerms: ['P1Y', 'P5Y', 'P10Y', 'G40w'],\n    hasError: false\n  }\n}"
+            },
+            {
                 "name": "preview",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -301,10 +301,34 @@
                 "defaultValue": "{\n  args: {\n    ...DefaultLayout.args,\n    readOnly: true\n  }\n}",
                 "rawdescription": "ReadOnly protection view",
                 "description": "<p>ReadOnly protection view</p>\n"
+            },
+            {
+                "name": "ValidationErrorState",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: {\n    ...Default.args,\n    hasError: true\n  }\n}"
             }
         ],
         "functions": [],
         "typealiases": [
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoAgeSelectorComponent>",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
             {
                 "name": "Story",
                 "ctype": "miscellaneous",
@@ -325,19 +349,6 @@
                 "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoMiningComponent>",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoOnsetSelectorComponent>",
-                "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -436,6 +447,52 @@
                     "description": "<p>ReadOnly protection view</p>\n"
                 }
             ],
+            "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
+                {
+                    "name": "Default",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    existingAgeStrings: ['P1Y', 'P3M', 'G20w', 'P45Y'],\n    allAvailableTerms: [\n      'P1Y', 'P2Y', 'P3Y', 'P5Y', 'P10Y', 'P15Y', 'P20Y', 'P35Y', 'P45Y',\n      'P1M', 'P2M', 'P3M', 'P6M',\n      'G20w', 'G24w', 'G36w', 'G40w'\n    ],\n    hasError: false\n  }\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HpoAgeSelectorComponent>",
+                    "defaultValue": "{\n  title: 'HPO/AgeSelector',\n  component: HpoAgeSelectorComponent,\n  tags: ['autodocs'],\n  decorators: [\n    moduleMetadata({\n      providers: [\n        provideAnimations() // Smooth dropdown and material overlay animations\n      ]\n    }),\n    // Simulates the physical boundaries of a Material Dialog box frame\n    (story) => ({\n      ...story(),\n      template: `\n        <div style=\"max-width: 440px; margin: 2rem auto; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); background: #fff; overflow: hidden;\">\n          ${story().template}\n        </div>\n      `\n    })\n  ],\n  argTypes: {\n    existingAgeStrings: {\n      control: 'object',\n      description: 'Quick-select history tags displaying ages already chosen in this session',\n    },\n    allAvailableTerms: {\n      control: 'object',\n      description: 'The master list of valid HPO/ISO age strings used for filtering autocomplete matches',\n    },\n    hasError: {\n      control: 'boolean',\n      description: 'Triggers the compact, dynamic inline validation error text below the input field',\n    },\n    selectTerm: { action: 'selectTerm (Existing Chosen)' },\n    createCustomTerm: { action: 'createCustomTerm (New Created)' },\n    cancel: { action: 'cancel clicked' }\n  }\n}"
+                },
+                {
+                    "name": "NoHistoryTags",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    existingAgeStrings: [],\n    allAvailableTerms: ['P1Y', 'P5Y', 'P10Y', 'G40w'],\n    hasError: false\n  }\n}"
+                },
+                {
+                    "name": "ValidationErrorState",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: {\n    ...Default.args,\n    hasError: true\n  }\n}"
+                }
+            ],
             "src/lib/hpo-mining/hpo-mining.stories.ts": [
                 {
                     "name": "Default",
@@ -469,41 +526,6 @@
                     "deprecationMessage": "",
                     "type": "Meta<HpoMiningComponent>",
                     "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
-                }
-            ],
-            "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts": [
-                {
-                    "name": "Default",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: {\n    selectedOnset: 'Antenatal onset (HP:0011460)',\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Antenatal onset (HP:0011460)',\n      'Neonatal onset (HP:0003623)',\n      'Infantile onset (HP:0003593)',\n      'Juvenile onset (HP:0003581)',\n      'Adult onset (HP:0003584)',\n    ],\n  },\n}"
-                },
-                {
-                    "name": "EmptySelection",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: {\n    selectedOnset: undefined,\n    availableOnsets: [\n      'Congenital onset (HP:0003577)',\n      'Neonatal onset (HP:0003623)',\n    ],\n  },\n}"
-                },
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<HpoOnsetSelectorComponent>",
-                    "defaultValue": "{\n  title: 'HPO/OnsetSelector',\n  component: HpoOnsetSelectorComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    selectedOnset: {\n      control: 'text',\n      description: 'The currently chosen onset age string (Two-way model bound)',\n    },\n    availableOnsets: {\n      control: 'object',\n      description: 'List of standard HPO age terms available for selection',\n    },\n  },\n}"
                 }
             ],
             "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
@@ -683,6 +705,21 @@
         "groupedFunctions": {},
         "groupedEnumerations": {},
         "groupedTypeAliases": {
+            "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoAgeSelectorComponent>",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
@@ -706,21 +743,6 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoMiningComponent>",
                     "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
-            "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoOnsetSelectorComponent>",
-                    "file": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -775,6 +797,56 @@
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
                 "name": "preview",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Default",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "NoHistoryTags",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ValidationErrorState",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
@@ -881,46 +953,6 @@
             },
             {
                 "filePath": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                "type": "type alias",
-                "linktype": "miscellaneous",
-                "linksubtype": "typealias",
-                "name": "Story",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "Default",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "EmptySelection",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "meta",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/hpo-onset-selector/hpo-onset-selector.stories.ts",
                 "type": "type alias",
                 "linktype": "miscellaneous",
                 "linksubtype": "typealias",
