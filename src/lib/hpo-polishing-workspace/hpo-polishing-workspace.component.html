@@ -35,11 +35,9 @@
             hpo-polisher-row
             [annotation]="rowItem"
             [hierarchy]="hierarchyCache()[rowItem.termId] || null"
-            [availableOnsets]="availableOnsets()"
             [availableModifiers]="availableModifiers()"
             (termClick)="handleHierarchyRequest(rowItem)"
             (updated)="handleBadgeUpdated($event, rowItem.termId)"
-            (createOnsetRequested)="handleCreateOnsetRequest(rowItem)"
             (deleteRequested)="deleteAnnotationEverywhere(rowItem.termId)">
           </tr>
         } @empty {

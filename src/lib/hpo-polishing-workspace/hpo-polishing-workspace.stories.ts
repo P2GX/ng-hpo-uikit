@@ -127,11 +127,9 @@ export const DefaultWorkspace: Story = {
   }),
   args: {
     sentences: mockSentences,
-    availableOnsets: mockOnsets,
     availableModifiers: mockModifiers,
     searchProvider: mockSearchProvider,
     hierarchyProvider: fn(),
-    createOnsetProvider: fn(),
     complete: fn(),
     cancel: fn(),
     badgeMoved: fn()

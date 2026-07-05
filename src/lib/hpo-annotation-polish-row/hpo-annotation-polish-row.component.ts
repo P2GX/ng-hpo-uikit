@@ -31,18 +31,14 @@ export class HpoPolishRowComponent {
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = input<HierarchyMapItem | null>(null);
-  readonly availableOnsets = input<string[]>([]);
   readonly availableModifiers = input<string[]>([]);
 
   readonly updated = output<PolishedHpoAnnotation>();
   readonly deleteRequested = output<void>();
   readonly termClick = output<string>();
-
-  createOnsetRequested = output<void>(); 
-
   // Local autocomplete search inputs
   modifierSearchQuery = signal<string>('');
-  onsetSearchQuery = signal<string>('');
+ 
 
   readonly showHierarchyMenu = signal<boolean>(false);
   showModifierMenu = signal(false);
@@ -58,22 +54,15 @@ export class HpoPolishRowComponent {
     );
   });
 
-  filteredOnsets = computed(() => {
-    const query = this.onsetSearchQuery().toLowerCase().trim();
-    return this.availableOnsets().filter(onset => 
-      onset.toLowerCase().includes(query)
-    );
-  });
-
   formattedModifierOptions = computed(() => {
     return this.availableModifiers().map(m => ({ id: m, label: m }));
   });
 
   updateModifiers(updatedMods: string[]): void {
-  const updatedAnnotation = {
-    ...this.annotation(),
-    modifiers: updatedMods
-  };
+    const updatedAnnotation = {
+      ...this.annotation(),
+      modifiers: updatedMods
+    };
   
   this.annotation.set(updatedAnnotation); // Update local signal view
   this.updated.emit(updatedAnnotation);   // Inform parent/backend pipeline

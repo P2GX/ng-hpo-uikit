@@ -35,12 +35,8 @@ export class HpoPolishingWorkspaceComponent {
   private notificationService = inject(NotificationService);
   
   sentences = input<FenominalSentence[]>([]);
-  availableOnsets = input<string[]>([]);
   availableModifiers = input<string[]>([]);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
-
-  //createOnsetRequested = output<PolishedHpoAnnotation>();
-  createOnsetProvider = input<((annotation: PolishedHpoAnnotation) => Promise<string | null>) | null>(null);
 
   complete = output<PolishedHpoAnnotation[]>();
   cancel = output<void>();
@@ -194,15 +190,6 @@ export class HpoPolishingWorkspaceComponent {
     }
   }
 
-  protected handleCreateOnsetRequest(annotation: PolishedHpoAnnotation): void {
-    const provider = this.createOnsetProvider();
-    if (!provider) return;
-
-    provider(annotation).then(newOnset => {
-      if (newOnset === null) return; // user cancelled
-      this.handleBadgeUpdated({ ...annotation, onsetString: newOnset }, annotation.termId);
-    });
-  }
 
   protected handleAutocompleteSelection(match: OntologyMatch): void {
     this.selectedHpoMatch.set(match);

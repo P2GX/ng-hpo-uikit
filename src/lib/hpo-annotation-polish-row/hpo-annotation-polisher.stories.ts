@@ -84,7 +84,6 @@ export const DefaultObserved: Story = {
       modifiers: ['Severe']
     },
     hierarchy: mockHierarchy,
-    availableOnsets: mockOnsets,
     availableModifiers: mockModifiers
   }
 };
@@ -98,7 +97,6 @@ export const ExcludedWithNoMetadata: Story = {
       modifiers: []
     },
     hierarchy: { currentTermId:'', parents: [], children: [] },
-    availableOnsets: mockOnsets,
     availableModifiers: mockModifiers
   }
 };
