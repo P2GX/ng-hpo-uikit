@@ -12,7 +12,7 @@ export class HpoAgeSelectorComponent {
   private dialog = inject(MatDialog);
 
   selectedOnset = input<string | null>(null);
-  availableOnsets = input<string[]>([]);
+ 
 
   onsetChanged = output<string>();
 
@@ -21,7 +21,6 @@ export class HpoAgeSelectorComponent {
       width: '440px',
       panelClass: 'compact-dialog-overlay',
       data: {
-        existingAgeStrings: this.availableOnsets(),
         currentSelection: this.selectedOnset()
       }
     });

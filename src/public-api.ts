@@ -8,7 +8,7 @@ export * from './lib/footer/footer.component';
 export * from './lib/help-button/help-button.component';
 export * from './lib/hpo-annotation-polish-row/hpo-annotation-polish-row.component';
 export * from './lib/hpo-polishing-workspace/hpo-polishing-workspace.component';
-export * from './lib/hpo-onset-selector/hpo-onset-selector.component';
+export * from './lib/hpo-age-selector/hpo-age-selector.component';
 export * from './lib/hpo-mining/hpo-mining.component';
 export * from './lib/hpo-modifier-menu/hpo-modifier-menu.component';
 export * from './lib/load-ontology/load-ontology.component';

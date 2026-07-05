@@ -31,7 +31,7 @@ export default defineConfig({
           { text: "HPO Polishing Workspace", link: '/components/hpo-polishing-workspace-component'},
           { text: "HPO Modifier Selector", link: '/components/hpo-modifier-selector'},
           { text: "HPO Text Mining Container", link: '/components/hpo-text-mining-container'},
-          { text: "HPO Onset Selector", link: '/components/hpo-onset-selector'},
+          { text: "HPO Age Selector", link: '/components/hpo-age-selector'},
           { text: "Phenopacket Loader", link:  '/components/phenopacket-loader' } ,
           { text: 'Help button', link: '/components/help-button' }
         ]

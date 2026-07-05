@@ -43,10 +43,8 @@
     <td class="onset-cell">
     <hpo-age-selector
       [selectedOnset]="annotation().onsetString || null"
-      [availableOnsets]="availableOnsets()"
       (onsetChanged)="changeOnset($event)"
     />
-  </td>
   </td>
 
   <td class="modifier-cell">
