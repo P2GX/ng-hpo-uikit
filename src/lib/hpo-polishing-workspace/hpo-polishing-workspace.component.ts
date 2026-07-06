@@ -13,7 +13,7 @@ import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
-import { HierarchyMapItem, HitSpanPatch, HpoTermMinimal, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
+import { HierarchyMapItem, HitSpanPatch, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { Observable } from 'rxjs';
 import { TextMiningContainerComponent } from "../text-mining-container/text-mining-container.component";
 
@@ -39,6 +39,8 @@ export class HpoPolishingWorkspaceComponent {
   sentences = input<FenominalSentence[]>([]);
   availableModifiers = input<HpoTermMinimal[]>([]);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
+  autocompleteProvider = input.required<OntologyAutocompleteProvider>();
+  
 
   complete = output<PolishedHpoAnnotation[]>();
   cancel = output<void>();
@@ -55,8 +57,8 @@ export class HpoPolishingWorkspaceComponent {
   // Autocomplete variables
   protected hpoInputString = '';
   protected selectedHpoMatch = signal<OntologyMatch | null>(null);
-  //searchProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();
-  searchProvider = input<((query: string) => Observable<OntologyMatch[]>) | null>(null);
+ 
+  
 
 
  // Computed state to extract unique table annotations dynamically from sentence arrays

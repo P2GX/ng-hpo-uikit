@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { OntologyMatch } from "./ontology-dto";
+
 export interface HpoTermMinimal {
   termId: string;
   label: string;
@@ -25,3 +28,6 @@ export interface HitSpanPatch {
   segmentIndex: number;
   span: { start: number; end: number };
 }
+
+
+export type OntologyAutocompleteProvider = (query: string) => Observable<OntologyMatch[]>;

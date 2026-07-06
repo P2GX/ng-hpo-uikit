@@ -7,6 +7,80 @@ It decouples the UI layer from your application services by using a dynamic sear
 
 The widget expects all option suggestions to implement the [OntologyMatch](./models/ontology-match.md) contract.
 
+## Backend
+
+This component relies on the `fenominal` Autocompleter, e.g., 
+```rust
+ pub fn perform_hpo_autocomplete(&self, query: String) -> Result<Vec<OntologyMatch>, String> {
+        let autocompleter = self.autocompleter.as_ref().ok_or_else(|| "Autocomplete not initialized".to_string())?;
+        let n_term_limit = 20;
+        Ok(autocompleter.search_hpo(&query, n_term_limit))
+    }
+```
+
+Assuming there is an angular service layer that does this:
+```typescript
+async performHpoAutocomplete(query: string): Promise<OntologyMatch[]> {
+  return invoke<OntologyMatch[]>('perform_hpo_autocomplete', { query });
+}
+```
+
+then in our component, we need to transform this into observables:
+
+```typescript
+protected performHpoAutocomplete(query: string): Observable<OntologyMatch[]> {
+  return from(this.configService.performHpoAutocomplete(query)).pipe(
+    catchError(err => {
+      this.notificationService.showError(String(err));
+      return of([]); // fail gracefully — empty results, not a broken autocomplete
+    })
+  );
+}
+```
+
+This can then be passed to the component with this definition
+```typescript
+autocompleteProvider: (query: string) => Observable<OntologyMatch[]>;
+```
+
+This translates into something like this in our template
+```html
+ @if (autocompleteProvider(); as provider) {
+  <div class="autocomplete-injection-box">
+    <hpo-ontology-autocomplete
+      [inputString]="hpoInputString"
+      [autocompleteProvider]="provider"
+      (selected)="handleAutocompleteSelection($event)">
+    </hpo-ontology-autocomplete>
+    <button 
+      (click)="injectManualHpoToken()"
+      [disabled]="!selectedHpoMatch()"
+      class="btn-workspace-add">
+      <mat-icon>add</mat-icon> Inject Term
+    </button>
+  </div>
+}
+```
+
+where we open the dialog (here with other providers), like this:
+
+```typescript
+const dialogRef = this.dialog.open(HpoTwostepComponent, {
+  width: '85vw',
+  maxWidth: '1200px',
+  height: '80vh',
+  disableClose: true,
+  data: {
+    mineTextProvider: (text: string) => this.configService.mineClinicalText(text),
+    autocompleteProvider: (query: string) =>  this.performHpoAutocomplete(query),
+    hierarchyProvider: this.fetchHpoHierarchy,
+    availableModifiers: this.availableModifiers
+  }
+});
+```
+
+
+
 ## API Reference
 
 Component Selector

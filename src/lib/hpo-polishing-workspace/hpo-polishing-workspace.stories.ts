@@ -102,7 +102,7 @@ const meta: Meta<HpoPolishingWorkspaceComponent> = {
   },
   tags: ['autodocs'],
   argTypes: {
-    searchProvider: {
+    autocompleteProvider: {
       table: { disable: true }
     }
   }
@@ -136,7 +136,7 @@ export const DefaultWorkspace: Story = {
   args: {
     sentences: mockSentences,
     availableModifiers: mockModifiers,
-    searchProvider: mockSearchProvider,
+    autocompleteProvider: mockSearchProvider,
     hierarchyProvider: fn(),
     complete: fn(),
     cancel: fn(),

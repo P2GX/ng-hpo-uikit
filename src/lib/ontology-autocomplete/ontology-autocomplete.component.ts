@@ -8,6 +8,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { MatIconModule } from "@angular/material/icon";
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OntologyMatch } from '../models/ontology-dto'; 
+import { OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 
 export function ontologyMatchValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -38,7 +39,7 @@ export class OntologyAutocompleteComponent {
   inputString = input<string>('');
   
   // Provide the query function dynamically from the parent
-  searchProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();
+  autocompleteProvider = input.required<OntologyAutocompleteProvider>();
 
   selected = output<OntologyMatch>();
 
@@ -55,7 +56,7 @@ export class OntologyAutocompleteComponent {
         const query = typeof value === 'string' ? value : value?.label;
         if (query && query.length > 2) {
           // Execute the dynamic search provider instead of a hardcoded service
-          return this.searchProvider()(query);
+          return this.autocompleteProvider()(query);
         }
         return of([]);
       })

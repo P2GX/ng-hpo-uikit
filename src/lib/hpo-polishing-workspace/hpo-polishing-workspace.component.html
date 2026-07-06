@@ -44,11 +44,11 @@
   </div>
 
   <div class="workspace-footer">
-    @if (searchProvider(); as provider) {
+    @if (autocompleteProvider(); as provider) {
       <div class="autocomplete-injection-box">
         <hpo-ontology-autocomplete
           [inputString]="hpoInputString"
-          [searchProvider]="provider"
+          [autocompleteProvider]="provider"
           (selected)="handleAutocompleteSelection($event)">
         </hpo-ontology-autocomplete>
         <button 

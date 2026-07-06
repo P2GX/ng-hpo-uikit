@@ -13,7 +13,6 @@ import { HitSpanPatch } from '../models/hpo-annotation-models';
 export class TextMiningContainerComponent {
   sentences = input<FenominalSentence[]>([]);
   readOnly = input(false, { transform: booleanAttribute });
-  //hitUpdated = output<{ action: string; sentence: FenominalSentence }>();
   hitUpdated = output<HitSpanPatch>();
 
   /* Show sentences above this index in collapsed mode to save space */
