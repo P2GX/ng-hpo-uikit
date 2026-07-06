@@ -9,6 +9,7 @@ import { fn } from '@storybook/test';
 import { HpoPolishingWorkspaceComponent } from './hpo-polishing-workspace.component';
 import { FenominalSentence } from '../models/fenominal-models';
 import { OntologyMatch } from '../models/ontology-dto';
+import { HpoTermMinimal } from '../models/hpo-annotation-models';
 
 // 1. Maintain mock input data as clean raw backend structures (FenominalSentence[])
 const mockSentences: FenominalSentence[] = [
@@ -62,7 +63,14 @@ const mockSentences: FenominalSentence[] = [
 ];
 
 const mockOnsets = ['Congenital onset', 'Antenatal onset', 'Neonatal onset', 'Infantile onset'];
-const mockModifiers = ['Severe', 'Mild', 'Progressive', 'Recurrent', 'Intermittent'];
+const mockModifiers: HpoTermMinimal[] = [
+  { termId: 'HP:0012825', label: 'Mild' },
+  { termId: 'HP:0012826', label: 'Moderate' },
+  { termId: 'HP:0012828', label: 'Severe' },
+  { termId: 'HP:0031375', label: 'Insidious onset' },
+  { termId: 'HP:0003679', label: 'Static' },
+  { termId: 'HP:0003676', label: 'Progressive' },
+];
 
 const mockSearchProvider = (query: string) => {
   const mockDatabase: OntologyMatch[] = [

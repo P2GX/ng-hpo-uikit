@@ -1,0 +1,76 @@
+<div class="modifier-menu-card">
+
+  @if (quickModifiers().length) {
+    <label class="section-label">Severity</label>
+    <div class="quick-select-row">
+      @for (mod of quickModifiers(); track mod.termId) {
+        <button
+          mat-stroked-button
+          color="primary"
+          class="btn-small"
+          [class.is-selected]="isSelected(mod)"
+          (click)="selectQuickModifier(mod)">
+          {{ mod.label }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (selectedModifiers().length) {
+    <div class="selected-chips-row">
+      @for (mod of selectedModifiers(); track mod.termId) {
+        <span class="modifier-chip">
+          {{ mod.label }}
+          <button type="button" class="chip-remove-btn" (click)="removeModifier(mod)" aria-label="Remove modifier">
+            <mat-icon>close</mat-icon>
+          </button>
+        </span>
+      }
+    </div>
+  }
+
+  <div class="inline-modifier-header">
+    <span class="inline-label">Modifiers</span>
+
+    <mat-form-field class="compact-form-field" appearance="outline">
+      <input type="text"
+        #hpoInput
+        [placeholder]="placeholder()"
+        matInput
+        [formControl]="control"
+        [matAutocomplete]="auto"
+        (blur)="control.markAsTouched()"
+        spellcheck="false"
+        autocomplete="off">
+
+      @if (control.value) {
+        <button matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onOptionSelected($event)">
+        @for (option of filteredOptions(); track option.termId) {
+          <mat-option [value]="option">
+            <div class="option-container">
+              <span class="option-matched-text">{{ option.label }}</span>
+              <small class="option-id"> ({{ option.termId }})</small>
+            </div>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+  </div>
+
+  @if (control.hasError('invalidSelection') && control.touched) {
+    <div class="error-text-fallback">Please select a term from the list</div>
+  }
+
+  <div class="modifier-menu-footer">
+    <button type="button" class="btn-close-menu" (click)="closeMenu()">Done</button>
+  </div>
+
+</div>

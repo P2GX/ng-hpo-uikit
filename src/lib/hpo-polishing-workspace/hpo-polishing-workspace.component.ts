@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { MatIcon } from '@angular/material/icon';
 
 import { 
@@ -14,8 +13,9 @@ import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
-import { HierarchyMapItem, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
+import { HierarchyMapItem, HitSpanPatch, HpoTermMinimal, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { Observable } from 'rxjs';
+import { TextMiningContainerComponent } from "../text-mining-container/text-mining-container.component";
 
 
 
@@ -23,11 +23,13 @@ import { Observable } from 'rxjs';
   selector: 'hpo-polishing-workspace',
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    MatIcon, 
+    CommonModule,
+    FormsModule,
+    MatIcon,
     OntologyAutocompleteComponent,
-    HpoPolishRowComponent],
+    HpoPolishRowComponent,
+    TextMiningContainerComponent
+],
   templateUrl: './hpo-polishing-workspace.component.html',
   styleUrls: ['./hpo-polishing-workspace.component.scss']
 })
@@ -35,7 +37,7 @@ export class HpoPolishingWorkspaceComponent {
   private notificationService = inject(NotificationService);
   
   sentences = input<FenominalSentence[]>([]);
-  availableModifiers = input<string[]>([]);
+  availableModifiers = input<HpoTermMinimal[]>([]);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
 
   complete = output<PolishedHpoAnnotation[]>();
@@ -242,6 +244,21 @@ export class HpoPolishingWorkspaceComponent {
     // Reset autocomplete inputs
     this.selectedHpoMatch.set(null);
     this.hpoInputString = '';
+  }
+
+  protected handleTextMiningUpdate(patch: HitSpanPatch): void {
+    this.localSentences.update(sentences =>
+      sentences.map(s => {
+        if (s.start !== patch.sentenceStart) return s;
+        return {
+          ...s,
+          segments: s.segments.map((seg, i) => {
+            if (i !== patch.segmentIndex || seg.kind !== 'hit') return seg;
+            return { ...seg, hit: { ...seg.hit, span: patch.span } };
+          })
+        };
+      })
+    );
   }
 
   protected saveAndFinish(): void {

@@ -1,4 +1,4 @@
-import { Component, input, model, computed, output, signal } from '@angular/core';
+import { Component, input, model, computed, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,10 +6,16 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { HpoModifierMenuComponent } from "../hpo-modifier-menu/hpo-modifier-menu.component";
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
+import { MatDialog } from '@angular/material/dialog';
+import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component'
 
+/*
+ * This component provides one row in the HPO annotation table and allows users to "polish" the
+ * annotations by toggling observed/excluded, setting onsets, adding modifiers, deleting annotations,
+ * and adding new annotations via autocompletion.
+*/
 @Component({
   selector: 'tr[hpo-polisher-row]',
   standalone: true,
@@ -21,17 +27,17 @@ import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.co
     MatIconModule,
     MatAutocompleteModule,
     MatInputModule,
-    MatFormFieldModule,
-    HpoModifierMenuComponent
+    MatFormFieldModule
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'
 })
 export class HpoPolishRowComponent {
+  private dialog = inject(MatDialog);
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = input<HierarchyMapItem | null>(null);
-  readonly availableModifiers = input<string[]>([]);
+  readonly availableModifiers = input<HpoTermMinimal[]>([]);
 
   readonly updated = output<PolishedHpoAnnotation>();
   readonly deleteRequested = output<void>();
@@ -39,8 +45,7 @@ export class HpoPolishRowComponent {
   // Local autocomplete search inputs
   modifierSearchQuery = signal<string>('');
  
-
-  readonly showHierarchyMenu = signal<boolean>(false);
+  readonly showHierarchyMenu = signal(false);
   showModifierMenu = signal(false);
 
   filteredModifiers = computed(() => {
@@ -50,7 +55,7 @@ export class HpoPolishRowComponent {
     
     return available.filter(mod => 
       !currentSelected.includes(mod) && 
-      mod.toLowerCase().includes(query)
+      mod.label.includes(query)
     );
   });
 
@@ -58,20 +63,20 @@ export class HpoPolishRowComponent {
     return this.availableModifiers().map(m => ({ id: m, label: m }));
   });
 
-  updateModifiers(updatedMods: string[]): void {
+  updateModifiers(updatedMods: HpoTermMinimal[]): void {
     const updatedAnnotation = {
       ...this.annotation(),
       modifiers: updatedMods
     };
-  
-  this.annotation.set(updatedAnnotation); // Update local signal view
-  this.updated.emit(updatedAnnotation);   // Inform parent/backend pipeline
-}
+    this.annotation.set(updatedAnnotation); 
+    this.updated.emit(updatedAnnotation); 
+  }
 
   toggleHierarchyMenu(): void {
     this.showHierarchyMenu.update(v => !v);
   }
 
+  /* replace a term with a parent or child from the hierarchy menu */
   replaceTerm(target: HpoTermMinimal): void {
    const updatedAnnotation = {
       ...this.annotation(),
@@ -92,7 +97,7 @@ export class HpoPolishRowComponent {
     this.updated.emit(updatedAnnotation);
   }
 
-
+/*
   addModifier(event: Event): void {
     const select = event.target as HTMLSelectElement;
     const value = select.value;
@@ -110,7 +115,7 @@ export class HpoPolishRowComponent {
     }
     select.value = ''; // Reset select tag view line
   }
-
+*/
   removeModifier(idx: number): void {
     const currentMods = this.annotation().modifiers || [];
     const updatedMods = currentMods.filter((_, i) => i !== idx);
@@ -121,6 +126,25 @@ export class HpoPolishRowComponent {
 
     this.annotation.set(updatedAnnotation); 
     this.updated.emit(updatedAnnotation);
+  }
+
+  protected openModifierDialog(): void {
+    const ref = this.dialog.open<HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult>(
+      HpoModifierDialogComponent,
+      {
+        data: {
+          availableModifiers: this.availableModifiers(),
+          selectedModifiers: this.annotation().modifiers || []
+        },
+        width: '480px'
+      }
+    );
+
+    ref.afterClosed().subscribe(result => {
+      if (result) {
+        this.updateModifiers(result.selectedModifiers);
+      }
+    });
   }
 
   changeOnset(newOnset: string): void {

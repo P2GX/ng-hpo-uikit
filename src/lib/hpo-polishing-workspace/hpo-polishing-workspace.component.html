@@ -1,20 +1,12 @@
 <div class="workspace-layout">
   <div class="document-preview-pane">
-    <div class="annotation-text-wrapper">
-      @for (sentence of localSentences(); track sentence.start) {
-        <p class="sentence-flow-line">
-          @for (seg of sentence.segments; track $index) {
-            @if (seg.kind === 'text') {
-              <span class="plain-text">{{ seg.text }}</span>
-            } @else if (seg.kind === 'hit') {
-              <span class="highlight-token" [class.is-excluded]="seg.hit.excluded">
-                {{ seg.text }}
-              </span>
-            }
-          }
-        </p>
-      }
-    </div>
+    <div class="document-preview-pane">
+    <hpo-text-mining-container
+      [sentences]="localSentences()"
+      [readOnly]=false
+      (hitUpdated)="handleTextMiningUpdate($event)">
+    </hpo-text-mining-container>
+</div>
   </div>
 
   <div class="table-viewport">

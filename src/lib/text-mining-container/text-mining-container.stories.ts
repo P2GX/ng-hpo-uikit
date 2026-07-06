@@ -63,11 +63,6 @@ const meta: Meta<TextMiningContainerComponent> = {
   component: TextMiningContainerComponent,
   tags: ['autodocs'],
   argTypes: {
-    displayMode: {
-      control: 'select',
-      options: ['default', 'compact'],
-      description: 'Changes layout rendering behavior of text blocks'
-    },
     readOnly: {
       control: 'boolean',
       description: 'Toggles interaction utilities and drag indicators'
@@ -84,7 +79,6 @@ type Story = StoryObj<TextMiningContainerComponent>;
 export const DefaultLayout: Story = {
   args: {
     sentences: mockSentences,
-    displayMode: 'default',
     readOnly: false
   }
 };
@@ -95,7 +89,6 @@ export const DefaultLayout: Story = {
 export const CompactTokensView: Story = {
   args: {
     ...DefaultLayout.args,
-    displayMode: 'compact'
   }
 };
 

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { HpoPolishRowComponent } from './hpo-annotation-polish-row.component';
+import { HpoTermMinimal } from '../models/hpo-annotation-models';
 
 const meta: Meta<HpoPolishRowComponent> = {
   title: 'Components/HPO Annotation Polisher',
@@ -61,9 +62,14 @@ const mockHierarchy = {
   ]
 };
 
-const mockOnsets = ['Antenatal onset', 'Neonatal onset', 'Infantile onset', 'Childhood onset'];
-const mockModifiers = ['Severe', 'Mild', 'Episodic', 'Progressive'];
-
+const mockModifiers: HpoTermMinimal[] = [
+  { termId: 'HP:0012825', label: 'Mild' },
+  { termId: 'HP:0012826', label: 'Moderate' },
+  { termId: 'HP:0012828', label: 'Severe' },
+  { termId: 'HP:0031375', label: 'Insidious onset' },
+  { termId: 'HP:0003679', label: 'Static' },
+  { termId: 'HP:0003676', label: 'Progressive' },
+];
 // --- Stories ---
 
 /*
@@ -81,7 +87,7 @@ export const DefaultObserved: Story = {
       label: 'Seizure',
       excluded: false,
       onsetString: 'Infantile onset',
-      modifiers: ['Severe']
+      modifiers: mockModifiers
     },
     hierarchy: mockHierarchy,
     availableModifiers: mockModifiers

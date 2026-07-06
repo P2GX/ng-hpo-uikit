@@ -40,7 +40,6 @@
   </td>
 
   <td class="onset-cell">
-    <td class="onset-cell">
     <hpo-age-selector
       [selectedOnset]="annotation().onsetString || null"
       (onsetChanged)="changeOnset($event)"
@@ -48,27 +47,12 @@
   </td>
 
   <td class="modifier-cell">
-    <div class="modifier-menu-wrapper">
-      
-      <div class="active-modifiers-preview" (click)="showModifierMenu.set(!showModifierMenu())">
-        @for (mod of annotation().modifiers || []; track mod) {
-          <span class="modifier-chip">{{ mod }}</span>
-        } @empty {
-          <span class="placeholder-text">+ Add Modifier</span>
-        }
-      </div>
-
-      @if (showModifierMenu()) {
-        <div class="modifier-overlay" (mouseleave)="showModifierMenu.set(false)">
-          <hpo-modifier-menu
-            [availableModifiers]="formattedModifierOptions()"
-            [selectedModifierIds]="annotation().modifiers || []"
-            (selectedModifierIdsChange)="updateModifiers($event)"
-            (menuClosed)="showModifierMenu.set(false)"
-          />
-        </div>
+    <div class="active-modifiers-preview" (click)="openModifierDialog()">
+      @for (mod of annotation().modifiers || []; track mod) {
+        <span class="modifier-chip">{{ mod }}</span>
+      } @empty {
+        <span class="placeholder-text">+ Add Modifier</span>
       }
-      
     </div>
   </td>
 

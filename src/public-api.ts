@@ -10,7 +10,7 @@ export * from './lib/hpo-annotation-polish-row/hpo-annotation-polish-row.compone
 export * from './lib/hpo-polishing-workspace/hpo-polishing-workspace.component';
 export * from './lib/hpo-age-selector/hpo-age-selector.component';
 export * from './lib/hpo-mining/hpo-mining.component';
-export * from './lib/hpo-modifier-menu/hpo-modifier-menu.component';
+export * from './lib/hpo-modifier/hpo-modifier.component';
 export * from './lib/load-ontology/load-ontology.component';
 export * from './lib/orcid-dialog/orcid-dialog';
 export * from './lib/phenopacket-loader/phenopacket-loader.component';

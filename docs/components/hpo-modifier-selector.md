@@ -1,11 +1,69 @@
-## HpoModifierMenuComponent
+## HpoModifierComponent
 
-The HpoModifierMenuComponent provides a unified interface for selecting and assigning clinical modifiers (such as severity, laterality, or specific course descriptors) to an HPO term. It balances quick-select options with an optimized selection flow, ensuring data integrity by binding directly to unique clinical modifier IDs.
+The `HpoModifierComponent` provides a unified interface for selecting and assigning clinical modifiers (such as severity, laterality, or specific course descriptors) to an HPO term. It combines a quick-select severity shortcut row with a searchable autocomplete, and binds directly to full `HpoTermMinimal` objects (not bare ID strings).
 
-## Features
-* **Modern Signal Architecture:** Built entirely on Angular's input, output, and model signals for reactive performance.
-* **Decoupled & Fast:** Designed to pair with a singleton-cached modifier service for instant client-side filtering and lightning-fast local state updates.
-* **Layout Safe:** Out-of-the-box styling configurations prevent common layout breakages when rendering inside tight spaces like a TableCellEditorComponent.
+## Connecting to backend
+
+This module requires as input a list of all HPO Modifier terms. This can be obtained using
+the `ga4ghphetools` library as follows
+```rust
+ pub fn get_modifiers(&self) -> Result<Vec<HpoTermDuplet>, String> {
+    let hpo = self.hpo.as_ref().ok_or_else(|| "HPO not initialized".to_string())?;
+    ga4ghphetools::hpo::get_modifiers(hpo.clone())
+}
+```
+
+The `HpoTermDuplet` is defined as follows:
+```rust
+/// A structure to represent an HPO term (id and label) in a simple way
+#[derive(Clone, Debug, Default, Hash, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HpoTermDuplet {
+    pub hpo_label: String,
+    pub hpo_id: String,
+}
+```
+
+The API of the library requires a slightly different interface
+```typescript
+export interface HpoTermMinimal {
+  termId: string;
+  label: string;
+}
+```
+
+Therefore, the service layer should use code something like this:
+```rust
+/// format matching the TypeScript `HpoTermMinimal` interface in ng-hpo-uikit.
+#[derive(Clone, Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct HpoTermMinimalDto {
+    pub term_id: String,
+    pub label: String,
+}
+
+impl From<HpoTermDuplet> for HpoTermMinimalDto {
+    fn from(d: HpoTermDuplet) -> Self {
+        HpoTermMinimalDto {
+            term_id: d.hpo_id,
+            label: d.hpo_label,
+        }
+    }
+}
+
+#[tauri::command]
+async fn get_hpo_modifiers(
+    state: tauri::State<'_, Arc<AppState>>
+) -> Result<Vec<HpoTermMinimalDto>, String> {
+    let singleton = state.phenoblendtk.lock()
+        .map_err(|_| "Failed to lock state".to_string())?;
+    let duplets = singleton.get_modifiers()?;
+
+    Ok(duplets.into_iter().map(HpoTermMinimalDto::from).collect())
+}
+```
+
+
 
 ## API Reference
 
@@ -13,15 +71,15 @@ The HpoModifierMenuComponent provides a unified interface for selecting and assi
 
 | Property | Type | Binding Type | Description |
 | :--- | :--- | :--- | :--- |
-| `availableModifiers` | `Modifier[]` | `input.required` | **Required.** Array of available modifier objects (containing IDs and labels) fetched from your cached ontology service. |
-| `selectedModifierIds` | `string[]` | `model` | **Two-way bindable.** An array of the currently selected clinical modifier IDs. |
+| `availableModifiers` | `HpoTermMinimal[]` | `input.required` | **Required.** Array of available modifier objects (containing IDs and labels) fetched from your cached ontology service. |
+| `selectedModifiers` | `HpoTermMinimal[]` | `model` | **Two-way bindable.** An array of the currently selected clinical modifier IDs. |
 
 
 ### Outputs
 
 | Event | Payload | Description |
 | :--- | :--- | :--- |
-| `modifierToggled` | `{ id: string, selected: boolean }` | Emits immediately whenever a specific modifier is checked, unchecked, or clicked. |
+| `modifierToggled` | `{ modifier: HpoTermMinimal, selected: boolean }` |  Emits whenever a modifier is added or removed, via quick-select, autocomplete selection, or chip removal.  |
 | `menuClosed` | `void` | Emits when the user clicks outside or clicks a confirmation action, indicating the state can be finalized. |
 
 ### Usage Example
@@ -44,11 +102,11 @@ interface Modifier {
   imports: [HpoModifierMenuComponent],
   template: `
     <div class="table-cell-editor">
-      <lib-hpo-modifier-menu
+      <hpo-modifier
         [(selectedModifierIds)]="activeModifiers"
         [availableModifiers]="modifierList()"
         (modifierToggled)="onModifierToggle($event)">
-      </lib-hpo-modifier-menu>
+      </hpo-modifier>
     </div>
   `
 })
@@ -69,3 +127,8 @@ export class TableCellEditorComponent {
   }
 }
 ```
+
+> **Note on hosting in a dialog:** if you present this component inside a
+> `MatDialog`, wire `menuClosed` to close the dialog with the current selection
+> (see `HpoModifierDialogComponent` for the reference pattern) — this component
+> does not manage its own dialog lifecycle or dismiss-on-outside-click behavior.

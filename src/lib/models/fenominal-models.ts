@@ -1,3 +1,5 @@
+import { HpoTermMinimal } from "./hpo-annotation-models";
+
 /** Mirrors Rust's `std::ops::Range<usize>`, which serde serializes as `{ start, end }`. */
 export interface Span {
   start: number;
@@ -37,7 +39,7 @@ export interface UiFenominalHit {
   severity?: string;
   onset?: string;
   excluded: boolean;
-  modifiers: string[];
+  modifiers: HpoTermMinimal[];
   
 }
 

@@ -15,5 +15,13 @@ export interface PolishedHpoAnnotation {
   label: string;
   excluded: boolean;
   onsetString?: string;
-  modifiers?: string[];
+  modifiers: HpoTermMinimal[];
+}
+
+/* Records what changes when a user moves a badge in our textmining component */
+export interface HitSpanPatch {
+  action: 'SPAN_BOUNDARIES_CHANGED' | 'SPAN_POSITION_SHIFTED';
+  sentenceStart: number;
+  segmentIndex: number;
+  span: { start: number; end: number };
 }
