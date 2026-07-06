@@ -1,5 +1,5 @@
 .text-mining-workspace {
-  line-height: 0.8; // Normal, readable paragraph breathing room
+  line-height: 1.35; 
   font-family: system-ui, -apple-system, sans-serif;
   color: #1e293b;
   padding: 12px;
@@ -7,14 +7,20 @@
 }
 
 .sentence-row {
+  display: inline;
   transition: opacity 0.2s ease;
   
   // Style changes when a block becomes archived history
   &.is-collapsed-view {
     opacity: 0.6; // Softens the visual weight of completed segments
-    margin-bottom: 4px;
     border-left: 2px solid #e2e8f0;
     padding-left: 8px;
+  }
+}
+
+.sentence-row + .sentence-row {
+  &::before {
+    content: ' ';
   }
 }
 
@@ -37,20 +43,20 @@
 .badge-overlay-controls {
   display: none; // Hidden by default
   position: absolute;
-  top: -28px; // Positioned above the text
+  top: -22px; // Positioned above the text
   left: 50%;
   transform: translateX(-50%);
   background: #0f172a;
   color: #ffffff;
-  padding: 3px 6px;
+  padding: 2px 4px;
   border-radius: 4px;
   align-items: center;
-  gap: 6px;
-  z-index: 20;
+  gap: 4px;
+  z-index: 50;
   white-space: nowrap;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px -1px rgba(0, 0, 0, 0.25);
 
-  // THE FIX: An invisible bridge connecting the badge text to the menu box
+  // An invisible bridge connecting the badge text to the menu box
   &::before {
     content: '';
     position: absolute;
@@ -86,6 +92,7 @@
 
 /* Floating button at the bottom to expand back if needed */
 .reset-view-btn {
+  display: block;
   margin-top: 16px;
   background: #ffffff;
   border: 1px solid #cbd5e1;
@@ -105,8 +112,8 @@
 }
 
 .sentence-line {
-  margin-bottom: 4;
-  display: block; // Ensures the paragraph behaves like text flow, not a flex container
+  margin: 0;
+  display: inline; 
 }
 
 .plain-text {

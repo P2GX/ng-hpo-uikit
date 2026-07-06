@@ -29,16 +29,24 @@
 
                 @if (!readOnly()) {
                   <span class="badge-overlay-controls">
-                    <span class="span-handle left-handle" (click)="adjustBoundary(sentence, segment, 'start', -1); $event.stopPropagation()">◀</span>
-                    <button class="shift-btn" (click)="shiftBadge(sentence, segment, -1); $event.stopPropagation()">←</button>
-                    
-                    <button class="collapse-above-btn" (click)="collapseUpTo(sentence.start); $event.stopPropagation()" title="Collapse all text above this line">
-                      Collapse Above 
-                    </button>
-
-                    <button class="shift-btn" (click)="shiftBadge(sentence, segment, 1); $event.stopPropagation()">→</button>
-                    <span class="span-handle right-handle" (click)="adjustBoundary(sentence, segment, 'end', 1); $event.stopPropagation()">▶</span>
+                  <span class="control-group boundary-group" title="Adjust start boundary">
+                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'start', -1); $event.stopPropagation()">−</span>
+                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'start', 1); $event.stopPropagation()">+</span>
                   </span>
+
+                  <button class="shift-btn" (click)="shiftBadge(sentence, $index, -1); $event.stopPropagation()">← word</button>
+
+                  <button class="collapse-above-btn" (click)="collapseUpTo(sentence.start); $event.stopPropagation()" title="Collapse all text above this line">
+                    Collapse Above
+                  </button>
+
+                  <button class="shift-btn" (click)="shiftBadge(sentence, $index, 1); $event.stopPropagation()">word →</button>
+
+                  <span class="control-group boundary-group" title="Adjust end boundary">
+                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'end', -1); $event.stopPropagation()">−</span>
+                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'end', 1); $event.stopPropagation()">+</span>
+                  </span>
+                </span>
                 }
               </span>
             }
