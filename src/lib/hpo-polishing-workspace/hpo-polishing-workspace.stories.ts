@@ -118,19 +118,17 @@ export const DefaultWorkspace: Story = {
   render: (args) => ({
     props: args,
     template: `
-      @if (searchProvider) {
         <hpo-polishing-workspace
           [sentences]="sentences"
           [availableOnsets]="availableOnsets"
           [availableModifiers]="availableModifiers"
-          [searchProvider]="searchProvider"
+          [autocompleteProvider]="autocompleteProvider"
           (requestHierarchy)="requestHierarchy($event)"
           (createOnsetProvider)="createOnsetRequested($event)"
           (complete)="complete($event)"
           (cancel)="cancel()"
           (badgeMoved)="badgeMoved($event)">
         </hpo-polishing-workspace>
-      }
     `
   }),
   args: {

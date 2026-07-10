@@ -86,3 +86,28 @@
     border-color: var(--hpo-primary);
   }
 }
+
+.annotation-action {
+  padding: 4px 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: white;
+  color: var(--text-gray-dark);
+  font: inherit;
+  font-style: italic;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--bg-gray-light);
+  }
+}
+
+.annotation-value {
+  color: #1f2937;
+  font-weight: 500;
+}
+
+.annotation-value-small {
+  font-size: 11px;
+  padding: 2px 6px;
+}

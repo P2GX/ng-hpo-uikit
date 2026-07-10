@@ -41,6 +41,7 @@
 
   <td class="onset-cell">
     <hpo-age-selector
+      size="small"
       [selectedOnset]="annotation().onsetString || null"
       (onsetChanged)="changeOnset($event)"
     />
@@ -48,21 +49,43 @@
 
   <td class="modifier-cell">
     <div class="active-modifiers-preview" (click)="openModifierDialog()">
-      @for (mod of annotation().modifiers || []; track mod) {
-        <span class="modifier-chip">{{ mod }}</span>
-      } @empty {
-        <span class="placeholder-text">+ Add Modifier</span>
-      }
+      @for (mod of annotation().modifiers?.slice(0,2) ?? []; track mod.termId) {
+        <span class="modifier-chip"
+                [matTooltip]="mod.label">
+             {{ mod.label.length > 10 ? mod.label.slice(0, 10) + '…' : mod.label }}
+        </span>
+        }
+
+        @if ((annotation().modifiers?.length ?? 0) > 2) {
+        <span
+            class="modifier-chip more"
+            [matTooltip]="remainingModifierLabels()">
+            +{{ (annotation().modifiers?.length ?? 0) - 2 }}
+        </span>
+        }
+        <button
+            class="annotation-action"
+            (click)="openModifierDialog(); $event.stopPropagation()">
+            {{ modifierButtonText() }}
+        </button>
     </div>
   </td>
 
   <td class="action-cell">
       <div class="action-group">
-      <button (click)="toggleObserved()" class="btn-icon">
-          <mat-icon>swap_horiz</mat-icon>Toggle
-      </button>
-      <button (click)="deleteRequested.emit()" class="btn-icon btn-delete">
-          <mat-icon>delete</mat-icon>Delete
-      </button>
-      </div>
+        <button
+            mat-icon-button
+            matTooltip="Toggle observed/excluded"
+            (click)="toggleObserved()">
+            <mat-icon>swap_horiz</mat-icon>
+        </button>
+
+        <button
+            mat-icon-button
+            color="warn"
+            matTooltip="Delete annotation"
+            (click)="deleteRequested.emit()">
+            <mat-icon>delete</mat-icon>
+        </button>
+    </div>
   </td>

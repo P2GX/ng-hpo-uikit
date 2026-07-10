@@ -25,21 +25,52 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;
 }
 .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }
-.menu-item { padding: 8px 12px; font-size: 13px; cursor: pointer; list-style: none; }
+.menu-item { padding: 4px 6px; font-size: 13px; cursor: pointer; list-style: none; }
 .menu-item:hover { background-color: #f1f3f5; }
+
+td {
+    padding: 4px 8px;
+    vertical-align: middle;
+}
 
 /* Modifier configuration layouts */
 .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
-.modifier-chip { background: #e9ecef; border-radius: 12px; padding: 2px 8px; font-size: 11px; display: inline-flex; align-items: center; gap: 4px; }
+.modifier-chip { background: #e9ecef; border-radius: 12px; padding: 1px 6px; font-size: 8px; display: inline-flex; align-items: center; gap: 4px; max-width: 90px; }
 .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }
-.modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 12px; }
+.modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 11px; }
+.active-modifiers-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    align-items: center;
+    min-height: 22px;
+}
 
 .badge {
   padding: 0.125rem 0.375rem;
   border-radius: 9999px;
-  font-size: 12px;
+  font-size: 8px;
   font-weight: 700;
+   padding: 1px 5px;
 
   &.badge-green { background: var(--green-bg); color: var(--green-text); }
   &.badge-red { background: var(--red-bg); color: var(--red-text); }
+}
+
+.action-group {
+    display: flex;
+    gap: 2px;
+    justify-content: center;
+}
+
+.action-group button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+}
+
+.action-group mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
 }

@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTooltip } from '@angular/material/tooltip';
 import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component'
 
 /*
@@ -27,7 +28,8 @@ import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } 
     MatIconModule,
     MatAutocompleteModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatTooltip
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'
@@ -61,6 +63,20 @@ export class HpoPolishRowComponent {
 
   formattedModifierOptions = computed(() => {
     return this.availableModifiers().map(m => ({ id: m, label: m }));
+  });
+
+  readonly remainingModifierLabels = computed(() => {
+    const mods = this.annotation().modifiers ?? [];
+
+    return mods
+      .slice(2)
+      .map(m => m.label)
+      .join('\n');
+  });
+
+  modifierButtonText = computed(() => {
+    const count = this.annotation().modifiers?.length ?? 0;
+    return count === 0 ? '+Add modifier' : 'Edit';
   });
 
   updateModifiers(updatedMods: HpoTermMinimal[]): void {

@@ -12,7 +12,7 @@ export class HpoAgeSelectorComponent {
   private dialog = inject(MatDialog);
 
   selectedOnset = input<string | null>(null);
- 
+  size = input<'normal' | 'small'>('normal');
 
   onsetChanged = output<string>();
 

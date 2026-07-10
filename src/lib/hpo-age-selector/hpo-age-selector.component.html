@@ -1,10 +1,13 @@
-<button 
-  type="button" 
-  class="age-picker-trigger" 
+<button
+  type="button"
+  [class.age-picker-trigger]="selectedOnset()"
+  [class.annotation-action]="!selectedOnset()"
+  [class.annotation-value-small]="size() === 'small'"
   (click)="openSelectorDialog()">
+
   @if (selectedOnset()) {
     <span class="age-value">{{ selectedOnset() }}</span>
   } @else {
-    <span class="placeholder-text">+ Add Age of Onset</span>
+    +Add Age of Onset
   }
 </button>

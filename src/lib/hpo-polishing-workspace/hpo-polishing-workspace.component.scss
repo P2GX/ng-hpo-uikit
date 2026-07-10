@@ -128,33 +128,14 @@
   max-width: 600px;
 }
 
-.btn-workspace-add {
-  display: inline-flex;
+.action-btn-cluster {
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
   gap: 4px;
-  background: #f1f5f9;
-  border: 1px solid #cbd5e1;
-  color: #475569;
-  padding: 8px 14px;
-  border-radius: 6px;
-  font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
-
-  &:hover:not(:disabled) { background: #e2e8f0; color: #0f172a; }
 }
 
-.btn-workspace-finish {
-  background: #2563eb;
-  color: #ffffff;
-  border: none;
-  padding: 8px 18px;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  
-  &:hover { background: #1d4ed8; }
-}
+
 
 /* Floating Overlay Tree Stylings */
 .ontology-context-menu {

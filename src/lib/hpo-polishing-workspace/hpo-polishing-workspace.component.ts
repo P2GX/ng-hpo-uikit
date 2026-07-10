@@ -14,7 +14,6 @@ import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
 import { HierarchyMapItem, HitSpanPatch, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
-import { Observable } from 'rxjs';
 import { TextMiningContainerComponent } from "../text-mining-container/text-mining-container.component";
 
 
