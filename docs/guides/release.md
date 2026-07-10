@@ -33,7 +33,7 @@ Users need to add the following to the `package.json` file of their application 
 
 Build the library locally
 ```bash
-npm run build:uikit
+npm run build
 ```
 
 ## Public API
