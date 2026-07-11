@@ -76,7 +76,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    sentences: mockSentences,\n    readOnly: false\n  }\n}",
+                "defaultValue": "{\n  args: {\n    sentences: mockSentences\n  }\n}",
                 "rawdescription": "Standard Reading Layout mimicking textual context matching",
                 "description": "<p>Standard Reading Layout mimicking textual context matching</p>\n"
             },
@@ -100,7 +100,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableModifiers: mockModifiers,\n    autocompleteProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [autocompleteProvider]=\"autocompleteProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableModifiers: mockModifiers,\n    autocompleteProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
             },
             {
                 "name": "EmptyWorkspace",
@@ -161,17 +161,6 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoAgeSelectorDialogComponent>",
-                "defaultValue": "{\n  title: 'Components/HpoAgeSelectorDialog',\n  component: HpoAgeSelectorDialogComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [BrowserAnimationsModule], // Required for Material animations\n      providers: [\n        { provide: MatDialogRef, useValue: mockDialogRef },\n        { provide: AgeService },\n        { provide: NotificationService, useValue: mockNotificationService },\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: null } }\n      ]\n    })\n  ],\n  tags: ['autodocs']\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -183,12 +172,12 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<HpoPolishingWorkspaceComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    autocompleteProvider: {\n      table: { disable: true }\n    }\n  }\n}"
+                "type": "Meta<HpoAgeSelectorDialogComponent>",
+                "defaultValue": "{\n  title: 'Components/HpoAgeSelectorDialog',\n  component: HpoAgeSelectorDialogComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [BrowserAnimationsModule], // Required for Material animations\n      providers: [\n        { provide: MatDialogRef, useValue: mockDialogRef },\n        { provide: AgeService },\n        { provide: NotificationService, useValue: mockNotificationService },\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: null } }\n      ]\n    })\n  ],\n  tags: ['autodocs']\n}"
             },
             {
                 "name": "meta",
@@ -216,12 +205,23 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoPolishingWorkspaceComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    autocompleteProvider: {\n      table: { disable: true }\n    }\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<TextMiningContainerComponent>",
-                "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    readOnly: {\n      control: 'boolean',\n      description: 'Toggles interaction utilities and drag indicators'\n    }\n  }\n}"
+                "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: { }\n}"
             },
             {
                 "name": "mockDialogRef",
@@ -364,7 +364,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  args: {\n    ...DefaultLayout.args,\n    readOnly: true\n  }\n}",
+                "defaultValue": "{\n  args: {\n    ...DefaultLayout.args\n    }\n}",
                 "rawdescription": "ReadOnly protection view",
                 "description": "<p>ReadOnly protection view</p>\n"
             },
@@ -409,19 +409,6 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
-                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoPolishRowComponent>",
                 "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
@@ -435,8 +422,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -463,6 +450,19 @@
                 "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoModifierComponent>",
                 "file": "src/lib/hpo-modifier/hpo-modifier.component.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -587,7 +587,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {\n    sentences: mockSentences,\n    readOnly: false\n  }\n}",
+                    "defaultValue": "{\n  args: {\n    sentences: mockSentences\n  }\n}",
                     "rawdescription": "Standard Reading Layout mimicking textual context matching",
                     "description": "<p>Standard Reading Layout mimicking textual context matching</p>\n"
                 },
@@ -600,7 +600,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Meta<TextMiningContainerComponent>",
-                    "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: {\n    readOnly: {\n      control: 'boolean',\n      description: 'Toggles interaction utilities and drag indicators'\n    }\n  }\n}"
+                    "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: { }\n}"
                 },
                 {
                     "name": "mockSentences",
@@ -622,7 +622,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: {\n    ...DefaultLayout.args,\n    readOnly: true\n  }\n}",
+                    "defaultValue": "{\n  args: {\n    ...DefaultLayout.args\n    }\n}",
                     "rawdescription": "ReadOnly protection view",
                     "description": "<p>ReadOnly protection view</p>\n"
                 }
@@ -797,7 +797,7 @@
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n      @if (searchProvider) {\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [searchProvider]=\"searchProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n      }\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableModifiers: mockModifiers,\n    autocompleteProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
+                    "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [autocompleteProvider]=\"autocompleteProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableModifiers: mockModifiers,\n    autocompleteProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
                 },
                 {
                     "name": "EmptyWorkspace",
@@ -896,21 +896,6 @@
         "groupedFunctions": {},
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
-                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
             "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
@@ -926,14 +911,14 @@
                     "kind": 184
                 }
             ],
-            "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
+            "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
-                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -964,6 +949,21 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoModifierComponent>",
                     "file": "src/lib/hpo-modifier/hpo-modifier.component.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",

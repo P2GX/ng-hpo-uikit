@@ -76,12 +76,7 @@ const meta: Meta<TextMiningContainerComponent> = {
   title: 'HPO Library/TextMiningContainer',
   component: TextMiningContainerComponent,
   tags: ['autodocs'],
-  argTypes: {
-    readOnly: {
-      control: 'boolean',
-      description: 'Toggles interaction utilities and drag indicators'
-    }
-  }
+  argTypes: { }
 };
 
 export default meta;
@@ -92,8 +87,7 @@ type Story = StoryObj<TextMiningContainerComponent>;
  */
 export const DefaultLayout: Story = {
   args: {
-    sentences: mockSentences,
-    readOnly: false
+    sentences: mockSentences
   }
 };
 
@@ -111,7 +105,6 @@ export const CompactTokensView: Story = {
  */
 export const ReadOnlyState: Story = {
   args: {
-    ...DefaultLayout.args,
-    readOnly: true
-  }
+    ...DefaultLayout.args
+    }
 };

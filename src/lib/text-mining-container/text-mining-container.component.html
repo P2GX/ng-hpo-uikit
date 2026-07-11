@@ -24,30 +24,12 @@
                 [class.is-excluded]="segment.hit?.excluded"
                 [attr.data-term-id]="segment.hit.termId"
                 [attr.title]="getTooltipText(segment.hit)">
-                
                 <span class="annotated-text">{{ segment.text }}</span>
-
-                @if (!readOnly()) {
                   <span class="badge-overlay-controls">
-                  <span class="control-group boundary-group" title="Adjust start boundary">
-                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'start', -1); $event.stopPropagation()">−</span>
-                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'start', 1); $event.stopPropagation()">+</span>
-                  </span>
-
-                  <button class="shift-btn" (click)="shiftBadge(sentence, $index, -1); $event.stopPropagation()">← word</button>
-
                   <button class="collapse-above-btn" (click)="collapseUpTo(sentence.start); $event.stopPropagation()" title="Collapse all text above this line">
                     Collapse Above
                   </button>
-
-                  <button class="shift-btn" (click)="shiftBadge(sentence, $index, 1); $event.stopPropagation()">word →</button>
-
-                  <span class="control-group boundary-group" title="Adjust end boundary">
-                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'end', -1); $event.stopPropagation()">−</span>
-                    <span class="span-handle" (click)="adjustBoundary(sentence, $index, 'end', 1); $event.stopPropagation()">+</span>
-                  </span>
                 </span>
-                }
               </span>
             }
           }
