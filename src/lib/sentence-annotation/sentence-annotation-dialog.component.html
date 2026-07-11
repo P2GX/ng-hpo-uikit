@@ -1,9 +1,11 @@
 <h2 mat-dialog-title>Manual HPO Annotation</h2>
 
 <mat-dialog-content>
-  <p class="dialog-hint">Click words to select the span that matches an HPO term.</p>
+  <p class="dialog-hint">Mark words to select the span that matches an HPO term.</p>
 
-  <div class="word-picker">
+  <div class="word-picker"
+    [class.is-dragging]="isDragging()"
+    (mouseleave)="onMouseUp()">
     @for (tok of tokens(); track $index) {
       @if (tok.isWhitespace) {
         <span class="word-space">{{ tok.text }}</span>
@@ -11,7 +13,9 @@
         <span
           class="word-token"
           [class.selected]="selectedIndices().has($index)"
-          (click)="toggleWord($index)">{{ tok.text }}</span>
+          (mousedown)="onWordMouseDown($index, $event)"
+          (mouseenter)="onWordMouseEnter($index)">
+            {{ tok.text }}</span>
       }
     }
   </div>

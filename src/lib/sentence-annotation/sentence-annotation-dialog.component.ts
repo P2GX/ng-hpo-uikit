@@ -1,21 +1,27 @@
 import { Component, computed, HostListener, inject, signal } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
-import { UiFenominalHit, UiFenominalSegment } from '../models/fenominal-models';
-import { OntologyAutocompleteComponent } from "../ontology-autocomplete/ontology-autocomplete.component";
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogContent,
+} from '@angular/material/dialog';
+import {
+  FenominalHit,
+  FenominalSegment,
+} from '../models/fenominal-models';
+import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { OntologyMatch } from '../models/ontology-dto';
 import { Observable } from 'rxjs/internal/Observable';
 
 // dialog input
-
-
-type UiFenominalTextSegment = Extract<UiFenominalSegment, { kind: 'text' }>;
+type FenominalTextSegment = Extract<FenominalSegment, { kind: 'text' }>;
 export interface SentenceAnnotationDialogData {
-  segment: UiFenominalTextSegment;
+  segment: FenominalTextSegment;
   autocompleteProvider: (query: string) => Observable<OntologyMatch[]>;
 }
 
-// dialog output — replaces the single input segment
-export type SentenceAnnotationDialogResult = UiFenominalSegment[] | null; // null = cancelled
+// dialog output
+export type SentenceAnnotationDialogResult = FenominalSegment[] | null; // null = cancelled
 
 interface WordToken {
   text: string;
@@ -23,8 +29,6 @@ interface WordToken {
   endOffset: number;
   isWhitespace: boolean;
 }
-
-
 
 function tokenize(text: string): WordToken[] {
   const tokens: WordToken[] = [];
@@ -41,7 +45,6 @@ function tokenize(text: string): WordToken[] {
   return tokens;
 }
 
-
 @Component({
   selector: 'app-sentence-annotation-dialog',
   standalone: true,
@@ -50,10 +53,10 @@ function tokenize(text: string): WordToken[] {
   imports: [MatDialogActions, OntologyAutocompleteComponent, MatDialogContent],
 })
 export class SentenceAnnotationDialogComponent {
-    private readonly dialogRef = inject<MatDialogRef<SentenceAnnotationDialogComponent, SentenceAnnotationDialogResult>>(MatDialogRef);
-
- 
-
+  private readonly dialogRef =
+    inject<MatDialogRef<SentenceAnnotationDialogComponent, SentenceAnnotationDialogResult>>(
+      MatDialogRef,
+    );
   readonly data = inject<SentenceAnnotationDialogData>(MAT_DIALOG_DATA);
   readonly tokens = signal<WordToken[]>([]);
   readonly selectedIndices = signal<Set<number>>(new Set());
@@ -61,84 +64,44 @@ export class SentenceAnnotationDialogComponent {
 
   readonly autocompleteProvider = this.data.autocompleteProvider;
 
-  private readonly isDragging = signal(false);
+  readonly isDragging = signal(false);
   private readonly dragStartIndex = signal<number | null>(null);
-
 
   readonly selectedText = computed(() => {
     const idxs = [...this.selectedIndices()].sort((a, b) => a - b);
     if (idxs.length === 0) return '';
     const toks = this.tokens();
-    return toks.slice(idxs[0], idxs[idxs.length - 1] + 1).map(t => t.text).join('');
+    return toks
+      .slice(idxs[0], idxs[idxs.length - 1] + 1)
+      .map((t) => t.text)
+      .join('');
   });
 
   readonly canConfirm = computed(
-    () => this.selectedIndices().size > 0 && this.chosenTerm() !== null
+    () => this.selectedIndices().size > 0 && this.chosenTerm() !== null,
   );
 
-    constructor() {
-        this.tokens.set(tokenize(this.data.segment.text));
-    }
-
-    handleAutocompleteSelection(match: OntologyMatch): void {
-        this.chosenTerm.set(match);
-    }
-
-  toggleWord(index: number): void {
-    const tok = this.tokens()[index];
-    if (tok.isWhitespace) return;
-
-    const current = this.selectedIndices();
-
-    // If clicking within/adjacent to the existing contiguous run, extend/shrink it.
-    // Otherwise start a fresh single-word selection.
-    if (current.size === 0) {
-      this.selectedIndices.set(new Set([index]));
-      return;
-    }
-
-    const sorted = [...current].sort((a, b) => a - b);
-    const min = sorted[0];
-    const max = sorted[sorted.length - 1];
-
-    if (current.has(index) && (index === min || index === max)) {
-      // shrink from whichever end was clicked
-      const next = new Set(current);
-      next.delete(index);
-      this.selectedIndices.set(next);
-      return;
-    }
-
-    if (index === min - 1 || index === max + 1) {
-      // extend the run by one
-      this.selectedIndices.set(new Set([...current, index]));
-      return;
-    }
-
-    // non-adjacent click: reset selection to this single word
-    this.selectedIndices.set(new Set([index]));
+  constructor() {
+    this.tokens.set(tokenize(this.data.segment.text));
   }
 
-  private textSegment(text: string, start: number, end: number): UiFenominalSegment {
-    return { kind: 'text', text, span: { start, end } };
-    }
+  handleAutocompleteSelection(match: OntologyMatch): void {
+    this.chosenTerm.set(match);
+  }
 
-   hitSegment(
-    text: string,
-    match: OntologyMatch,
-    start: number,
-    end: number,
-    ): UiFenominalSegment {
-    const hit: UiFenominalHit = {
-        id: crypto.randomUUID(),
-        termId: match.id,
-        label: match.label,
-        span: { start, end },
-        excluded: false,
-        modifiers: [],
+  private textSegment(text: string, start: number, end: number): FenominalSegment {
+    return { kind: 'text', text, span: { start, end } };
+  }
+
+  hitSegment(text: string, match: OntologyMatch, start: number, end: number): FenominalSegment {
+    const hit: FenominalHit = {
+      termId: match.id,
+      label: match.label,
+      span: { start, end },
+      excluded: false,
     };
     return { kind: 'hit', text, hit };
-    }
+  }
 
   confirm(): void {
     if (!this.canConfirm()) return;
@@ -151,47 +114,48 @@ export class SentenceAnnotationDialogComponent {
     const lastTok = toks[idxs[idxs.length - 1]];
     const match = this.chosenTerm()!;
 
-    const result: UiFenominalSegment[] = [];
+    const result: FenominalSegment[] = [];
 
     if (firstTok.startOffset > 0) {
-        result.push(this.textSegment(
-        this.data.segment.text.slice(0, firstTok.startOffset),
-        segStart,
-        segStart + firstTok.startOffset,
-        ));
+      result.push(
+        this.textSegment(
+          this.data.segment.text.slice(0, firstTok.startOffset),
+          segStart,
+          segStart + firstTok.startOffset,
+        ),
+      );
     }
 
-    result.push(this.hitSegment(
+    result.push(
+      this.hitSegment(
         this.data.segment.text.slice(firstTok.startOffset, lastTok.endOffset),
         match,
         segStart + firstTok.startOffset,
         segStart + lastTok.endOffset,
-    ));
+      ),
+    );
 
     if (lastTok.endOffset < this.data.segment.text.length) {
-        result.push(this.textSegment(
-        this.data.segment.text.slice(lastTok.endOffset),
-        segStart + lastTok.endOffset,
-        this.data.segment.span.end,
-        ));
+      result.push(
+        this.textSegment(
+          this.data.segment.text.slice(lastTok.endOffset),
+          segStart + lastTok.endOffset,
+          this.data.segment.span.end,
+        ),
+      );
     }
 
     this.dialogRef.close(result);
-    }
-
-
-
-
+  }
 
   onWordMouseDown(index: number, event: MouseEvent): void {
     const tok = this.tokens()[index];
     if (tok.isWhitespace) return;
-
     event.preventDefault(); // avoid native text selection while dragging
     this.isDragging.set(true);
     this.dragStartIndex.set(index);
     this.selectedIndices.set(new Set([index]));
-    this.chosenTerm.set(null); // clear any previously chosen term on new selection
+    this.chosenTerm.set(null);
   }
 
   onWordMouseEnter(index: number): void {

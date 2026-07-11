@@ -1,0 +1,67 @@
+.dialog-hint {
+  margin: 0 0 12px;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.word-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 0;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  line-height: 1.6;
+  user-select: none; // prevents native text-selection artifacts while dragging
+
+  // Subtle affordance that this area is drag-selectable
+  &.is-dragging {
+    cursor: crosshair;
+  }
+}
+
+.word-space {
+  white-space: pre;
+}
+
+.word-token {
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 4px;
+  transition: background-color 0.1s ease, color 0.1s ease;
+
+  &:hover {
+    background: #e2e8f0;
+  }
+
+  &.selected {
+    background-color: #bae6fd;
+    color: #0369a1;
+    font-weight: 500;
+  }
+}
+
+.selected-preview {
+  margin: 12px 0 0;
+  font-size: 0.85rem;
+  color: #475569;
+
+  strong {
+    color: #0f172a;
+  }
+}
+
+mat-dialog-content {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+hpo-ontology-autocomplete {
+  display: block; 
+}
+
+mat-dialog-actions {
+  gap: 4px;
+}

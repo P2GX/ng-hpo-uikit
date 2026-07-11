@@ -98,17 +98,6 @@
                 "name": "Default",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  args: { pastedText: '' }\n}"
-            },
-            {
-                "name": "Default",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-modifier/hpo-modifier.component.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -126,6 +115,17 @@
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{}"
+            },
+            {
+                "name": "Default",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  args: { pastedText: '' }\n}"
             },
             {
                 "name": "Default",
@@ -247,12 +247,12 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<HpoMiningComponent>",
-                "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                "type": "Meta<HpoPolishRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -280,23 +280,23 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoMiningComponent>",
+                "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<HpoPolishingWorkspaceComponent>",
                 "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    autocompleteProvider: {\n      table: { disable: true }\n    }\n  }\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoPolishRowComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -368,7 +368,7 @@
                 "name": "mockModifiers",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -379,7 +379,7 @@
                 "name": "mockModifiers",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -621,8 +621,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoMiningComponent>",
-                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                "rawtype": "StoryObj<HpoPolishRowComponent>",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -660,8 +660,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "rawtype": "StoryObj<HpoMiningComponent>",
+                "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -673,8 +673,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishRowComponent>",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -865,41 +865,6 @@
                     "description": "<p>ReadOnly protection view</p>\n"
                 }
             ],
-            "src/lib/hpo-mining/hpo-mining.stories.ts": [
-                {
-                    "name": "Default",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  args: { pastedText: '' }\n}"
-                },
-                {
-                    "name": "InteractiveMiningSimulation",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
-                },
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<HpoMiningComponent>",
-                    "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
-                }
-            ],
             "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
                 {
                     "name": "Default",
@@ -966,6 +931,41 @@
                     "deprecationMessage": "",
                     "type": "Story",
                     "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: 'G32w' } },\n         { provide: AgeService },\n      ]\n    })\n  ]\n}"
+                }
+            ],
+            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+                {
+                    "name": "Default",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: { pastedText: '' }\n}"
+                },
+                {
+                    "name": "InteractiveMiningSimulation",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HpoMiningComponent>",
+                    "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
                 }
             ],
             "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts": [
@@ -1292,14 +1292,14 @@
         },
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoMiningComponent>",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "rawtype": "StoryObj<HpoPolishRowComponent>",
+                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -1337,6 +1337,21 @@
                     "kind": 184
                 }
             ],
+            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoMiningComponent>",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
                 {
                     "name": "Story",
@@ -1345,21 +1360,6 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
                     "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
-            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolishRowComponent>",
-                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",

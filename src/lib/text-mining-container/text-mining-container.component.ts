@@ -1,6 +1,6 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FenominalSentence, FenominalHit, UiFenominalSentence } from '../models/fenominal-models';
+import { FenominalSentence, FenominalHit, UiFenominalSentence, UiFenominalSegment, FenominalSegment } from '../models/fenominal-models';
 import { DeleteHitRequest, OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 import { MatDialog } from '@angular/material/dialog';
 import { SentenceAnnotationDialogComponent, SentenceAnnotationDialogData, SentenceAnnotationDialogResult } from '../sentence-annotation/sentence-annotation-dialog.component';
@@ -20,6 +20,11 @@ export class TextMiningContainerComponent {
    private readonly dialog = inject(MatDialog);
     readonly autocompleteProvider = input.required<OntologyAutocompleteProvider>();
 
+    readonly segmentsReplaced = output<{
+      sentence: FenominalSentence;
+      segmentIndex: number;
+      newSegments: FenominalSegment[];
+    }>();
 
   /* Show sentences above this index in collapsed mode to save space */
   protected collapsedUntilIndex = signal<number | null>(null);
@@ -60,7 +65,7 @@ export class TextMiningContainerComponent {
 
     ref.afterClosed().subscribe(result => {
       if (!result) return; // user cancelled
-      sentence.segments.splice(segmentIndex, 1, ...result);
+      this.segmentsReplaced.emit({ sentence, segmentIndex, newSegments: result });
     });
   }
 

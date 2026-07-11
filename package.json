@@ -1,6 +1,6 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.2.29",
+  "version": "0.2.30",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -53,6 +53,7 @@
     "chai": "^6.2.2",
     "eslint": "^10.3.0",
     "ng-packagr": "^21.2.5",
+    "prettier": "^3.9.5",
     "react": "^19.2.7",
     "storybook": "^10.4.6",
     "typescript": "~5.9",
