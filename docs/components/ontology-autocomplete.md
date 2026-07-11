@@ -56,7 +56,7 @@ This translates into something like this in our template
       (click)="injectManualHpoToken()"
       [disabled]="!selectedHpoMatch()"
       class="btn-workspace-add">
-      <mat-icon>add</mat-icon> Inject Term
+      <mat-icon>add</mat-icon>Add Term
     </button>
   </div>
 }

@@ -1,4 +1,4 @@
-import { Component, inject, output } from '@angular/core';
+import { AfterViewInit, Component, inject, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
@@ -21,10 +21,10 @@ export interface OrcidDialogData {
     MatTooltipModule,
     ReactiveFormsModule
   ],
-  templateUrl: './orcid-dialog.html',
-  styleUrl: './orcid-dialog.scss'
+  templateUrl: './orcid-dialog.component.html',
+  styleUrl: './orcid-dialog.component.scss'
 })
-export class OrcidDialogComponent {
+export class OrcidDialogComponent implements AfterViewInit {
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<OrcidDialogComponent>);
   public data = inject<OrcidDialogData>(MAT_DIALOG_DATA);
@@ -39,6 +39,15 @@ export class OrcidDialogComponent {
       ]
     ]
   });
+
+  ngAfterViewInit(): void {
+    const control = this.orcidForm.get('orcid');
+
+    if (control?.invalid) {
+      control.markAsTouched();
+      control.updateValueAndValidity();
+    }
+  }
 
   onLinkClick(event: Event): void {
     event.preventDefault(); 

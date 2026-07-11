@@ -103,6 +103,17 @@
                 "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [autocompleteProvider]=\"autocompleteProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableModifiers: mockModifiers,\n    autocompleteProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
             },
             {
+                "name": "Empty",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
+            },
+            {
                 "name": "EmptyWorkspace",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -161,23 +172,23 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoPolishRowComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<HpoAgeSelectorDialogComponent>",
                 "defaultValue": "{\n  title: 'Components/HpoAgeSelectorDialog',\n  component: HpoAgeSelectorDialogComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [BrowserAnimationsModule], // Required for Material animations\n      providers: [\n        { provide: MatDialogRef, useValue: mockDialogRef },\n        { provide: AgeService },\n        { provide: NotificationService, useValue: mockNotificationService },\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: null } }\n      ]\n    })\n  ],\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoPolishRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -216,12 +227,34 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<OrcidDialogComponent>",
+                "defaultValue": "{\n  title: 'Dialogs/ORCID Dialog',\n  component: OrcidDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MatDialogRef,\n          useValue: {\n            close: (...args: unknown[]) => console.log('Dialog closed', args)\n          }\n        },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/text-mining-container/text-mining-container.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<TextMiningContainerComponent>",
                 "defaultValue": "{\n  title: 'HPO Library/TextMiningContainer',\n  component: TextMiningContainerComponent,\n  tags: ['autodocs'],\n  argTypes: { }\n}"
+            },
+            {
+                "name": "MissingOrcid",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: 'na'\n          }\n        }\n      ]\n    })\n  ],\n\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n\n    const input = canvas.getByPlaceholderText(\n      '0000-0000-0000-0000'\n    ) as HTMLInputElement;\n\n    // This makes Angular Material consider the control \"touched\"\n    input.focus();\n    input.blur();\n  }\n}"
             },
             {
                 "name": "mockDialogRef",
@@ -380,6 +413,17 @@
                 "defaultValue": "[\n  { termId: 'HP:0012825', label: 'Mild' },\n  { termId: 'HP:0012826', label: 'Moderate' },\n  { termId: 'HP:0012828', label: 'Severe' },\n  { termId: 'HP:0031375', label: 'Insidious onset' },\n  { termId: 'HP:0003679', label: 'Static' },\n  { termId: 'HP:0003676', label: 'Progressive' },\n]"
             },
             {
+                "name": "ValidOrcid",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: '0000-0002-1825-0097'\n          }\n        }\n      ]\n    })\n  ]\n}"
+            },
+            {
                 "name": "WithPreFilledSelection",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -409,8 +453,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishRowComponent>",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -422,8 +466,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
-                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "rawtype": "StoryObj<HpoPolishRowComponent>",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -463,6 +507,19 @@
                 "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
                 "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<OrcidDialogComponent>",
+                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -866,6 +923,52 @@
                     "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          excluded: false,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          excluded: false,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          excluded: true,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
                 }
             ],
+            "src/lib/orcid-dialog/orcid-dialog.stories.ts": [
+                {
+                    "name": "Empty",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<OrcidDialogComponent>",
+                    "defaultValue": "{\n  title: 'Dialogs/ORCID Dialog',\n  component: OrcidDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MatDialogRef,\n          useValue: {\n            close: (...args: unknown[]) => console.log('Dialog closed', args)\n          }\n        },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
+                },
+                {
+                    "name": "MissingOrcid",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: 'na'\n          }\n        }\n      ]\n    })\n  ],\n\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n\n    const input = canvas.getByPlaceholderText(\n      '0000-0000-0000-0000'\n    ) as HTMLInputElement;\n\n    // This makes Angular Material consider the control \"touched\"\n    input.focus();\n    input.blur();\n  }\n}"
+                },
+                {
+                    "name": "ValidOrcid",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: '0000-0002-1825-0097'\n          }\n        }\n      ]\n    })\n  ]\n}"
+                }
+            ],
             "src/lib/styles/button.stories.ts": [
                 {
                     "name": "Gallery",
@@ -896,21 +999,6 @@
         "groupedFunctions": {},
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolishRowComponent>",
-                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
             "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
                 {
                     "name": "Story",
@@ -919,6 +1007,21 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
                     "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoPolishRowComponent>",
+                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -971,6 +1074,21 @@
                     "kind": 184
                 }
             ],
+            "src/lib/orcid-dialog/orcid-dialog.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<OrcidDialogComponent>",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/text-mining-container/text-mining-container.stories.ts": [
                 {
                     "name": "Story",
@@ -994,7 +1112,7 @@
         "children": []
     },
     "coverage": {
-        "count": 7,
+        "count": 6,
         "status": "low",
         "files": [
             {
@@ -1329,6 +1447,56 @@
             },
             {
                 "filePath": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "type": "type alias",
+                "linktype": "miscellaneous",
+                "linksubtype": "typealias",
+                "name": "Story",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Empty",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "MissingOrcid",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ValidOrcid",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
                 "type": "type alias",
                 "linktype": "miscellaneous",
                 "linksubtype": "typealias",

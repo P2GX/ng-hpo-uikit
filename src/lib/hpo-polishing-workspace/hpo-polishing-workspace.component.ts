@@ -176,7 +176,7 @@ export class HpoPolishingWorkspaceComponent {
     };
   
 
-    // Append a synthetic sentence block to display the new manual inject token
+    // Append a synthetic sentence block to display the new manual add token
     this.localSentences.update(list => [
       ...list,
       {
