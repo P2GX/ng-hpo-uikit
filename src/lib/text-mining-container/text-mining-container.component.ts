@@ -1,9 +1,9 @@
 import { Component, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FenominalSentence, FenominalHit, UiFenominalSentence, UiFenominalSegment, FenominalSegment } from '../models/fenominal-models';
+import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fenominal-models';
 import { DeleteHitRequest, OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 import { MatDialog } from '@angular/material/dialog';
-import { SentenceAnnotationDialogComponent, SentenceAnnotationDialogData, SentenceAnnotationDialogResult } from '../sentence-annotation/sentence-annotation-dialog.component';
+import { SentenceAnnotationDialogComponent } from '../sentence-annotation/sentence-annotation-dialog.component';
 import { MatIconModule } from "@angular/material/icon";
 
 

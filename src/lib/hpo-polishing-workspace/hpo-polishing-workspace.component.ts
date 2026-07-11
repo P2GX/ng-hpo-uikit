@@ -8,7 +8,8 @@ import {
   FenominalHit, 
   UiFenominalSentence,
   UiFenominalHit, 
-  ui_from_fenominal } from '../models/fenominal-models';
+  ui_from_fenominal, 
+  FenominalSegment} from '../models/fenominal-models';
 import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
@@ -36,10 +37,13 @@ export class HpoPolishingWorkspaceComponent {
   private notificationService = inject(NotificationService);
   
   sentences = input<FenominalSentence[]>([]);
+  // relay change signal to data owner outside of the library
+  readonly segmentsReplaced = output<{ sentence: FenominalSentence; segmentIndex: number; newSegments: FenominalSegment[] }>();
+
   availableModifiers = input<HpoTermMinimal[]>([]);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
   autocompleteProvider = input.required<OntologyAutocompleteProvider>();
-  
+
 
   complete = output<PolishedHpoAnnotation[]>();
   cancel = output<void>();
@@ -85,6 +89,9 @@ export class HpoPolishingWorkspaceComponent {
   private hasInitialized = false;
   constructor() {
     effect(() => {
+      console.log('[HpoPolishingWorkspaceComponent] sentences() changed:', this.sentences());
+    });
+    effect(() => {
        // convert from FenominalSentence to UiFenominalSentence
       const rawSentences = this.sentences();
       if (rawSentences && rawSentences.length > 0 && !this.hasInitialized) {
@@ -103,7 +110,6 @@ export class HpoPolishingWorkspaceComponent {
           return seg;
         })
       }));
-      console.log("In effect for raw Setence, ui=", uiSentences);
       this.localSentences.set(uiSentences);
       this.hasInitialized = true;// Prevents subsequent internal mutations from being overwritten
     }
@@ -220,6 +226,36 @@ export class HpoPolishingWorkspaceComponent {
   );
 }
 
+/* This is called as a result of manual editing of a text segment that did not get a correct HPO */
+onSegmentsReplaced(event: {
+  sentence: FenominalSentence;
+  segmentIndex: number;
+  newSegments: FenominalSegment[];
+}): void {
+  // Update local display state directly — the one-shot init effect above
+  // won't pick this up since `hasInitialized` is already true by this point.
+  this.localSentences.update(sentences =>
+    sentences.map(s => {
+      if (s.start !== event.sentence.start) return s;
+
+      const uiNewSegments = event.newSegments.map((seg, i) => {
+        if (seg.kind === 'text') return seg;
+        const trackingId = `hit-${s.start}-${event.segmentIndex}-${i}-${seg.hit.termId}`;
+        return { kind: 'hit' as const, text: seg.text, hit: ui_from_fenominal(seg.hit, trackingId) };
+      });
+
+      return {
+        ...s,
+        segments: [
+          ...s.segments.slice(0, event.segmentIndex),
+          ...uiNewSegments,
+          ...s.segments.slice(event.segmentIndex + 1),
+        ],
+      };
+    })
+  );
+  this.segmentsReplaced.emit(event);
+}
   protected saveAndFinish(): void {
     this.complete.emit(this.uniqueTableAnnotations());
   }

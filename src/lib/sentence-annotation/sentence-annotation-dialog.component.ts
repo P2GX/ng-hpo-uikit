@@ -28,18 +28,23 @@ interface WordToken {
   startOffset: number; // offset relative to segment.text, NOT absolute doc offset
   endOffset: number;
   isWhitespace: boolean;
+  isPunctuation: boolean;
 }
 
 function tokenize(text: string): WordToken[] {
   const tokens: WordToken[] = [];
-  const re = /\S+|\s+/g;
+  const re = /[\p{L}\p{N}]+|[^\s\p{L}\p{N}]+|\s+/gu;
   let match: RegExpExecArray | null;
   while ((match = re.exec(text)) !== null) {
+    const raw = match[0];
+    const isWhitespace = /^\s+$/u.test(raw);
+    const isPunctuation = !isWhitespace && /^[^\p{L}\p{N}]+$/u.test(raw);
     tokens.push({
-      text: match[0],
+      text: raw,
       startOffset: match.index,
-      endOffset: match.index + match[0].length,
-      isWhitespace: /^\s+$/.test(match[0]),
+      endOffset: match.index + raw.length,
+      isWhitespace,
+      isPunctuation,
     });
   }
   return tokens;
@@ -150,7 +155,7 @@ export class SentenceAnnotationDialogComponent {
 
   onWordMouseDown(index: number, event: MouseEvent): void {
     const tok = this.tokens()[index];
-    if (tok.isWhitespace) return;
+    if (tok.isWhitespace || tok.isPunctuation) return;
     event.preventDefault(); // avoid native text selection while dragging
     this.isDragging.set(true);
     this.dragStartIndex.set(index);
@@ -165,11 +170,20 @@ export class SentenceAnnotationDialogComponent {
 
     const [lo, hi] = start <= index ? [start, index] : [index, start];
     const toks = this.tokens();
-    const next = new Set<number>();
+    // Collect all non-whitespace tokens in the dragged range.
+    let indices: number[] = [];
     for (let i = lo; i <= hi; i++) {
-      if (!toks[i].isWhitespace) next.add(i);
+        if (!toks[i].isWhitespace) indices.push(i);
     }
-    this.selectedIndices.set(next);
+    // Trim leading/trailing punctuation so a mark never begins or ends
+    // on a punctuation token, even if the drag physically covers one.
+    let s = 0;
+    let e = indices.length - 1;
+    while (s <= e && toks[indices[s]].isPunctuation) s++;
+    while (e >= s && toks[indices[e]].isPunctuation) e--;
+    indices = indices.slice(s, e + 1);
+
+    this.selectedIndices.set(new Set(indices));
   }
 
   @HostListener('document:mouseup')

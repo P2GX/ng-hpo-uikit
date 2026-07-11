@@ -49,7 +49,8 @@ export class HpoMiningComponent {
   }
 
   loadExampleText(): void {
-    this.pastedText = `The patient presents with severe macrocephaly and global developmental delay. There is no history of seizures.`;
+    // from PMID:28775536
+    this.pastedText = `Physical examination revealed short stature (149 Cm), low set ears, ptosis, antimongoloid palpebral slant, high arched palate and pectus excavatum. Pulse, blood pressure and jugular venous pressure were normal. There was no pallor, cyanosis, clubbing or pedal edema. Apex beat was palpable in the left fourth intercostal space in the midclavicular line, normal in the character.`;
   }
 
   onCancel(): void {

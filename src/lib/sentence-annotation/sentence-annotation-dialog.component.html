@@ -9,7 +9,12 @@
     @for (tok of tokens(); track $index) {
       @if (tok.isWhitespace) {
         <span class="word-space">{{ tok.text }}</span>
-      } @else {
+      } @else if (tok.isPunctuation) {
+        <span
+            class="word-token punctuation-token"
+            [class.selected]="selectedIndices().has($index)"
+            (mouseenter)="onWordMouseEnter($index)">{{ tok.text }}</span>
+    } @else {
         <span
           class="word-token"
           [class.selected]="selectedIndices().has($index)"
@@ -20,7 +25,7 @@
     }
   </div>
 
-  @if (selectedText()) {
+  @if (selectedText() && !isDragging()) {
     <p class="selected-preview">Selected: <strong>{{ selectedText() }}</strong></p>
         <hpo-ontology-autocomplete
           [inputString]="selectedText()"
@@ -32,10 +37,10 @@
 
 <mat-dialog-actions align="end">
     @if (selectedIndices().size > 0) {
-        <button mat-button (click)="clearSelection()">Clear selection</button>
+        <button class="btn-outline-cancel" (click)="clearSelection()">Clear selection</button>
     }
-  <button mat-button (click)="cancel()">Cancel</button>
-  <button mat-flat-button color="primary" [disabled]="!canConfirm()" (click)="confirm()">
+  <button class="btn-outline-cancel" (click)="cancel()">Cancel</button>
+  <button class="btn-outline-primary" [disabled]="!canConfirm()" (click)="confirm()">
     Add Term
   </button>
 </mat-dialog-actions>

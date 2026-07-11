@@ -5,6 +5,7 @@
       [sentences]="localSentences()"
       (deleteHitRequested)="deleteHit($event)"
       [autocompleteProvider]="autocompleteProvider()"
+      (segmentsReplaced)="onSegmentsReplaced($event)"
       >
     </hpo-text-mining-container>
 </div>

@@ -154,7 +154,6 @@ export class PhenotypeManagerComponent {
       newList[index] = updatedRow;
       return newList;
     });
-    console.log('Successfully saved row update to master state:', updatedRow);
   }
 
   /**
