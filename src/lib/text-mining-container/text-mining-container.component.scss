@@ -9,8 +9,6 @@
 .sentence-row {
   display: inline;
   transition: opacity 0.2s ease;
-  
-  // Style changes when a block becomes archived history
   &.is-collapsed-view {
     opacity: 0.6; // Softens the visual weight of completed segments
     border-left: 2px solid #e2e8f0;
@@ -25,14 +23,14 @@
 }
 
 .compact-token-line {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   gap: 4px;
   
   .compact-token {
     font-size: 0.75rem;
     padding: 1px 4px;
-    background-color: #f1f5f9; // Neutral grey background since it is curated
+    background-color: #f1f5f9; 
     color: #475569;
     border-bottom: none;
     cursor: default;
@@ -118,7 +116,7 @@
 
 .plain-text {
   color: #334155;
-  white-space: pre-wrap;
+  white-space: normal;
 }
 
 /* Changed to inline so text flows and wraps perfectly */

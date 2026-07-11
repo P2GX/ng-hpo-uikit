@@ -1,20 +1,23 @@
 <div class="text-mining-workspace">
   
   @for (sentence of sentences(); track sentence.start) {
-    <div class="sentence-row" [class.is-collapsed-view]="isSentenceCollapsed(sentence.start)">
+    <span class="sentence-row" [class.is-collapsed-view]="isSentenceCollapsed(sentence.start)">
       
       @if (isSentenceCollapsed(sentence.start)) {
-        <div class="compact-token-line">
+        <span class="compact-token-line">
           @for (segment of sentence.segments; track $index) {
             @if (segment.kind === 'hit') {
-              <span class="annotation-badge compact-token" [class.is-excluded]="segment.hit?.excluded" [attr.title]="getTooltipText(segment.hit)">
+              <span 
+              class="annotation-badge compact-token" 
+              [class.is-excluded]="segment.hit?.excluded" 
+              [attr.title]="getTooltipText(segment.hit)">
                 <span class="annotated-text">{{ segment.text }}</span>
               </span>
             }
           }
-        </div>
+        </span>
       } @else {
-        <p class="sentence-line">
+        <span class="sentence-line">
           @for (segment of sentence.segments; track $index) {
             @if (segment.kind === 'text') {
               <span class="plain-text">{{ segment.text }}</span>
@@ -33,10 +36,10 @@
               </span>
             }
           }
-        </p>
+        </span>
       }
 
-    </div>
+    </span>
   }
 
   @if (collapsedUntilIndex() !== null) {
