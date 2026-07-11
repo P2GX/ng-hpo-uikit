@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { OntologyMatch } from "./ontology-dto";
-import { FenominalHit } from './fenominal-models';
+import { FenominalHit  } from './fenominal-models';
 
 export interface HpoTermMinimal {
   termId: string;
@@ -38,3 +38,4 @@ export interface DeleteHitRequest {
     sentenceStart: number;
     hit: FenominalHit;
 }
+

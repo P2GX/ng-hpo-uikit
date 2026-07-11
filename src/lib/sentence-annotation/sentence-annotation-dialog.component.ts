@@ -1,0 +1,224 @@
+import { Component, computed, HostListener, inject, signal } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogActions, MatDialogContent } from '@angular/material/dialog';
+import { UiFenominalHit, UiFenominalSegment } from '../models/fenominal-models';
+import { OntologyAutocompleteComponent } from "../ontology-autocomplete/ontology-autocomplete.component";
+import { OntologyMatch } from '../models/ontology-dto';
+import { Observable } from 'rxjs/internal/Observable';
+
+// dialog input
+
+
+type UiFenominalTextSegment = Extract<UiFenominalSegment, { kind: 'text' }>;
+export interface SentenceAnnotationDialogData {
+  segment: UiFenominalTextSegment;
+  autocompleteProvider: (query: string) => Observable<OntologyMatch[]>;
+}
+
+// dialog output — replaces the single input segment
+export type SentenceAnnotationDialogResult = UiFenominalSegment[] | null; // null = cancelled
+
+interface WordToken {
+  text: string;
+  startOffset: number; // offset relative to segment.text, NOT absolute doc offset
+  endOffset: number;
+  isWhitespace: boolean;
+}
+
+
+
+function tokenize(text: string): WordToken[] {
+  const tokens: WordToken[] = [];
+  const re = /\S+|\s+/g;
+  let match: RegExpExecArray | null;
+  while ((match = re.exec(text)) !== null) {
+    tokens.push({
+      text: match[0],
+      startOffset: match.index,
+      endOffset: match.index + match[0].length,
+      isWhitespace: /^\s+$/.test(match[0]),
+    });
+  }
+  return tokens;
+}
+
+
+@Component({
+  selector: 'app-sentence-annotation-dialog',
+  standalone: true,
+  templateUrl: './sentence-annotation-dialog.component.html',
+  styleUrl: './sentence-annotation-dialog.component.scss',
+  imports: [MatDialogActions, OntologyAutocompleteComponent, MatDialogContent],
+})
+export class SentenceAnnotationDialogComponent {
+    private readonly dialogRef = inject<MatDialogRef<SentenceAnnotationDialogComponent, SentenceAnnotationDialogResult>>(MatDialogRef);
+
+ 
+
+  readonly data = inject<SentenceAnnotationDialogData>(MAT_DIALOG_DATA);
+  readonly tokens = signal<WordToken[]>([]);
+  readonly selectedIndices = signal<Set<number>>(new Set());
+  readonly chosenTerm = signal<OntologyMatch | null>(null);
+
+  readonly autocompleteProvider = this.data.autocompleteProvider;
+
+  private readonly isDragging = signal(false);
+  private readonly dragStartIndex = signal<number | null>(null);
+
+
+  readonly selectedText = computed(() => {
+    const idxs = [...this.selectedIndices()].sort((a, b) => a - b);
+    if (idxs.length === 0) return '';
+    const toks = this.tokens();
+    return toks.slice(idxs[0], idxs[idxs.length - 1] + 1).map(t => t.text).join('');
+  });
+
+  readonly canConfirm = computed(
+    () => this.selectedIndices().size > 0 && this.chosenTerm() !== null
+  );
+
+    constructor() {
+        this.tokens.set(tokenize(this.data.segment.text));
+    }
+
+    handleAutocompleteSelection(match: OntologyMatch): void {
+        this.chosenTerm.set(match);
+    }
+
+  toggleWord(index: number): void {
+    const tok = this.tokens()[index];
+    if (tok.isWhitespace) return;
+
+    const current = this.selectedIndices();
+
+    // If clicking within/adjacent to the existing contiguous run, extend/shrink it.
+    // Otherwise start a fresh single-word selection.
+    if (current.size === 0) {
+      this.selectedIndices.set(new Set([index]));
+      return;
+    }
+
+    const sorted = [...current].sort((a, b) => a - b);
+    const min = sorted[0];
+    const max = sorted[sorted.length - 1];
+
+    if (current.has(index) && (index === min || index === max)) {
+      // shrink from whichever end was clicked
+      const next = new Set(current);
+      next.delete(index);
+      this.selectedIndices.set(next);
+      return;
+    }
+
+    if (index === min - 1 || index === max + 1) {
+      // extend the run by one
+      this.selectedIndices.set(new Set([...current, index]));
+      return;
+    }
+
+    // non-adjacent click: reset selection to this single word
+    this.selectedIndices.set(new Set([index]));
+  }
+
+  private textSegment(text: string, start: number, end: number): UiFenominalSegment {
+    return { kind: 'text', text, span: { start, end } };
+    }
+
+   hitSegment(
+    text: string,
+    match: OntologyMatch,
+    start: number,
+    end: number,
+    ): UiFenominalSegment {
+    const hit: UiFenominalHit = {
+        id: crypto.randomUUID(),
+        termId: match.id,
+        label: match.label,
+        span: { start, end },
+        excluded: false,
+        modifiers: [],
+    };
+    return { kind: 'hit', text, hit };
+    }
+
+  confirm(): void {
+    if (!this.canConfirm()) return;
+
+    const idxs = [...this.selectedIndices()].sort((a, b) => a - b);
+    const toks = this.tokens();
+    const segStart = this.data.segment.span.start; // safe: segment is guaranteed 'text'
+
+    const firstTok = toks[idxs[0]];
+    const lastTok = toks[idxs[idxs.length - 1]];
+    const match = this.chosenTerm()!;
+
+    const result: UiFenominalSegment[] = [];
+
+    if (firstTok.startOffset > 0) {
+        result.push(this.textSegment(
+        this.data.segment.text.slice(0, firstTok.startOffset),
+        segStart,
+        segStart + firstTok.startOffset,
+        ));
+    }
+
+    result.push(this.hitSegment(
+        this.data.segment.text.slice(firstTok.startOffset, lastTok.endOffset),
+        match,
+        segStart + firstTok.startOffset,
+        segStart + lastTok.endOffset,
+    ));
+
+    if (lastTok.endOffset < this.data.segment.text.length) {
+        result.push(this.textSegment(
+        this.data.segment.text.slice(lastTok.endOffset),
+        segStart + lastTok.endOffset,
+        this.data.segment.span.end,
+        ));
+    }
+
+    this.dialogRef.close(result);
+    }
+
+
+
+
+
+  onWordMouseDown(index: number, event: MouseEvent): void {
+    const tok = this.tokens()[index];
+    if (tok.isWhitespace) return;
+
+    event.preventDefault(); // avoid native text selection while dragging
+    this.isDragging.set(true);
+    this.dragStartIndex.set(index);
+    this.selectedIndices.set(new Set([index]));
+    this.chosenTerm.set(null); // clear any previously chosen term on new selection
+  }
+
+  onWordMouseEnter(index: number): void {
+    if (!this.isDragging()) return;
+    const start = this.dragStartIndex();
+    if (start === null) return;
+
+    const [lo, hi] = start <= index ? [start, index] : [index, start];
+    const toks = this.tokens();
+    const next = new Set<number>();
+    for (let i = lo; i <= hi; i++) {
+      if (!toks[i].isWhitespace) next.add(i);
+    }
+    this.selectedIndices.set(next);
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp(): void {
+    this.isDragging.set(false);
+    this.dragStartIndex.set(null);
+  }
+
+  clearSelection(): void {
+    this.selectedIndices.set(new Set());
+    this.chosenTerm.set(null);
+  }
+  cancel(): void {
+    this.dialogRef.close(null);
+  }
+}

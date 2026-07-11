@@ -4,7 +4,67 @@
     "injectables": [],
     "guards": [],
     "interceptors": [],
-    "classes": [],
+    "classes": [
+        {
+            "name": "MockDialogRef",
+            "id": "class-MockDialogRef-22f0419fbe4ce894e977209f1b1c46e4b054c64f982d42c5d20071752f8c5b563f5263254720c7997fee14e184b122886f010152a36d889d2b982f8c7b86cbb3",
+            "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+            "coverageIgnore": false,
+            "deprecated": false,
+            "deprecationMessage": "",
+            "type": "class",
+            "sourceCode": "import type { Meta, StoryObj } from '@storybook/angular';\nimport { moduleMetadata } from '@storybook/angular';\nimport { of, delay } from 'rxjs';\nimport { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';\n\nimport { SentenceAnnotationDialogComponent } from './sentence-annotation-dialog.component';\nimport type { SentenceAnnotationDialogData } from './sentence-annotation-dialog.component';\nimport type { UiFenominalSegment } from '../models/fenominal-models';\nimport type { OntologyMatch } from '../models/ontology-dto'; \n\n// --- Fixtures -----------------------------------------------------------\n\nconst sampleTextSegment: Extract<UiFenominalSegment, { kind: 'text' }> = {\n  kind: 'text',\n  text: 'the patient presented with unusual facial features and short stature',\n  span: { start: 0, end: 68 },\n};\n\nconst sampleMatches: OntologyMatch[] = [\n  { id: 'HP:0001999', label: 'Abnormal facial shape', matchedText: 'unusual facial features' },\n  { id: 'HP:0000252', label: 'Microcephaly', matchedText: 'small head' },\n  { id: 'HP:0004322', label: 'Short stature', matchedText: 'short stature' },\n];\n\n// Fake provider: filters the fixture list by naive substring match on the query,\n// with a small delay to mimic real async lookup latency in the autocomplete UI.\nfunction mockAutocompleteProvider(query: string) {\n  const q = query.trim().toLowerCase();\n  const results = q\n    ? sampleMatches.filter(\n        m => m.label.toLowerCase().includes(q) || m.matchedText.toLowerCase().includes(q)\n      )\n    : sampleMatches;\n  return of(results).pipe(delay(200));\n}\n\n// Minimal MatDialogRef stub — logs close() calls instead of actually closing anything,\n// since there's no real dialog overlay in Storybook.\nclass MockDialogRef {\n  close(result: unknown): void {\n    // eslint-disable-next-line no-console\n    console.log('[SentenceAnnotationDialogData] dialogRef.close called with:', result);\n  }\n}\n\n// --- Meta ----------------------------------------------------------------\n\nconst meta: Meta<SentenceAnnotationDialogComponent> = {\n  title: 'Curation/SentenceAnnotationDialogComponent',\n  component: SentenceAnnotationDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n  parameters: {\n    // Renders standalone rather than inside a real CDK overlay, so add\n    // a bit of surrounding chrome/width so the dialog content isn't\n    // rendered edge-to-edge against the Storybook canvas.\n    layout: 'padded',\n  },\n};\n\nexport default meta;\ntype Story = StoryObj<SentenceAnnotationDialogComponent>;\n\n// --- Stories ---------------------------------------------------------------\n\n/** Default: a plain text segment, nothing selected yet. */\nexport const Default: Story = {};\n\n/** A shorter segment, useful for checking layout with a single short phrase. */\nexport const ShortSegment: Story = {\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: {\n              kind: 'text',\n              text: 'mild hypertelorism noted',\n              span: { start: 0, end: 24 },\n            } satisfies Extract<UiFenominalSegment, { kind: 'text' }>,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n};\n\n/** A longer segment, to check word-wrapping behavior in the word-picker. */\nexport const LongSegment: Story = {\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: {\n              kind: 'text',\n              text:\n                'on examination the patient demonstrated marked hypertelorism, a broad nasal bridge, ' +\n                'low-set ears, and mild micrognathia consistent with the previously reported facial gestalt',\n              span: { start: 0, end: 190 },\n            } satisfies Extract<UiFenominalSegment, { kind: 'text' }>,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n};\n\n/** Provider that never resolves — useful for visually checking a loading state, if one exists. */\nexport const SlowProvider: Story = {\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: (query: string) => of(sampleMatches).pipe(delay(5000)),\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n};\n\n/** Provider that always returns zero matches, to check the empty-results UI. */\nexport const NoMatches: Story = {\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: () => of([]),\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n};",
+            "displayName": "MockDialogRef",
+            "inputsClass": [],
+            "outputsClass": [],
+            "properties": [],
+            "methods": [
+                {
+                    "name": "close",
+                    "coverageIgnore": false,
+                    "args": [
+                        {
+                            "name": "result",
+                            "type": "unknown",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "optional": false,
+                    "returnType": "void",
+                    "typeParameters": [],
+                    "line": 40,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "\n",
+                    "description": "",
+                    "jsdoctags": [
+                        {
+                            "name": "result",
+                            "type": "unknown",
+                            "optional": false,
+                            "dotDotDotToken": false,
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ],
+            "indexSignatures": [],
+            "extends": [],
+            "hostBindings": [],
+            "hostListeners": [],
+            "relationships": {
+                "incoming": [],
+                "outgoing": []
+            }
+        }
+    ],
     "directives": [],
     "components": [],
     "modules": [],
@@ -38,17 +98,6 @@
                 "name": "Default",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{}"
-            },
-            {
-                "name": "Default",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -66,6 +115,30 @@
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  args: {\n    availableModifiers: SAMPLE_MODIFIERS,\n    selectedModifiers: [],\n  },\n}"
+            },
+            {
+                "name": "Default",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}"
+            },
+            {
+                "name": "Default",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{}",
+                "rawdescription": "Default: a plain text segment, nothing selected yet.",
+                "description": "<p>Default: a plain text segment, nothing selected yet.</p>\n"
             },
             {
                 "name": "DefaultLayout",
@@ -101,17 +174,6 @@
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  // Use a custom render function to guarantee bindings exist on initial paint\n  render: (args) => ({\n    props: args,\n    template: `\n        <hpo-polishing-workspace\n          [sentences]=\"sentences\"\n          [availableOnsets]=\"availableOnsets\"\n          [availableModifiers]=\"availableModifiers\"\n          [autocompleteProvider]=\"autocompleteProvider\"\n          (requestHierarchy)=\"requestHierarchy($event)\"\n          (createOnsetProvider)=\"createOnsetRequested($event)\"\n          (complete)=\"complete($event)\"\n          (cancel)=\"cancel()\"\n          (badgeMoved)=\"badgeMoved($event)\">\n        </hpo-polishing-workspace>\n    `\n  }),\n  args: {\n    sentences: mockSentences,\n    availableModifiers: mockModifiers,\n    autocompleteProvider: mockSearchProvider,\n    hierarchyProvider: fn(),\n    complete: fn(),\n    cancel: fn(),\n    badgeMoved: fn()\n  }\n}"
-            },
-            {
-                "name": "Empty",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Story",
-                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
             },
             {
                 "name": "EmptyWorkspace",
@@ -158,6 +220,19 @@
                 "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
             },
             {
+                "name": "LongSegment",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: {\n              kind: 'text',\n              text:\n                'on examination the patient demonstrated marked hypertelorism, a broad nasal bridge, ' +\n                'low-set ears, and mild micrognathia consistent with the previously reported facial gestalt',\n              span: { start: 0, end: 190 },\n            } satisfies Extract<UiFenominalSegment, { kind: 'text' }>,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                "rawdescription": "A longer segment, to check word-wrapping behavior in the word-picker.",
+                "description": "<p>A longer segment, to check word-wrapping behavior in the word-picker.</p>\n"
+            },
+            {
                 "name": "ManyModifiers",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -167,28 +242,6 @@
                 "deprecationMessage": "",
                 "type": "Story",
                 "defaultValue": "{\n  args: {\n    availableModifiers: [\n      ...SAMPLE_MODIFIERS,\n      { termId: 'HP:0025153', label: 'Recurrent' },\n      { termId: 'HP:0031797', label: 'Cyclic' },\n      { termId: 'HP:0025302', label: 'Fluctuating' },\n      { termId: 'HP:0011009', label: 'Sudden onset' },\n    ],\n    selectedModifiers: [SAMPLE_MODIFIERS[0]],\n  },\n  name: 'Long list (scroll check)',\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoAgeSelectorDialogComponent>",
-                "defaultValue": "{\n  title: 'Components/HpoAgeSelectorDialog',\n  component: HpoAgeSelectorDialogComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [BrowserAnimationsModule], // Required for Material animations\n      providers: [\n        { provide: MatDialogRef, useValue: mockDialogRef },\n        { provide: AgeService },\n        { provide: NotificationService, useValue: mockNotificationService },\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: null } }\n      ]\n    })\n  ],\n  tags: ['autodocs']\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoPolishRowComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -216,6 +269,17 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoAgeSelectorDialogComponent>",
+                "defaultValue": "{\n  title: 'Components/HpoAgeSelectorDialog',\n  component: HpoAgeSelectorDialogComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [BrowserAnimationsModule], // Required for Material animations\n      providers: [\n        { provide: MatDialogRef, useValue: mockDialogRef },\n        { provide: AgeService },\n        { provide: NotificationService, useValue: mockNotificationService },\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: null } }\n      ]\n    })\n  ],\n  tags: ['autodocs']\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -227,12 +291,34 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoPolishRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
                 "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Meta<OrcidDialogComponent>",
-                "defaultValue": "{\n  title: 'Dialogs/ORCID Dialog',\n  component: OrcidDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MatDialogRef,\n          useValue: {\n            close: (...args: unknown[]) => console.log('Dialog closed', args)\n          }\n        },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
+                "defaultValue": "{\n  title: 'Dialogs/ORCID Dialog',\n  component: OrcidDialogComponent,\n  decorators: [\n    moduleMetadata({\n        imports: [OrcidDialogComponent],\n      providers: [\n        {\n          provide: MatDialogRef,\n          useValue: {\n            close: (...args: unknown[]) => console.log('Dialog closed', args)\n          }\n        },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: ''\n          } \n        }\n      ]\n    })\n  ]\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<SentenceAnnotationDialogComponent>",
+                "defaultValue": "{\n  title: 'Curation/SentenceAnnotationDialogComponent',\n  component: SentenceAnnotationDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n  parameters: {\n    // Renders standalone rather than inside a real CDK overlay, so add\n    // a bit of surrounding chrome/width so the dialog content isn't\n    // rendered edge-to-edge against the Storybook canvas.\n    layout: 'padded',\n  },\n}"
             },
             {
                 "name": "meta",
@@ -254,7 +340,7 @@
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: 'na'\n          }\n        }\n      ]\n    })\n  ],\n\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n\n    const input = canvas.getByPlaceholderText(\n      '0000-0000-0000-0000'\n    ) as HTMLInputElement;\n\n    // This makes Angular Material consider the control \"touched\"\n    input.focus();\n    input.blur();\n  }\n}"
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: 'na'\n          }\n        }\n      ]\n    })\n  ],\n\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n\n    const input = canvas.getByPlaceholderText(\n      '0000-0000-0000-0000'\n    ) as HTMLInputElement;\n\n    // This makes Angular Material consider the control \"touched\"\n    input.focus();\n    input.blur();\n  }\n}"
             },
             {
                 "name": "mockDialogRef",
@@ -282,7 +368,7 @@
                 "name": "mockModifiers",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -293,7 +379,7 @@
                 "name": "mockModifiers",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
@@ -367,6 +453,19 @@
                 "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { \n          provide: AgeService, \n        }\n      ]\n    })\n  ]\n}"
             },
             {
+                "name": "NoMatches",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: () => of([]),\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                "rawdescription": "Provider that always returns zero matches, to check the empty-results UI.",
+                "description": "<p>Provider that always returns zero matches, to check the empty-results UI.</p>\n"
+            },
+            {
                 "name": "NoModifiersAvailable",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
@@ -413,15 +512,52 @@
                 "defaultValue": "[\n  { termId: 'HP:0012825', label: 'Mild' },\n  { termId: 'HP:0012826', label: 'Moderate' },\n  { termId: 'HP:0012828', label: 'Severe' },\n  { termId: 'HP:0031375', label: 'Insidious onset' },\n  { termId: 'HP:0003679', label: 'Static' },\n  { termId: 'HP:0003676', label: 'Progressive' },\n]"
             },
             {
-                "name": "ValidOrcid",
+                "name": "sampleMatches",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "OntologyMatch[]",
+                "defaultValue": "[\n  { id: 'HP:0001999', label: 'Abnormal facial shape', matchedText: 'unusual facial features' },\n  { id: 'HP:0000252', label: 'Microcephaly', matchedText: 'small head' },\n  { id: 'HP:0004322', label: 'Short stature', matchedText: 'short stature' },\n]"
+            },
+            {
+                "name": "sampleTextSegment",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Extract<UiFenominalSegment, { kind: text }>",
+                "defaultValue": "{\n  kind: 'text',\n  text: 'the patient presented with unusual facial features and short stature',\n  span: { start: 0, end: 68 },\n}"
+            },
+            {
+                "name": "ShortSegment",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
                 "type": "Story",
-                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: '0000-0002-1825-0097'\n          }\n        }\n      ]\n    })\n  ]\n}"
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: {\n              kind: 'text',\n              text: 'mild hypertelorism noted',\n              span: { start: 0, end: 24 },\n            } satisfies Extract<UiFenominalSegment, { kind: 'text' }>,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                "rawdescription": "A shorter segment, useful for checking layout with a single short phrase.",
+                "description": "<p>A shorter segment, useful for checking layout with a single short phrase.</p>\n"
+            },
+            {
+                "name": "SlowProvider",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Story",
+                "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: (query: string) => of(sampleMatches).pipe(delay(5000)),\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                "rawdescription": "Provider that never resolves — useful for visually checking a loading state, if one exists.",
+                "description": "<p>Provider that never resolves — useful for visually checking a loading state, if one exists.</p>\n"
             },
             {
                 "name": "WithPreFilledSelection",
@@ -446,34 +582,40 @@
                 "defaultValue": "{\n  args: {\n    availableModifiers: SAMPLE_MODIFIERS,\n    selectedModifiers: [SAMPLE_MODIFIERS[1], SAMPLE_MODIFIERS[4]], // Moderate + Static\n  },\n}"
             }
         ],
-        "functions": [],
+        "functions": [
+            {
+                "name": "mockAutocompleteProvider",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "ctype": "miscellaneous",
+                "subtype": "function",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "displayName": "mockAutocompleteProvider",
+                "args": [
+                    {
+                        "name": "query",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": ""
+                    }
+                ],
+                "jsdoctags": [
+                    {
+                        "name": "query",
+                        "type": "string",
+                        "deprecated": false,
+                        "deprecationMessage": "",
+                        "tagName": {
+                            "text": "param"
+                        }
+                    }
+                ]
+            }
+        ],
         "typealiases": [
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
-                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishRowComponent>",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
             {
                 "name": "Story",
                 "ctype": "miscellaneous",
@@ -505,6 +647,19 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
+                "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
                 "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "deprecated": false,
@@ -518,8 +673,34 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoPolishRowComponent>",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
                 "rawtype": "StoryObj<OrcidDialogComponent>",
                 "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<SentenceAnnotationDialogComponent>",
+                "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -684,6 +865,41 @@
                     "description": "<p>ReadOnly protection view</p>\n"
                 }
             ],
+            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+                {
+                    "name": "Default",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  args: { pastedText: '' }\n}"
+                },
+                {
+                    "name": "InteractiveMiningSimulation",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
+                },
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<HpoMiningComponent>",
+                    "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                }
+            ],
             "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
                 {
                     "name": "Default",
@@ -752,39 +968,104 @@
                     "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MAT_DIALOG_DATA, useValue: { currentSelection: 'G32w' } },\n         { provide: AgeService },\n      ]\n    })\n  ]\n}"
                 }
             ],
-            "src/lib/hpo-mining/hpo-mining.stories.ts": [
+            "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts": [
                 {
                     "name": "Default",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                     "coverageIgnore": false,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  args: { pastedText: '' }\n}"
+                    "defaultValue": "{}",
+                    "rawdescription": "Default: a plain text segment, nothing selected yet.",
+                    "description": "<p>Default: a plain text segment, nothing selected yet.</p>\n"
                 },
                 {
-                    "name": "InteractiveMiningSimulation",
+                    "name": "LongSegment",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                     "coverageIgnore": false,
                     "deprecated": false,
                     "deprecationMessage": "",
                     "type": "Story",
-                    "defaultValue": "{\n  render: (args) => ({\n    props: {\n      ...args,\n      pastedText: 'The patient exhibits arachnodactyly.',\n      // Explicitly hook up the handler to receive the event payload object\n      onMiningRequested: (event: any) => {\n        console.log('Storybook backend worker running text mining simulation...');\n        setTimeout(() => {\n          // Fire your mock data callback function\n          event.callback(mockFenominalSuccessResponse);\n          console.log('Storybook simulation completed successfully!');\n        }, 1500); // Increased slightly so you can visually see the button state change!\n      }\n    },\n    template: `\n      <hpo-mining-workspace\n        [pastedText]=\"pastedText\"\n        (miningRequested)=\"onMiningRequested($event)\"\n        (success)=\"success($event)\"\n        (cancel)=\"cancel()\">\n      </hpo-mining-workspace>\n    `\n  })\n}"
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: {\n              kind: 'text',\n              text:\n                'on examination the patient demonstrated marked hypertelorism, a broad nasal bridge, ' +\n                'low-set ears, and mild micrognathia consistent with the previously reported facial gestalt',\n              span: { start: 0, end: 190 },\n            } satisfies Extract<UiFenominalSegment, { kind: 'text' }>,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                    "rawdescription": "A longer segment, to check word-wrapping behavior in the word-picker.",
+                    "description": "<p>A longer segment, to check word-wrapping behavior in the word-picker.</p>\n"
                 },
                 {
                     "name": "meta",
                     "ctype": "miscellaneous",
                     "subtype": "variable",
-                    "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                     "coverageIgnore": false,
                     "deprecated": false,
                     "deprecationMessage": "",
-                    "type": "Meta<HpoMiningComponent>",
-                    "defaultValue": "{\n  title: 'HPO/HpoMiningComponent',\n  component: HpoMiningComponent,\n  args: {\n    success: fn(),\n    error: fn(),\n    cancel: fn(),\n    miningRequested: fn()\n  }\n}"
+                    "type": "Meta<SentenceAnnotationDialogComponent>",
+                    "defaultValue": "{\n  title: 'Curation/SentenceAnnotationDialogComponent',\n  component: SentenceAnnotationDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n  parameters: {\n    // Renders standalone rather than inside a real CDK overlay, so add\n    // a bit of surrounding chrome/width so the dialog content isn't\n    // rendered edge-to-edge against the Storybook canvas.\n    layout: 'padded',\n  },\n}"
+                },
+                {
+                    "name": "NoMatches",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: () => of([]),\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                    "rawdescription": "Provider that always returns zero matches, to check the empty-results UI.",
+                    "description": "<p>Provider that always returns zero matches, to check the empty-results UI.</p>\n"
+                },
+                {
+                    "name": "sampleMatches",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "OntologyMatch[]",
+                    "defaultValue": "[\n  { id: 'HP:0001999', label: 'Abnormal facial shape', matchedText: 'unusual facial features' },\n  { id: 'HP:0000252', label: 'Microcephaly', matchedText: 'small head' },\n  { id: 'HP:0004322', label: 'Short stature', matchedText: 'short stature' },\n]"
+                },
+                {
+                    "name": "sampleTextSegment",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Extract<UiFenominalSegment, { kind: text }>",
+                    "defaultValue": "{\n  kind: 'text',\n  text: 'the patient presented with unusual facial features and short stature',\n  span: { start: 0, end: 68 },\n}"
+                },
+                {
+                    "name": "ShortSegment",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: {\n              kind: 'text',\n              text: 'mild hypertelorism noted',\n              span: { start: 0, end: 24 },\n            } satisfies Extract<UiFenominalSegment, { kind: 'text' }>,\n            autocompleteProvider: mockAutocompleteProvider,\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                    "rawdescription": "A shorter segment, useful for checking layout with a single short phrase.",
+                    "description": "<p>A shorter segment, useful for checking layout with a single short phrase.</p>\n"
+                },
+                {
+                    "name": "SlowProvider",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        { provide: MatDialogRef, useClass: MockDialogRef },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            segment: sampleTextSegment,\n            autocompleteProvider: (query: string) => of(sampleMatches).pipe(delay(5000)),\n          } satisfies SentenceAnnotationDialogData,\n        },\n      ],\n    }),\n  ],\n}",
+                    "rawdescription": "Provider that never resolves — useful for visually checking a loading state, if one exists.",
+                    "description": "<p>Provider that never resolves — useful for visually checking a loading state, if one exists.</p>\n"
                 }
             ],
             "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
@@ -923,52 +1204,6 @@
                     "defaultValue": "[\n  {\n    start: 0,\n    originalText: 'The patient presents with severe macrocephaly and developmental delay.',\n    segments: [\n      { kind: 'text', text: 'The patient presents with severe ', span: { start: 0, end: 33 } },\n      {\n        kind: 'hit',\n        text: 'macrocephaly',\n        hit: {\n          termId: 'HP:0000256',\n          label: 'Macrocephaly',\n          excluded: false,\n          span: { start: 33, end: 45 }\n        }\n      },\n      { kind: 'text', text: ' and ', span: { start: 45, end: 50 } },\n      {\n        kind: 'hit',\n        text: 'developmental delay',\n        hit: {\n          termId: 'HP:0001263',\n          label: 'Global developmental delay',\n          excluded: false,\n          span: { start: 50, end: 69 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 69, end: 70 } }\n    ]\n  },\n  {\n    start: 100,\n    originalText: 'There is no history of seizures.',\n    segments: [\n      { kind: 'text', text: 'There is no history of ', span: { start: 0, end: 23 } },\n      {\n        kind: 'hit',\n        text: 'seizures',\n        hit: {\n          termId: 'HP:0001250',\n          label: 'Seizure',\n          excluded: true,\n          span: { start: 23, end: 31 }\n        }\n      },\n      { kind: 'text', text: '.', span: { start: 31, end: 32 } }\n    ]\n  }\n]"
                 }
             ],
-            "src/lib/orcid-dialog/orcid-dialog.stories.ts": [
-                {
-                    "name": "Empty",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
-                },
-                {
-                    "name": "meta",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Meta<OrcidDialogComponent>",
-                    "defaultValue": "{\n  title: 'Dialogs/ORCID Dialog',\n  component: OrcidDialogComponent,\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MatDialogRef,\n          useValue: {\n            close: (...args: unknown[]) => console.log('Dialog closed', args)\n          }\n        },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: ''\n          }\n        }\n      ]\n    })\n  ]\n}"
-                },
-                {
-                    "name": "MissingOrcid",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: <OrcidDialogData>{\n            currentOrcid: 'na'\n          }\n        }\n      ]\n    })\n  ],\n\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n\n    const input = canvas.getByPlaceholderText(\n      '0000-0000-0000-0000'\n    ) as HTMLInputElement;\n\n    // This makes Angular Material consider the control \"touched\"\n    input.focus();\n    input.blur();\n  }\n}"
-                },
-                {
-                    "name": "ValidOrcid",
-                    "ctype": "miscellaneous",
-                    "subtype": "variable",
-                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                    "coverageIgnore": false,
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "type": "Story",
-                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: '0000-0002-1825-0097'\n          }\n        }\n      ]\n    })\n  ]\n}"
-                }
-            ],
             "src/lib/styles/button.stories.ts": [
                 {
                     "name": "Gallery",
@@ -980,6 +1215,30 @@
                     "deprecationMessage": "",
                     "type": "StoryObj",
                     "defaultValue": "{\n  render: () => ({\n    template: `\n      <div style=\"display: flex; gap: 12px; align-items: center; padding: 24px;\">\n        <button class=\"btn-outline-primary\">Run HPO Text Mining</button>\n        <button class=\"btn-outline-cancel\">Cancel</button>\n        <button class=\"btn-outline-primary\" disabled>Disabled State</button>\n      </div>\n    `,\n  }),\n}"
+                }
+            ],
+            "src/lib/orcid-dialog/orcid-dialog.stories.ts": [
+                {
+                    "name": "meta",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Meta<OrcidDialogComponent>",
+                    "defaultValue": "{\n  title: 'Dialogs/ORCID Dialog',\n  component: OrcidDialogComponent,\n  decorators: [\n    moduleMetadata({\n        imports: [OrcidDialogComponent],\n      providers: [\n        {\n          provide: MatDialogRef,\n          useValue: {\n            close: (...args: unknown[]) => console.log('Dialog closed', args)\n          }\n        },\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: ''\n          } \n        }\n      ]\n    })\n  ]\n}"
+                },
+                {
+                    "name": "MissingOrcid",
+                    "ctype": "miscellaneous",
+                    "subtype": "variable",
+                    "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "type": "Story",
+                    "defaultValue": "{\n  decorators: [\n    moduleMetadata({\n      providers: [\n        {\n          provide: MAT_DIALOG_DATA,\n          useValue: {\n            currentOrcid: 'na'\n          }\n        }\n      ]\n    })\n  ],\n\n  play: async ({ canvasElement }) => {\n    const canvas = within(canvasElement);\n\n    const input = canvas.getByPlaceholderText(\n      '0000-0000-0000-0000'\n    ) as HTMLInputElement;\n\n    // This makes Angular Material consider the control \"touched\"\n    input.focus();\n    input.blur();\n  }\n}"
                 }
             ],
             ".storybook/preview.ts": [
@@ -996,39 +1255,43 @@
                 }
             ]
         },
-        "groupedFunctions": {},
+        "groupedFunctions": {
+            "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts": [
+                {
+                    "name": "mockAutocompleteProvider",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                    "ctype": "miscellaneous",
+                    "subtype": "function",
+                    "coverageIgnore": false,
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "displayName": "mockAutocompleteProvider",
+                    "args": [
+                        {
+                            "name": "query",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": ""
+                        }
+                    ],
+                    "jsdoctags": [
+                        {
+                            "name": "query",
+                            "type": "string",
+                            "deprecated": false,
+                            "deprecationMessage": "",
+                            "tagName": {
+                                "text": "param"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
-                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
-            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolishRowComponent>",
-                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
             "src/lib/hpo-mining/hpo-mining.stories.ts": [
                 {
                     "name": "Story",
@@ -1059,6 +1322,21 @@
                     "kind": 184
                 }
             ],
+            "src/lib/hpo-age-selector/hpo-age-selector.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoAgeSelectorDialogComponent>",
+                    "file": "src/lib/hpo-age-selector/hpo-age-selector.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
                 {
                     "name": "Story",
@@ -1074,6 +1352,21 @@
                     "kind": 184
                 }
             ],
+            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoPolishRowComponent>",
+                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
             "src/lib/orcid-dialog/orcid-dialog.stories.ts": [
                 {
                     "name": "Story",
@@ -1082,6 +1375,21 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<OrcidDialogComponent>",
                     "file": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<SentenceAnnotationDialogComponent>",
+                    "file": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -1112,7 +1420,7 @@
         "children": []
     },
     "coverage": {
-        "count": 6,
+        "count": 14,
         "status": "low",
         "files": [
             {
@@ -1460,16 +1768,6 @@
                 "type": "variable",
                 "linktype": "miscellaneous",
                 "linksubtype": "variable",
-                "name": "Empty",
-                "coveragePercent": 0,
-                "coverageCount": "0/1",
-                "status": "low"
-            },
-            {
-                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                "type": "variable",
-                "linktype": "miscellaneous",
-                "linksubtype": "variable",
                 "name": "meta",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
@@ -1487,16 +1785,115 @@
             },
             {
                 "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
-                "type": "variable",
+                "type": "type alias",
                 "linktype": "miscellaneous",
-                "linksubtype": "variable",
-                "name": "ValidOrcid",
+                "linksubtype": "typealias",
+                "name": "Story",
                 "coveragePercent": 0,
                 "coverageCount": "0/1",
                 "status": "low"
             },
             {
-                "filePath": "src/lib/orcid-dialog/orcid-dialog.stories.ts",
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "class",
+                "linktype": "classe",
+                "name": "MockDialogRef",
+                "coveragePercent": 0,
+                "coverageCount": "0/2",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "function",
+                "linktype": "miscellaneous",
+                "linksubtype": "function",
+                "name": "mockAutocompleteProvider",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "Default",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "LongSegment",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "meta",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "NoMatches",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "sampleMatches",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "sampleTextSegment",
+                "coveragePercent": 0,
+                "coverageCount": "0/1",
+                "status": "low"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "ShortSegment",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
+                "type": "variable",
+                "linktype": "miscellaneous",
+                "linksubtype": "variable",
+                "name": "SlowProvider",
+                "coveragePercent": 100,
+                "coverageCount": "1/1",
+                "status": "very-good"
+            },
+            {
+                "filePath": "src/lib/sentence-annotation/sentence-annotation-dialog.stories.ts",
                 "type": "type alias",
                 "linktype": "miscellaneous",
                 "linksubtype": "typealias",

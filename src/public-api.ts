@@ -12,7 +12,7 @@ export * from './lib/hpo-age-selector/hpo-age-selector.component';
 export * from './lib/hpo-mining/hpo-mining.component';
 export * from './lib/hpo-modifier/hpo-modifier.component';
 export * from './lib/load-ontology/load-ontology.component';
-export * from './lib/orcid-dialog/orcid-dialog';
+export * from './lib/orcid-dialog/orcid-dialog.component';
 export * from './lib/phenopacket-loader/phenopacket-loader.component';
 export * from './lib/models/fenominal-models';
 export * from './lib/models/hpo-annotation-models';

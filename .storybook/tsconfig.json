@@ -5,7 +5,8 @@
       "skipLibCheck": true,
     "types": ["node"],
     "allowSyntheticDefaultImports": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "target": "ES2022"
   },
   "exclude": ["../src/test.ts", "../src/**/*.spec.ts"],
   "include": ["../src/**/*.stories.*", "./preview.ts", "../src/lib/styles/styles.scss"],

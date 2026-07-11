@@ -4,6 +4,7 @@
     <hpo-text-mining-container
       [sentences]="localSentences()"
       (deleteHitRequested)="deleteHit($event)"
+      [autocompleteProvider]="autocompleteProvider()"
       >
     </hpo-text-mining-container>
 </div>

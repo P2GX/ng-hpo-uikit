@@ -21,6 +21,15 @@
           @for (segment of sentence.segments; track $index) {
             @if (segment.kind === 'text') {
               <span class="plain-text">{{ segment.text }}</span>
+              @if (!isPunctuationOnly(segment.text)) {
+                <button
+                  class="manual-annotate-btn"
+                  (click)="openManualAnnotationDialog(sentence, $index)"
+                  title="Manually add HPO term"
+                  aria-label="Manually add HPO term">
+                  <mat-icon>add_circle_outline</mat-icon>
+                </button>
+              }
             } @else if (segment.kind === 'hit') {
               <span 
                 class="annotation-badge"
