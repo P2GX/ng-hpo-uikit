@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { OntologyMatch } from "./ontology-dto";
+import { FenominalHit } from './fenominal-models';
 
 export interface HpoTermMinimal {
   termId: string;
@@ -31,3 +32,9 @@ export interface HitSpanPatch {
 
 
 export type OntologyAutocompleteProvider = (query: string) => Observable<OntologyMatch[]>;
+
+/* This is used if we delete an erroneous hit from the HPO text mining window */
+export interface DeleteHitRequest {
+    sentenceStart: number;
+    hit: FenominalHit;
+}

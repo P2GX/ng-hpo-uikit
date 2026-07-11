@@ -1,7 +1,7 @@
 import { Component, input, output, booleanAttribute, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fenominal-models';
-import { HitSpanPatch } from '../models/hpo-annotation-models';
+import { DeleteHitRequest, HitSpanPatch } from '../models/hpo-annotation-models';
 
 @Component({
   selector: 'hpo-text-mining-container',
@@ -13,6 +13,7 @@ import { HitSpanPatch } from '../models/hpo-annotation-models';
 export class TextMiningContainerComponent {
   sentences = input<FenominalSentence[]>([]);
   hitUpdated = output<HitSpanPatch>();
+  deleteHitRequested = output<DeleteHitRequest>();
 
   /* Show sentences above this index in collapsed mode to save space */
   protected collapsedUntilIndex = signal<number | null>(null);
@@ -32,6 +33,15 @@ export class TextMiningContainerComponent {
     return sentenceStart <= cutoff;
   }
 
+  protected deleteHit(
+      sentence: FenominalSentence,
+      hit: FenominalHit
+  ): void {
+      this.deleteHitRequested.emit({
+          sentenceStart: sentence.start,
+          hit
+      });
+  }
 
 
   protected getTooltipText(hit: FenominalHit): string {

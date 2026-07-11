@@ -3,7 +3,8 @@
     <div class="document-preview-pane">
     <hpo-text-mining-container
       [sentences]="localSentences()"
-      (hitUpdated)="handleTextMiningUpdate($event)">
+      (deleteHitRequested)="deleteHit($event)"
+      >
     </hpo-text-mining-container>
 </div>
   </div>
@@ -28,7 +29,6 @@
             [hierarchy]="hierarchyCache()[rowItem.termId] || null"
             [availableModifiers]="availableModifiers()"
             (termClick)="handleHierarchyRequest(rowItem)"
-            (updated)="handleBadgeUpdated($event, rowItem.termId)"
             (deleteRequested)="deleteAnnotationEverywhere(rowItem.termId)">
           </tr>
         } @empty {

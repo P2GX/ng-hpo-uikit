@@ -13,7 +13,7 @@ import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
-import { HierarchyMapItem, HitSpanPatch, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
+import { DeleteHitRequest, HierarchyMapItem, HitSpanPatch, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { TextMiningContainerComponent } from "../text-mining-container/text-mining-container.component";
 
 
@@ -112,62 +112,6 @@ export class HpoPolishingWorkspaceComponent {
 
 
 
-  protected handleBadgeMoved(
-    originalTermId: string, 
-    textSnippet: string, 
-    newSpan: { start: number; end: number }): void {
-    // 1. strip the old HPO classification out of local state
-    this.localSentences.update(sentences =>
-      sentences.map(s => ({
-        ...s,
-        segments: s.segments.map(seg => {
-          if (seg.kind === 'hit' && seg.hit.termId === originalTermId) {
-            return {
-              kind: 'text',
-              text: textSnippet,
-              span: newSpan
-            };
-          }
-          return seg;
-        })
-      }))
-    );
-
-    // 2. Notify shell to dispatch the backend extraction call
-    this.badgeMoved.emit({
-      originalTermId,
-      newTextWindow: textSnippet,
-      newSpan
-    });
-  }
-
-
-  /** This is called when the user moves a badge, which deletes the origal */
-  protected handleBadgeUpdated(updatedRow: PolishedHpoAnnotation, originalTermId: string): void {
-    this.localSentences.update(sentences =>
-      sentences.map(s => ({
-        ...s,
-        segments: s.segments.map(seg => {
-          if (seg.kind === 'hit' && seg.hit.termId === originalTermId) {
-            const updatedHit: UiFenominalHit = {
-              ...seg.hit,
-              termId: updatedRow.termId,
-              label: updatedRow.label,
-              excluded: updatedRow.excluded,
-              onset: updatedRow.onsetString,
-              modifiers: updatedRow.modifiers || []
-            };
-            return {
-              ...seg,
-              text: updatedRow.label,
-              hit: updatedHit
-            };
-          }
-          return seg;
-        })
-      }))
-    );
-  }
 
   protected deleteAnnotationEverywhere(termId: string): void {
     this.localSentences.update(sentences =>
@@ -247,20 +191,34 @@ export class HpoPolishingWorkspaceComponent {
     this.hpoInputString = '';
   }
 
-  protected handleTextMiningUpdate(patch: HitSpanPatch): void {
-    this.localSentences.update(sentences =>
-      sentences.map(s => {
-        if (s.start !== patch.sentenceStart) return s;
-        return {
-          ...s,
-          segments: s.segments.map((seg, i) => {
-            if (i !== patch.segmentIndex || seg.kind !== 'hit') return seg;
-            return { ...seg, hit: { ...seg.hit, span: patch.span } };
-          })
-        };
-      })
-    );
-  }
+  protected deleteHit(request: DeleteHitRequest): void {
+  this.localSentences.update(sentences =>
+    sentences.map(sentence => {
+      if (sentence.start !== request.sentenceStart) {
+        return sentence;
+      }
+
+      return {
+        ...sentence,
+        segments: sentence.segments.map(segment => {
+          if (
+            segment.kind === 'hit' &&
+            segment.hit.span.start === request.hit.span.start &&
+            segment.hit.span.end === request.hit.span.end
+          ) {
+            return {
+              kind: 'text' as const,
+              text: segment.text,
+              span: { ...segment.hit.span }
+            };
+          }
+
+          return segment;
+        })
+      };
+    })
+  );
+}
 
   protected saveAndFinish(): void {
     this.complete.emit(this.uniqueTableAnnotations());

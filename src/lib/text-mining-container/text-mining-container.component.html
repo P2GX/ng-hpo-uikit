@@ -34,6 +34,10 @@
                   </button>
                 </span>
               </span>
+              <button
+                  (click)="deleteHit(sentence, segment.hit); $event.stopPropagation()">
+                  ✕
+              </button>
             }
           }
         </span>
