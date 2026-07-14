@@ -89,9 +89,6 @@ export class HpoPolishingWorkspaceComponent {
   private hasInitialized = false;
   constructor() {
     effect(() => {
-      console.log('[HpoPolishingWorkspaceComponent] sentences() changed:', this.sentences());
-    });
-    effect(() => {
        // convert from FenominalSentence to UiFenominalSentence
       const rawSentences = this.sentences();
       if (rawSentences && rawSentences.length > 0 && !this.hasInitialized) {

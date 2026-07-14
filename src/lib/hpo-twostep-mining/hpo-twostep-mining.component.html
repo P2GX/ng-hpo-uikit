@@ -1,0 +1,20 @@
+<div class="hpo-twostep-container">
+  @if (currentStep() === 1) {
+    <hpo-mining-workspace
+      (miningRequested)="handleMiningRequest($event)"
+      (success)="onTextMiningSuccess($event)"
+      (error)="onTextMiningError($event)"
+      (cancel)="close()">
+    </hpo-mining-workspace>
+  } @else if (currentStep() === 2) {
+     <hpo-polishing-workspace
+          [sentences]="curatedSentences()"
+          [autocompleteProvider]="config().autocompleteProvider"
+          [hierarchyProvider]="config().hierarchyProvider"
+          [availableModifiers]="availableModifiers()"
+          (segmentsReplaced)="onSegmentsReplaced($event)"
+          (complete)="onCurationComplete($event)"
+          (cancel)="close()">
+        </hpo-polishing-workspace>
+  }
+</div>

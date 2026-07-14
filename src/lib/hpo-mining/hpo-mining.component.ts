@@ -19,7 +19,7 @@ export class HpoMiningComponent {
   error = output<string>();
   cancel = output<void>();
 
-  // A brand new output that delegates the actual HTTP call to the host application
+  // output that delegates the actual HTTP call to the host application
   miningRequested = output<{ 
     text: string, 
     callback: (result: FenominalSentence[] | string) => void 
@@ -29,9 +29,7 @@ export class HpoMiningComponent {
    * Triggers the text mining pipeline by handing the text off to the host application
    */
   runTextMining(): void {
-    console.log("runTextMining")
     if (!this.pastedText.trim()) return;
-
     this.isMining.set(true);
 
     // Delegate the async operation to the app layer
