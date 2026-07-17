@@ -98,3 +98,23 @@ with it we get
 ```
 
 This is because applications benefit from pinning exact versions so builds are reproducible.
+
+
+## Ensuring that an application uses the latest version of ng-hpo-uikit
+Delete the existing package, uninstall it, reinstall fresh from the dist-build branch
+
+```bash
+npm uninstall ng-hpo-uikit --legacy-peer-deps
+rm -rf node_modules/ng-hpo-uikit
+npm install ng-hpo-uikit@github:P2GX/ng-hpo-uikit#dist-build --legacy-peer-deps
+```
+
+Check things worked:
+```bash
+# check
+head node_modules/ng-hpo-uikit/package.json 
+{
+  "name": "ng-hpo-uikit",
+  "version": "0.2.42",
+  (..)
+```

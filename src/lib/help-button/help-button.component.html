@@ -1,11 +1,15 @@
-<button mat-icon-button [matMenuTriggerFor]="helpMenu" class="help-trigger" type="button">
-  <mat-icon>help_outline</mat-icon>
+<!-- help-button.component.html -->
+<button (click)="toggle()" class="help-trigger" type="button" aria-label="Help">
+  <!-- replace mat-icon: inline SVG, or an icon font class, your call -->
+  <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+    <path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm.75 15h-1.5v-1.5h1.5Zm1.53-6.22c-.36.4-.9.86-1.53 1.28-.4.27-.63.51-.63.94v.25h-1.5v-.3c0-.86.42-1.4 1.05-1.83.5-.35.85-.63 1.1-.94.24-.3.36-.62.36-1 0-.83-.67-1.43-1.6-1.43-.86 0-1.5.5-1.68 1.32l-1.47-.26c.28-1.35 1.4-2.31 3.15-2.31 1.83 0 3.1 1.06 3.1 2.6 0 .7-.28 1.28-.85 1.68Z"/>
+  </svg>
 </button>
 
-<mat-menu #helpMenu="matMenu" panelClass="help-bubble-menu">
-  <div class="help-content" (click)="$event.stopPropagation()">
+<div #popoverEl popover="auto" class="help-bubble-menu">
+  <div class="help-content">
     <h3 class="help-title">{{ title() }}</h3>
-    
+
     @for (line of lines(); track line) {
       <p class="help-text" [innerHTML]="line"></p>
     }
@@ -13,9 +17,8 @@
     @if (helpUrl()) {
       <hr class="help-divider">
       <button class="btn-docs" (click)="openDocs()">
-        <mat-icon>open_in_new</mat-icon>
         <span>Learn more</span>
       </button>
     }
   </div>
-</mat-menu>
+</div>

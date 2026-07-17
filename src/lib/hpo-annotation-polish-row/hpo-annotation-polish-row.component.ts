@@ -113,25 +113,7 @@ export class HpoPolishRowComponent {
     this.updated.emit(updatedAnnotation);
   }
 
-/*
-  addModifier(event: Event): void {
-    const select = event.target as HTMLSelectElement;
-    const value = select.value;
-    if (!value) return;
 
-    const currentMods = this.annotation().modifiers || [];
-    if (!currentMods.includes(value)) {
-      const updatedAnnotation = {
-        ...this.annotation(),
-        modifiers: [...currentMods, value]
-      };
-      
-      this.annotation.set(updatedAnnotation); // Update local view
-      this.updated.emit(updatedAnnotation);
-    }
-    select.value = ''; // Reset select tag view line
-  }
-*/
   removeModifier(idx: number): void {
     const currentMods = this.annotation().modifiers || [];
     const updatedMods = currentMods.filter((_, i) => i !== idx);
