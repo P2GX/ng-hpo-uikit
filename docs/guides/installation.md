@@ -118,3 +118,20 @@ head node_modules/ng-hpo-uikit/package.json
   "version": "0.2.42",
   (..)
 ```
+
+
+## Rapid iteration
+
+During development, we may want to revise a component in ng-hpo-toolkit and test it in an application. To do so, revise the code here and build
+
+```bash
+npm run build
+```
+
+Then go to the application and enter
+```bash
+npm install ng-hpo-uikit@file:../ng-hpo-uikit/dist/ng-hpo-uikit --legacy-peer-deps
+head node_modules/ng-hpo-uikit/package.json        
+```
+
+Ths latter command should show that the latest version has been installed.

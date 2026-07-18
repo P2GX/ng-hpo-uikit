@@ -1,15 +1,36 @@
 # Ontology Autocomplete (hpo-ontology-autocomplete)
-The OntologyAutocompleteComponent is a highly reusable, accessible, and generic lookup widget designed to fetch and display search term selections from any medical or biological ontology schema (e.g., Human Phenotype Ontology, Gene Ontology).
 
-It decouples the UI layer from your application services by using a dynamic search provider input stream.
+The `OntologyAutocompleteComponent` is a lightweight, high-performance lookup widget built with plain HTML/CSS. 
 
-## Data Model Specifications
+
+It supports both instant selection and an optional two-step confirmation flow.
+
+
+## Backend Integration
 
 The widget expects all option suggestions to implement the [OntologyMatch](./models/ontology-match.md) contract.
 
-## Backend
+This component relies on a backend (e.g., a Rust-based autocompleter via Tauri invokes) transformed into an Observable stream:
+```typescript
+protected performHpoAutocomplete(query: string): Observable<OntologyMatch[]> {
+  return from(this.configService.performHpoAutocomplete(query)).pipe(
+    catchError(err => {
+      this.notificationService.showError(String(err));
+      return of([]); // Fail gracefully with empty results
+    })
+  );
+}
+```
 
-This component relies on the `fenominal` Autocompleter, e.g., 
+
+This can then be passed to the component with this definition
+```typescript
+autocompleteProvider: (query: string) => Observable<OntologyMatch[]>;
+```
+
+
+In our applications, this is implemented using [fenominal](https://github.com/P2GX/fenominal).
+ 
 ```rust
  pub fn perform_hpo_autocomplete(&self, query: String) -> Result<Vec<OntologyMatch>, String> {
         let autocompleter = self.autocompleter.as_ref().ok_or_else(|| "Autocomplete not initialized".to_string())?;
@@ -18,66 +39,56 @@ This component relies on the `fenominal` Autocompleter, e.g.,
     }
 ```
 
-Assuming there is an angular service layer that does this:
-```typescript
-async performHpoAutocomplete(query: string): Promise<OntologyMatch[]> {
-  return invoke<OntologyMatch[]>('perform_hpo_autocomplete', { query });
-}
-```
+
 
 then in our component, we need to transform this into observables:
 
-```typescript
-protected performHpoAutocomplete(query: string): Observable<OntologyMatch[]> {
-  return from(this.configService.performHpoAutocomplete(query)).pipe(
-    catchError(err => {
-      this.notificationService.showError(String(err));
-      return of([]); // fail gracefully — empty results, not a broken autocomplete
-    })
-  );
-}
-```
 
-This can then be passed to the component with this definition
-```typescript
-autocompleteProvider: (query: string) => Observable<OntologyMatch[]>;
-```
+## Implementation Examples
 
-This translates into something like this in our template
+1. Simple Integration (Instant Selection)
 ```html
- @if (autocompleteProvider(); as provider) {
-  <div class="autocomplete-injection-box">
-    <hpo-ontology-autocomplete
-      [inputString]="hpoInputString"
-      [autocompleteProvider]="provider"
-      (selected)="handleAutocompleteSelection($event)">
-    </hpo-ontology-autocomplete>
-    <button 
-      (click)="injectManualHpoToken()"
-      [disabled]="!selectedHpoMatch()"
-      class="btn-workspace-add">
-      <mat-icon>add</mat-icon>Add Term
-    </button>
-  </div>
+ <hpo-ontology-autocomplete
+  placeholder="Search clinical phenotypes (e.g., Seizures)..."
+  [autocompleteProvider]="hpoSearcher"
+  (selected)="onHpoTermSelected($event)" />
+}
+```
+with 
+```typescript
+import { Component, inject } from '@angular/core';
+import { ConfigService, OntologyMatch } from 'ng-hpo-uikit';
+
+@Component({
+  selector: 'app-setup-view',
+  standalone: true,
+  imports: [OntologyAutocompleteComponent],
+  templateUrl: './setup-view.component.html'
+})
+export class SetupViewComponent {
+  private configService = inject(ConfigService);
+
+  // Preserve lexical 'this' context using an arrow function
+  hpoSearcher = (query: string) => this.performHpoAutocomplete(query);
+
+  onHpoTermSelected(term: OntologyMatch) {
+    console.log('Selected term:', term);
+  }
 }
 ```
 
-where we open the dialog (here with other providers), like this:
+## 2. Two-Step Confirmation Workflow
 
-```typescript
-const dialogRef = this.dialog.open(HpoTwostepComponent, {
-  width: '85vw',
-  maxWidth: '1200px',
-  height: '80vh',
-  disableClose: true,
-  data: {
-    mineTextProvider: (text: string) => this.configService.mineClinicalText(text),
-    autocompleteProvider: (query: string) =>  this.performHpoAutocomplete(query),
-    hierarchyProvider: this.fetchHpoHierarchy,
-    availableModifiers: this.availableModifiers
-  }
-});
+Use this mode when you want to guard selections with an explicit confirmation action before committing changes to the parent workspace state.
+
+```html
+<hpo-ontology-autocomplete
+  [autocompleteProvider]="hpoSearcher"
+  [requireConfirmation]="true"
+  (selected)="addTermToWorkspace($event)">
+</hpo-ontology-autocomplete>
 ```
+
 
 
 
@@ -95,7 +106,8 @@ Component Selector
 | :--- | :--- | :--- | :--- |
 | `placeholder` | `string` | `'Search ontology term...'` | The placeholder string displayed inside the text input box. |
 | `inputString` | `string` | `''` | Initial or programmatic text value to seed into the input control field. Changing this triggers an immediate focus and select text animation. |
-| `searchProvider` | `(query: string) => Observable<OntologyMatch[]>` | **Required** | A closure callback function executing your custom backend network request filter payload. |
+| `autocompleteProvider` | `(query: string) => Observable<OntologyMatch[]>` | **Required** | A closure callback function executing your custom backend network request filter payload. |
+| `requireConfirmation` | `boolean`|  `false` | If true, adds a dedicated "Confirm" button step instead of emitting the value instantly upon dropdown selection. |
 
 ### Outputs (`output`)
 
@@ -103,59 +115,3 @@ Component Selector
 | :--- | :--- | :--- |
 | `selected` | `EventEmitter<OntologyMatch>` | Emits the complete `OntologyMatch` data object whenever a user explicitly clicks on a term from the autocomplete dropdown list. |
 
-### Implementation Examples
-
-1. Simple Integration (Human Phenotype Ontology)
-
-To integrate the component into your workspace layout view:
-
-```html
-<div class="search-section-card">
-  <hpo-ontology-autocomplete
-    placeholder="Search clinical phenotypes (e.g., Seizures)..."
-    [searchProvider]="hpoSearcher"
-    (selected)="onHpoTermSelected($event)" />
-</div>
-```
-
-```typescript
-import { Component, inject } from '@angular/core';
-import { ConfigService, OntologyMatch } from 'ng-hpo-uikit';
-
-@Component({
-  selector: 'app-setup-view',
-  templateUrl: './setup-view.component.html'
-})
-export class SetupViewComponent {
-  private configService = inject(ConfigService);
-
-  // Bind service execution to component context scope via lambda arrow functions
-  hpoSearcher = (query: string) => this.configService.getAutocompleteHpo(query);
-
-  onHpoTermSelected(term: OntologyMatch) {
-    console.log('User selected ontology term payload:', term);
-  }
-}
-```
-
-
-### 2. Advanced Mapping Example (Gene Ontology)
-If your underlying service endpoint handles custom backend schemas that do not match the exact OntologyMatch shape natively, map the reactive stream array pipe inside your custom handler:
-
-```typescript
-goSearcher = (query: string) => {
-  return this.configService.fetchGeneOntologyTerms(query).pipe(
-    map(backendHits => backendHits.map(hit => ({
-      id: hit.accessionNumber,       // Map standard field 'accessionNumber' -> 'id'
-      label: hit.name,               // Map standard field 'name' -> 'label'
-      matchedText: hit.matchedText   // Match tracking token
-    })))
-  );
-};
-```
-
-### UX Features Built-In
-
-* **Debounced Inputs:** Out-of-the-box user input tracking is automatically debounced by $300\text{ms}$ before executing search streams to minimize unnecessary backend request overload.
-* **Auto-Clear Action:** When text contains active value properties, an auxiliary clear icon (X) dynamically surfaces to allow easy form resets.
-* **Smart Row Density:** Material Option heights automatically recalculate dynamically if a hit displays a secondary row showing a canonical label alternative.

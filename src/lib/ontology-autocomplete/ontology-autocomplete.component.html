@@ -1,36 +1,55 @@
-<mat-form-field class="full-width-field" appearance="outline">
-  <input type="text"
-    #ontologyInput
-    [placeholder]="placeholder()"
-    matInput
-    [formControl]="control"
-    [matAutocomplete]="auto"
-    spellcheck="false"
-    autocomplete="off">
+<!-- ontology-autocomplete.component.html -->
+<div class="autocomplete-wrapper" (clickOutside)="hideDropdown()">
+  <div class="input-container">
+    <input type="text"
+      #ontologyInput
+      [placeholder]="placeholder()"
+      [formControl]="control"
+      (focus)="showDropdown()"
+      (keydown)="onKeyDown($event)"
+      spellcheck="false"
+      autocomplete="off">
 
-  @if (control.value) {
-    <button matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
-      <mat-icon>close</mat-icon>
-    </button>
-  }
-  
-  <mat-autocomplete 
-    #auto="matAutocomplete" 
-    [displayWith]="displayFn" 
-    (optionSelected)="onOptionSelected($event)">
-    @for (option of options(); track option.id) {
-      <mat-option [value]="option">
-        <div class="option-container">
-          <span class="option-matched-text">{{ option.matchedText }}</span>
-          @if (option.matchedText !== option.label) {
-            <small class="option-primary-label">Primary: {{ option.label }}</small>
-          }
-          <small class="option-id">{{ option.id }}</small>
-        </div>
-      </mat-option>
+    @if (control.value) {
+      <button type="button" class="clear-btn" aria-label="Clear input" (click)="clear()">
+        <span class="close-icon">&times;</span>
+      </button>
     }
-  </mat-autocomplete>
-  @if (control.hasError('invalidSelection') && control.touched) {
-    <mat-error>Please select a term from the list</mat-error>
+  </div>
+
+  <!-- Dropdown Menu -->
+  @if (isOpen() && options().length > 0) {
+    <ul class="dropdown-menu" role="listbox">
+      @for (option of options(); track option.id; let i = $index) {
+        <li 
+          role="option"
+          [class.active-highlight]="i === activeHighlightIndex()"
+          [attr.aria-selected]="i === activeHighlightIndex()"
+          (click)="selectOption(option)"
+          (mouseenter)="activeHighlightIndex.set(i)">
+          
+          <div class="option-container">
+            <span class="option-matched-text">{{ option.matchedText }}</span>
+            @if (option.matchedText !== option.label) {
+              <small class="option-primary-label">Primary: {{ option.label }}</small>
+            }
+            <small class="option-id">{{ option.id }}</small>
+          </div>
+        </li>
+      }
+    </ul>
   }
-</mat-form-field>
+
+  @if (control.hasError('invalidSelection') && control.touched) {
+    <span class="error-message">Please select a term from the list</span>
+  }
+</div>
+
+<!-- Optional Confirm Action Section -->
+@if (requireConfirmation() && activeSelection()) {
+  <div class="confirmation-actions">
+    <button type="button" class="confirm-btn" (click)="confirmSelection()">
+      Confirm "{{ activeSelection()?.label }}"
+    </button>
+  </div>
+}
