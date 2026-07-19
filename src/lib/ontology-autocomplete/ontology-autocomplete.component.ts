@@ -6,10 +6,18 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { OntologyMatch } from '../models/ontology-dto'; 
 import { OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 
-export function ontologyMatchValidator(): ValidatorFn {
+export function ontologyMatchValidator(component?: any): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const value = control.value;
+    // If it's an object (OntologyMatch object), it's valid
+    if (value && typeof value === 'object') {
+      return null;
+    }
+    // If it's a string, only allow it if it matches the confirmed selection
     if (typeof value === 'string' && value.length > 0) {
+      if (component && component.activeSelection()?.label === value) {
+        return null;
+      }
       return { 'invalidSelection': true };
     }
     return null;
@@ -32,7 +40,7 @@ export class OntologyAutocompleteComponent {
   selected = output<OntologyMatch>();
 
   inputElement = viewChild<ElementRef<HTMLInputElement>>('ontologyInput');
-  control = new FormControl<string | OntologyMatch>('', [ontologyMatchValidator()]);
+  control = new FormControl<string | OntologyMatch>('', [ontologyMatchValidator(this)]);
 
   // UI State Signals
   isOpen = signal<boolean>(false);
@@ -94,8 +102,8 @@ export class OntologyAutocompleteComponent {
   }
 
   selectOption(option: OntologyMatch) {
-    // Sync the input value display text
     this.control.setValue(option.label, { emitEvent: false });
+    this.control.setErrors(null);
     
     if (this.requireConfirmation()) {
       this.activeSelection.set(option);
@@ -108,8 +116,11 @@ export class OntologyAutocompleteComponent {
   confirmSelection() {
     const current = this.activeSelection();
     if (current) {
-      this.selected.emit(current);
+      this.control.markAsUntouched();
+      this.control.markAsPristine();
+      this.control.setErrors(null);
       this.activeSelection.set(null);
+      this.selected.emit(current);
     }
   }
 

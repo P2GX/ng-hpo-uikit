@@ -36,6 +36,7 @@ td {
 /* Modifier configuration layouts */
 .modifiers-container { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .modifier-chip { background: #e9ecef; border-radius: 12px; padding: 1px 6px; font-size: 8px; display: inline-flex; align-items: center; gap: 4px; max-width: 90px; }
+.modifier-chip.more {  cursor: help; }
 .remove-mod-btn { border: none; background: transparent; cursor: pointer; font-weight: bold; color: #dc3545; }
 .modifier-select, .onset-select { padding: 4px; border-radius: 4px; border: 1px solid #ced4da; font-size: 11px; }
 .active-modifiers-preview {
@@ -59,18 +60,24 @@ td {
 
 .action-group {
     display: flex;
-    gap: 2px;
-    justify-content: center;
+    gap: 8px;
+    align-items: center;
+    button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        
+        &:hover {
+        background-color: #f0f0f0;
+        }
+    }
 }
 
-.action-group button {
-    width: 28px;
-    height: 28px;
-    padding: 0;
-}
 
-.action-group mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-}
+
+

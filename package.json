@@ -1,6 +1,6 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.2.44",
+  "version": "0.2.46",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -15,10 +15,10 @@
     "lint": "ng lint ng-hpo-uikit"
   },
   "peerDependencies": {
-    "@angular/common": "^21.2.0",
-    "@angular/core": "^21.2.0",
-    "@angular/material": "^21.2.0",
-    "@angular/platform-browser": "^21.2.0",
+    "@angular/common": ">=21.2.0 <23.0.0",
+    "@angular/core": ">=21.2.0 <23.0.0",
+    "@angular/material": ">=21.2.0 <23.0.0",
+    "@angular/platform-browser": ">=21.2.0 <23.0.0",
     "@tauri-apps/plugin-opener": "^2.0.0"
   },
   "dependencies": {

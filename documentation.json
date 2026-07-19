@@ -247,17 +247,6 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                "coverageIgnore": false,
-                "deprecated": false,
-                "deprecationMessage": "",
-                "type": "Meta<HpoPolishRowComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
-            },
-            {
-                "name": "meta",
-                "ctype": "miscellaneous",
-                "subtype": "variable",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
@@ -280,12 +269,12 @@
                 "name": "meta",
                 "ctype": "miscellaneous",
                 "subtype": "variable",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "coverageIgnore": false,
                 "deprecated": false,
                 "deprecationMessage": "",
-                "type": "Meta<HpoPolishingWorkspaceComponent>",
-                "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    autocompleteProvider: {\n      table: { disable: true }\n    }\n  }\n}"
+                "type": "Meta<HpoPolishRowComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Annotation Polisher',\n  component: HpoPolishRowComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],\n    }),\n    (story, context) => {\n      const storyInstance = story();\n      return {\n        ...storyInstance, //  passes mock arguments context to the wrapper template\n        template: `\n          <div style=\"padding: 2rem;\">\n            <table style=\"width: 100%; border-collapse: collapse; background: white;\">\n              <tbody>\n                <tr hpo-polisher-row \n                    [annotation]=\"annotation\"\n                    [hierarchy]=\"hierarchy\"\n                    [availableOnsets]=\"availableOnsets\"\n                    [availableModifiers]=\"availableModifiers\"\n                    (annotationChange)=\"annotationChange($event)\"\n                    (updated)=\"updated($event)\"\n                    (deleteRequested)=\"deleteRequested($event)\"\n                    (termClick)=\"termClick($event)\">\n                </tr>\n              </tbody>\n            </table>\n          </div>\n        `,\n      };\n    },\n  ],\n  // Automatically capture output() events in the Storybook Actions log panel\n  argTypes: {\n    annotationChange: { action: 'annotationChange' },\n    updated: { action: 'updated' },\n    deleteRequested: { action: 'deleteRequested' },\n    termClick: { action: 'termClick' },\n  },\n}"
             },
             {
                 "name": "meta",
@@ -297,6 +286,17 @@
                 "deprecationMessage": "",
                 "type": "Meta<HpoModifierComponent>",
                 "defaultValue": "{\n  title: 'Components/HpoModifier',\n  component: HpoModifierComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [HpoModifierComponent],\n    }),\n  ],\n  // required input MUST be supplied here, or Storybook renders before Angular\n  // sets it and you get NG0950 — same class of bug as the earlier input.required() fix\n  args: {\n    availableModifiers: SAMPLE_MODIFIERS,\n    selectedModifiers: [],\n  },\n  argTypes: {\n    modifierToggled: { action: 'modifierToggled' },\n    menuClosed: { action: 'menuClosed' },\n    selectedModifiersChange: { action: 'selectedModifiersChange' }, // auto-generated by model()\n  },\n}"
+            },
+            {
+                "name": "meta",
+                "ctype": "miscellaneous",
+                "subtype": "variable",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "coverageIgnore": false,
+                "deprecated": false,
+                "deprecationMessage": "",
+                "type": "Meta<HpoPolishingWorkspaceComponent>",
+                "defaultValue": "{\n  title: 'Components/HPO Polishing Workspace',\n  component: HpoPolishingWorkspaceComponent,\n  decorators: [\n    moduleMetadata({\n      imports: [CommonModule, FormsModule, MatIconModule],\n    }),\n  ],\n  parameters: {\n    layout: 'padded',\n  },\n  tags: ['autodocs'],\n  argTypes: {\n    autocompleteProvider: {\n      table: { disable: true }\n    }\n  }\n}"
             },
             {
                 "name": "meta",
@@ -621,19 +621,6 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishRowComponent>",
-                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                "deprecated": false,
-                "deprecationMessage": "",
-                "rawdescription": "",
-                "description": "",
-                "kind": 184
-            },
-            {
-                "name": "Story",
-                "ctype": "miscellaneous",
-                "subtype": "typealias",
-                "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoMiningComponent>",
                 "file": "src/lib/hpo-mining/hpo-mining.stories.ts",
                 "deprecated": false,
@@ -660,8 +647,8 @@
                 "ctype": "miscellaneous",
                 "subtype": "typealias",
                 "coverageIgnore": false,
-                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
-                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                "rawtype": "StoryObj<HpoPolishRowComponent>",
+                "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -675,6 +662,19 @@
                 "coverageIgnore": false,
                 "rawtype": "StoryObj<HpoModifierComponent>",
                 "file": "src/lib/hpo-modifier/hpo-modifier.component.stories.ts",
+                "deprecated": false,
+                "deprecationMessage": "",
+                "rawdescription": "",
+                "description": "",
+                "kind": 184
+            },
+            {
+                "name": "Story",
+                "ctype": "miscellaneous",
+                "subtype": "typealias",
+                "coverageIgnore": false,
+                "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                 "deprecated": false,
                 "deprecationMessage": "",
                 "rawdescription": "",
@@ -1292,21 +1292,6 @@
         },
         "groupedEnumerations": {},
         "groupedTypeAliases": {
-            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
-                {
-                    "name": "Story",
-                    "ctype": "miscellaneous",
-                    "subtype": "typealias",
-                    "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolishRowComponent>",
-                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
-                    "deprecated": false,
-                    "deprecationMessage": "",
-                    "rawdescription": "",
-                    "description": "",
-                    "kind": 184
-                }
-            ],
             "src/lib/hpo-mining/hpo-mining.stories.ts": [
                 {
                     "name": "Story",
@@ -1337,14 +1322,14 @@
                     "kind": 184
                 }
             ],
-            "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
+            "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts": [
                 {
                     "name": "Story",
                     "ctype": "miscellaneous",
                     "subtype": "typealias",
                     "coverageIgnore": false,
-                    "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
-                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
+                    "rawtype": "StoryObj<HpoPolishRowComponent>",
+                    "file": "src/lib/hpo-annotation-polish-row/hpo-annotation-polisher.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",
@@ -1360,6 +1345,21 @@
                     "coverageIgnore": false,
                     "rawtype": "StoryObj<HpoModifierComponent>",
                     "file": "src/lib/hpo-modifier/hpo-modifier.component.stories.ts",
+                    "deprecated": false,
+                    "deprecationMessage": "",
+                    "rawdescription": "",
+                    "description": "",
+                    "kind": 184
+                }
+            ],
+            "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts": [
+                {
+                    "name": "Story",
+                    "ctype": "miscellaneous",
+                    "subtype": "typealias",
+                    "coverageIgnore": false,
+                    "rawtype": "StoryObj<HpoPolishingWorkspaceComponent>",
+                    "file": "src/lib/hpo-polishing-workspace/hpo-polishing-workspace.stories.ts",
                     "deprecated": false,
                     "deprecationMessage": "",
                     "rawdescription": "",

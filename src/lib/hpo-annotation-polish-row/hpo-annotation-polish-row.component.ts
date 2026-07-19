@@ -1,15 +1,9 @@
 import { Component, input, model, computed, output, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MatTooltip } from '@angular/material/tooltip';
+import { ModifierSelectorComponent } from './app-modifier-selector';
 import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component'
 
 /*
@@ -21,21 +15,17 @@ import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } 
   selector: 'tr[hpo-polisher-row]',
   standalone: true,
   imports: [
+    ModifierSelectorComponent,
     CommonModule,
     FormsModule,
-    HpoAgeSelectorComponent,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTooltip
+    HpoAgeSelectorComponent
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'
 })
 export class HpoPolishRowComponent {
-  private dialog = inject(MatDialog);
+  
+  readonly isModifierDialogOpen = signal(false);
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = input<HierarchyMapItem | null>(null);
@@ -88,6 +78,10 @@ export class HpoPolishRowComponent {
     this.updated.emit(updatedAnnotation); 
   }
 
+  toggleModifierModal(): void {
+    this.isModifierDialogOpen.update(v => !v);
+  }
+
   toggleHierarchyMenu(): void {
     this.showHierarchyMenu.update(v => !v);
   }
@@ -124,25 +118,6 @@ export class HpoPolishRowComponent {
 
     this.annotation.set(updatedAnnotation); 
     this.updated.emit(updatedAnnotation);
-  }
-
-  protected openModifierDialog(): void {
-    const ref = this.dialog.open<HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult>(
-      HpoModifierDialogComponent,
-      {
-        data: {
-          availableModifiers: this.availableModifiers(),
-          selectedModifiers: this.annotation().modifiers || []
-        },
-        width: '480px'
-      }
-    );
-
-    ref.afterClosed().subscribe(result => {
-      if (result) {
-        this.updateModifiers(result.selectedModifiers);
-      }
-    });
   }
 
   changeOnset(newOnset: string): void {
