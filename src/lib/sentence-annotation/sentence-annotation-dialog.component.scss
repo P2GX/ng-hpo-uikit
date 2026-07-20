@@ -16,7 +16,6 @@
   line-height: 1.6;
   user-select: none; // prevents native text-selection artifacts while dragging
 
-  // Subtle affordance that this area is drag-selectable
   &.is-dragging {
     cursor: crosshair;
   }
@@ -64,4 +63,31 @@ hpo-ontology-autocomplete {
 
 mat-dialog-actions {
   gap: 4px;
+}
+
+.dialog-body {
+  padding: 24px;
+  flex-grow: 1;
+  overflow-y: auto; /* This makes the content scrollable */
+  min-height: 200px; /* Give it a minimum height to start with */
+}
+
+/* Ensure the autocomplete dropdown is not being clipped */
+app-ontology-autocomplete {
+  display: block;
+  min-height: 400px; /* Ensure there is enough vertical space for results */
+  margin-top: 10px;
+}
+
+.dialog-header {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+}
+.dialog-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px; 
 }

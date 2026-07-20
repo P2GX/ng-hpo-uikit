@@ -1,34 +1,37 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, ElementRef, inject, input, output, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fenominal-models';
 import { DeleteHitRequest, OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
-import { MatDialog } from '@angular/material/dialog';
 import { SentenceAnnotationDialogComponent } from '../sentence-annotation/sentence-annotation-dialog.component';
-
-
+import { NotificationService } from '../services/notification.service';
+import { SEMICOLON } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'hpo-text-mining-container',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, SentenceAnnotationDialogComponent],
   templateUrl: './text-mining-container.component.html',
-  styleUrls: ['./text-mining-container.component.scss']
+  styleUrls: ['./text-mining-container.component.scss'],
 })
 export class TextMiningContainerComponent {
+  @ViewChild('annotationDialog') dialogRef!: ElementRef<HTMLDialogElement>;
+  private notificationService = inject(NotificationService);
+  selectedSentence = signal<FenominalSentence | null>(null);
+  selectedSegment = signal<FenominalSegment|null>(null);
+  selectedIndex = signal<number | null>(null);
   sentences = input<FenominalSentence[]>([]);
   deleteHitRequested = output<DeleteHitRequest>();
-   private readonly dialog = inject(MatDialog);
-    readonly autocompleteProvider = input.required<OntologyAutocompleteProvider>();
+  readonly autocompleteProvider = input.required<OntologyAutocompleteProvider>();
 
-    readonly segmentsReplaced = output<{
-      sentence: FenominalSentence;
-      segmentIndex: number;
-      newSegments: FenominalSegment[];
-    }>();
+  readonly segmentsReplaced = output<{
+    sentence: FenominalSentence;
+    segmentIndex: number;
+    newSegments: FenominalSegment[];
+  }>();
 
   /* Show sentences above this index in collapsed mode to save space */
   protected collapsedUntilIndex = signal<number | null>(null);
-  
+
   protected collapseUpTo(sentenceStart: number): void {
     this.collapsedUntilIndex.set(sentenceStart);
   }
@@ -44,28 +47,40 @@ export class TextMiningContainerComponent {
     return sentenceStart <= cutoff;
   }
 
-  protected deleteHit(
-      sentence: FenominalSentence,
-      hit: FenominalHit
-  ): void {
-      this.deleteHitRequested.emit({
-          sentenceStart: sentence.start,
-          hit
-      });
+  protected deleteHit(sentence: FenominalSentence, hit: FenominalHit): void {
+    this.deleteHitRequested.emit({
+      sentenceStart: sentence.start,
+      hit,
+    });
   }
 
   openManualAnnotationDialog(sentence: FenominalSentence, segmentIndex: number): void {
     const segment = sentence.segments[segmentIndex];
-    if (segment.kind !== 'text') return; // defensive; template already prevents this
+    if (segment.kind !== 'text') return;
+    this.selectedSentence.set(sentence);
+    this.selectedIndex.set(segmentIndex);
+    this.selectedSegment.set(segment);
+    this.dialogRef.nativeElement.showModal();
+  }
 
-    const ref = this.dialog.open(SentenceAnnotationDialogComponent, {
-      data: { segment, autocompleteProvider: this.autocompleteProvider() },
-      width: '480px',
-    });
+  handleDialogResult(result: FenominalSegment[] | null): void {
+    this.dialogRef.nativeElement.close();
+    const sentence = this.selectedSentence();
+    const idx = this.selectedIndex();
+    this.selectedSentence.set(null);
+    this.selectedIndex.set(null);
+    if (!result) {
+      return;
+    }
+    if (!sentence || idx === null) {
+      this.notificationService.showError("Could not retrieve sentence context for annotation.");
+      return;
+    }
 
-    ref.afterClosed().subscribe(result => {
-      if (!result) return; // user cancelled
-      this.segmentsReplaced.emit({ sentence, segmentIndex, newSegments: result });
+    this.segmentsReplaced.emit({
+      sentence,
+      segmentIndex: idx,
+      newSegments: result,
     });
   }
 
@@ -78,5 +93,4 @@ export class TextMiningContainerComponent {
   protected getTooltipText(hit: FenominalHit): string {
     return `ID: ${hit.termId}\nSpan: [${hit.span.start}, ${hit.span.end}]`;
   }
-
 }

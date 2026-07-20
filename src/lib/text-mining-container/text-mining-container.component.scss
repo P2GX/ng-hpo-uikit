@@ -280,3 +280,24 @@ $badge-delete-hover: rgba(0, 0, 0, 0.15);
     display: block; /* Removes any extra baseline space */
   }
 }
+
+.hpo-annotation-dialog {
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  width: 580px;
+  max-height: 90vh;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  
+  /* Styling the backdrop that covers the app */
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+  }
+}
+
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh; /* Match the dialog height */
+}

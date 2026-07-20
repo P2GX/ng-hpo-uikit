@@ -1,6 +1,9 @@
-<h2 mat-dialog-title>Manual HPO Annotation</h2>
+<!-- Native Dialog structure -->
+<div class="dialog-header">
+  <h2>Manual HPO Annotation</h2>
+</div>
 
-<mat-dialog-content>
+<div class="dialog-body">
   <p class="dialog-hint">Mark words to select the span that matches an HPO term.</p>
 
   <div class="word-picker"
@@ -27,15 +30,15 @@
 
   @if (selectedText() && !isDragging()) {
     <p class="selected-preview">Selected: <strong>{{ selectedText() }}</strong></p>
-        <hpo-ontology-autocomplete
-          [inputString]="selectedText()"
-          [autocompleteProvider]="autocompleteProvider"
-          (selected)="handleAutocompleteSelection($event)">
-        </hpo-ontology-autocomplete>
+    <hpo-ontology-autocomplete
+      [inputString]="selectedText()"
+      [autocompleteProvider]="autocompleteProvider()"
+      (selected)="handleAutocompleteSelection($event)">
+    </hpo-ontology-autocomplete>
   }
-</mat-dialog-content>
+</div>
 
-<mat-dialog-actions align="end">
+<div class="dialog-footer">
     @if (selectedIndices().size > 0) {
         <button class="btn-outline-cancel" (click)="clearSelection()">Clear selection</button>
     }
@@ -43,4 +46,4 @@
   <button class="btn-outline-primary" [disabled]="!canConfirm()" (click)="confirm()">
     Add Term
   </button>
-</mat-dialog-actions>
+</div>

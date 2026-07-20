@@ -2,6 +2,13 @@
 
 This page provides some explanations for developers.
 
+## File format
+Use the prettier app
+```bash
+npx prettier --write path/to/your/file.js
+```
+
+
 # Multiple angular core libraries
 
 We can import a component from this library and use it in anapplication like this

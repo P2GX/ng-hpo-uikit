@@ -60,4 +60,18 @@
   @if (collapsedUntilIndex() !== null) {
     <button class="reset-view-btn" (click)="resetCollapse()">Show Full Document</button>
   }
+
+  <dialog #annotationDialog class="hpo-annotation-dialog">
+    @if (selectedSentence(); as sentence) {
+    @let segment = sentence.segments[selectedIndex()!];
+    
+    @if (segment.kind === 'text') {
+      <app-sentence-annotation-dialog
+        [segment]="segment"
+        [autocompleteProvider]="autocompleteProvider()"
+        (close)="handleDialogResult($event)">
+      </app-sentence-annotation-dialog>
+    }
+  }
+  </dialog>
 </div>

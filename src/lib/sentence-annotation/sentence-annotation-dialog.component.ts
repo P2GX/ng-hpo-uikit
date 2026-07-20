@@ -1,7 +1,5 @@
-import { Component, computed, HostListener, inject, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, inject, input, output, signal } from '@angular/core';
 import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
   MatDialogActions,
   MatDialogContent,
 } from '@angular/material/dialog';
@@ -58,19 +56,23 @@ function tokenize(text: string): WordToken[] {
   imports: [MatDialogActions, OntologyAutocompleteComponent, MatDialogContent],
 })
 export class SentenceAnnotationDialogComponent {
-  private readonly dialogRef =
-    inject<MatDialogRef<SentenceAnnotationDialogComponent, SentenceAnnotationDialogResult>>(
-      MatDialogRef,
-    );
-  readonly data = inject<SentenceAnnotationDialogData>(MAT_DIALOG_DATA);
+ 
+  segment = input.required<FenominalTextSegment>();
+  autocompleteProvider = input.required<(query: string) => Observable<OntologyMatch[]>>();
+  close = output<FenominalSegment[] | null>();
+  
   readonly tokens = signal<WordToken[]>([]);
   readonly selectedIndices = signal<Set<number>>(new Set());
   readonly chosenTerm = signal<OntologyMatch | null>(null);
-
-  readonly autocompleteProvider = this.data.autocompleteProvider;
-
   readonly isDragging = signal(false);
   private readonly dragStartIndex = signal<number | null>(null);
+
+   constructor() {
+    effect(() => {
+      this.tokens.set(tokenize(this.segment().text));
+    });
+  }
+
 
   readonly selectedText = computed(() => {
     const idxs = [...this.selectedIndices()].sort((a, b) => a - b);
@@ -86,9 +88,7 @@ export class SentenceAnnotationDialogComponent {
     () => this.selectedIndices().size > 0 && this.chosenTerm() !== null,
   );
 
-  constructor() {
-    this.tokens.set(tokenize(this.data.segment.text));
-  }
+ 
 
   handleAutocompleteSelection(match: OntologyMatch): void {
     this.chosenTerm.set(match);
@@ -108,49 +108,33 @@ export class SentenceAnnotationDialogComponent {
     return { kind: 'hit', text, hit };
   }
 
-  confirm(): void {
+ confirm(): void {
     if (!this.canConfirm()) return;
-
+    
+    // Use the signal inputs
+    const seg = this.segment();
     const idxs = [...this.selectedIndices()].sort((a, b) => a - b);
     const toks = this.tokens();
-    const segStart = this.data.segment.span.start; // safe: segment is guaranteed 'text'
-
-    const firstTok = toks[idxs[0]];
-    const lastTok = toks[idxs[idxs.length - 1]];
+    const segStart = seg.span.start;
     const match = this.chosenTerm()!;
 
     const result: FenominalSegment[] = [];
+    const firstTok = toks[idxs[0]];
+    const lastTok = toks[idxs[idxs.length - 1]];
 
     if (firstTok.startOffset > 0) {
-      result.push(
-        this.textSegment(
-          this.data.segment.text.slice(0, firstTok.startOffset),
-          segStart,
-          segStart + firstTok.startOffset,
-        ),
-      );
+      result.push(this.textSegment(seg.text.slice(0, firstTok.startOffset), segStart, segStart + firstTok.startOffset));
+    }
+    result.push(this.hitSegment(seg.text.slice(firstTok.startOffset, lastTok.endOffset), match, segStart + firstTok.startOffset, segStart + lastTok.endOffset));
+    if (lastTok.endOffset < seg.text.length) {
+      result.push(this.textSegment(seg.text.slice(lastTok.endOffset), segStart + lastTok.endOffset, seg.span.end));
     }
 
-    result.push(
-      this.hitSegment(
-        this.data.segment.text.slice(firstTok.startOffset, lastTok.endOffset),
-        match,
-        segStart + firstTok.startOffset,
-        segStart + lastTok.endOffset,
-      ),
-    );
+    this.close.emit(result);
+  }
 
-    if (lastTok.endOffset < this.data.segment.text.length) {
-      result.push(
-        this.textSegment(
-          this.data.segment.text.slice(lastTok.endOffset),
-          segStart + lastTok.endOffset,
-          this.data.segment.span.end,
-        ),
-      );
-    }
-
-    this.dialogRef.close(result);
+  cancel(): void {
+    this.close.emit(null);
   }
 
   onWordMouseDown(index: number, event: MouseEvent): void {
@@ -196,7 +180,5 @@ export class SentenceAnnotationDialogComponent {
     this.selectedIndices.set(new Set());
     this.chosenTerm.set(null);
   }
-  cancel(): void {
-    this.dialogRef.close(null);
-  }
+
 }
