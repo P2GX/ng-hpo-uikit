@@ -20,9 +20,16 @@
 
 /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */
 .local-context-menu {
-    position: absolute; top: 100%; left: 0; z-index: 1000;
-    background: #ffffff; border: 1px solid #ced4da; border-radius: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 260px; max-height: 300px; overflow-y: auto;
+ 
+    z-index: 1000;
+    margin-bottom: 8px;
+    background: #ffffff; 
+    border: 1px solid #ced4da; 
+    border-radius: 6px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.1); 
+    min-width: 260px; 
+    max-height: 300px; 
+    overflow-y: auto;
 }
 .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }
 .menu-item { padding: 4px 6px; font-size: 13px; cursor: pointer; list-style: none; }

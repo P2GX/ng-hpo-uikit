@@ -1,7 +1,6 @@
 import { Component, computed, effect, inject, input, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIcon } from '@angular/material/icon';
 
 import { 
   FenominalSentence, 
@@ -14,7 +13,7 @@ import { OntologyMatch } from '../models/ontology-dto';
 import { NotificationService } from '../services/notification.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
-import { DeleteHitRequest, HierarchyMapItem, HitSpanPatch, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
+import { DeleteHitRequest, HierarchyMapItem, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { TextMiningContainerComponent } from "../text-mining-container/text-mining-container.component";
 
 
@@ -25,7 +24,6 @@ import { TextMiningContainerComponent } from "../text-mining-container/text-mini
   imports: [
     CommonModule,
     FormsModule,
-    MatIcon,
     OntologyAutocompleteComponent,
     HpoPolishRowComponent,
     TextMiningContainerComponent
@@ -45,6 +43,10 @@ export class HpoPolishingWorkspaceComponent {
   autocompleteProvider = input.required<OntologyAutocompleteProvider>();
 
 
+  protected activeTermId = signal<string | null>(null);
+
+
+
   complete = output<PolishedHpoAnnotation[]>();
   cancel = output<void>();
   badgeMoved = output<{
@@ -53,8 +55,6 @@ export class HpoPolishingWorkspaceComponent {
     newSpan: { start: number; end: number };
   }>();
 
-
-  protected hierarchyCache = signal<Record<string, HierarchyMapItem>>({});
   protected localSentences = signal<UiFenominalSentence[]>([]);
 
   // Autocomplete variables
@@ -86,7 +86,9 @@ export class HpoPolishingWorkspaceComponent {
     }
     return Array.from(uniqueMap.values());
   });
+
   private hasInitialized = false;
+
   constructor() {
     effect(() => {
        // convert from FenominalSentence to UiFenominalSentence
@@ -113,8 +115,25 @@ export class HpoPolishingWorkspaceComponent {
     });
   }
 
-
-
+  handleAnnotationUpdate(oldItem: PolishedHpoAnnotation, newItem: PolishedHpoAnnotation) {
+    console.log('update fired', { oldTermId: oldItem.termId, newItem });
+    this.localSentences.update(sentences => {
+      let matched = 0;
+      const next = sentences.map(sentence => ({
+        ...sentence,
+        segments: sentence.segments.map(segment => {
+          if (segment.kind === 'hit' && segment.hit.termId === oldItem.termId) {
+            matched++;
+            return { ...segment, hit: { ...segment.hit, termId: newItem.termId, label: newItem.label, excluded: newItem.excluded, onset: newItem.onsetString, modifiers: newItem.modifiers } };
+          }
+          return segment;
+        })
+      }));
+      console.log('matched segments:', matched);
+      return next;
+    });
+  }
+  
 
   protected deleteAnnotationEverywhere(termId: string): void {
     this.localSentences.update(sentences =>
@@ -124,22 +143,6 @@ export class HpoPolishingWorkspaceComponent {
       }))
     );
   }
-
-  protected handleHierarchyRequest(annotation: PolishedHpoAnnotation): void {
-    const termId = annotation.termId;
-    if (!this.hierarchyCache()[termId]) {
-      const provider = this.hierarchyProvider();
-      if (provider) {
-        provider(termId).then(data => {
-          this.hierarchyCache.update(cache => ({
-            ...cache,
-            [termId]: data
-          }));
-        });
-      }
-    }
-  }
-
 
   protected handleAutocompleteSelection(match: OntologyMatch): void {
     this.selectedHpoMatch.set(match);

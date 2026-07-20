@@ -6,17 +6,35 @@
 
   <td class="label-cell">
       <div class="dropdown-wrapper">
-      <span (click)="toggleHierarchyMenu(); termClick.emit(annotation().termId)" class="dropdown-trigger">
+      <span 
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+        (click)="openHierarchyMenu();" 
+        class="dropdown-trigger">
           {{ annotation().label }} <span class="caret">▼</span>
       </span>
-
-      @if (showHierarchyMenu()) {
+        <ng-template
+            cdkConnectedOverlay
+            [cdkConnectedOverlayOrigin]="trigger"
+            [cdkConnectedOverlayOpen]="showHierarchyMenu()"
+            [cdkConnectedOverlayPositions]="[{
+                originX: 'start', originY: 'bottom',
+                overlayX: 'start', overlayY: 'top',
+                offsetY: 4
+            }, {
+                originX: 'start', originY: 'top',
+                overlayX: 'start', overlayY: 'bottom',
+                offsetY: -4
+            }]"
+            (backdropClick)="showHierarchyMenu.set(false)"
+            [cdkConnectedOverlayHasBackdrop]="true"
+            [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'">
           <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
           @if (hierarchy()?.parents?.length) {
               <div class="menu-section-title">Parents</div>
               <ul>
               @for (p of hierarchy()?.parents; track p.termId) {
-                  <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
+                  <li (click)="replaceTerm(p);$event.stopPropagation();" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
               }
               </ul>
           }
@@ -29,7 +47,7 @@
               </ul>
           }
           </div>
-      }
+      </ng-template>
       </div>
   </td>
 

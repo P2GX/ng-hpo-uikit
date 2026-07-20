@@ -27,7 +27,9 @@
                   (click)="openManualAnnotationDialog(sentence, $index)"
                   title="Manually add HPO term"
                   aria-label="Manually add HPO term">
-                  <mat-icon>add_circle_outline</mat-icon>
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/>
+                  </svg>
                 </button>
               }
             } @else if (segment.kind === 'hit') {
@@ -42,11 +44,11 @@
                     Collapse Above
                   </button>
                 </span>
+                <button
+                  class="delete-hit-icon"
+                  (click)="deleteHit(sentence, segment.hit); $event.stopPropagation()"
+                  title="Delete annotation">x</button>
               </span>
-              <button
-                  (click)="deleteHit(sentence, segment.hit); $event.stopPropagation()">
-                  ✕
-              </button>
             }
           }
         </span>

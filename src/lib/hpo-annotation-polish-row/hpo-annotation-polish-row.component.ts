@@ -1,10 +1,10 @@
-import { Component, input, model, computed, output, signal, inject } from '@angular/core';
+import { Component, input, model, computed, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
 import { ModifierSelectorComponent } from './app-modifier-selector';
-import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component'
 
 /*
  * This component provides one row in the HPO annotation table and allows users to "polish" the
@@ -18,7 +18,8 @@ import { HpoModifierDialogComponent, ModifierDialogData, ModifierDialogResult } 
     ModifierSelectorComponent,
     CommonModule,
     FormsModule,
-    HpoAgeSelectorComponent
+    HpoAgeSelectorComponent,
+    OverlayModule
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'
@@ -28,7 +29,8 @@ export class HpoPolishRowComponent {
   readonly isModifierDialogOpen = signal(false);
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
-  readonly hierarchy = input<HierarchyMapItem | null>(null);
+  readonly hierarchy = signal<HierarchyMapItem | null>(null);
+   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
   readonly availableModifiers = input<HpoTermMinimal[]>([]);
 
   readonly updated = output<PolishedHpoAnnotation>();
@@ -50,6 +52,9 @@ export class HpoPolishRowComponent {
       mod.label.includes(query)
     );
   });
+
+ 
+
 
   formattedModifierOptions = computed(() => {
     return this.availableModifiers().map(m => ({ id: m, label: m }));
@@ -86,15 +91,31 @@ export class HpoPolishRowComponent {
     this.showHierarchyMenu.update(v => !v);
   }
 
+  async openHierarchyMenu(): Promise<void> {
+    if (!this.showHierarchyMenu() && this.hierarchy() === null) {
+      const provider = this.hierarchyProvider(); // Get the function
+      const data = await provider(this.annotation().termId); // Fetch fresh
+      this.hierarchy.set(data);
+      }
+    this.showHierarchyMenu.update(v => !v);
+  }
+
   /* replace a term with a parent or child from the hierarchy menu */
-  replaceTerm(target: HpoTermMinimal): void {
-   const updatedAnnotation = {
+  /* replace a term with a parent or child from the hierarchy menu */
+  async replaceTerm(target: HpoTermMinimal): Promise<void> {
+    const updatedAnnotation = {
       ...this.annotation(),
       termId: target.termId,
       label: target.label
     };
     this.annotation.set(updatedAnnotation);
     this.updated.emit(updatedAnnotation);
+
+    //  fetch fresh data for the new term immediately
+    // this prevents the menu from showing stale data on the next open
+    const provider = this.hierarchyProvider();
+    const data = await provider(target.termId);
+    this.hierarchy.set(data);
     this.showHierarchyMenu.set(false);
   }
 

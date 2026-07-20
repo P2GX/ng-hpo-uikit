@@ -28,9 +28,9 @@
           <tr 
             hpo-polisher-row
             [annotation]="rowItem"
-            [hierarchy]="hierarchyCache()[rowItem.termId] || null"
+            [hierarchyProvider]="hierarchyProvider()"
             [availableModifiers]="availableModifiers()"
-            (termClick)="handleHierarchyRequest(rowItem)"
+            (updated)="handleAnnotationUpdate(rowItem, $event)"
             (deleteRequested)="deleteAnnotationEverywhere(rowItem.termId)">
           </tr>
         } @empty {
@@ -56,7 +56,9 @@
           (click)="injectManualHpoToken()"
           [disabled]="!selectedHpoMatch()"
           class="btn-workspace-add">
-          <mat-icon>add</mat-icon>Add Term
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>Add Term
         </button>
       </div>
     }

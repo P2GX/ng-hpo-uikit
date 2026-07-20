@@ -1,3 +1,10 @@
+$badge-bg-obs: #e0f2fe; // Blue for observed
+$badge-text-obs: #0369a1;
+$badge-bg-exc: #fee2e2; // Red for excluded
+$badge-text-exc: #b91c1c;
+$badge-delete-hover: rgba(0, 0, 0, 0.15);
+
+
 .text-mining-workspace {
   line-height: 1.35; 
   font-family: system-ui, -apple-system, sans-serif;
@@ -78,13 +85,71 @@
   -webkit-box-decoration-break: clone;
   cursor: help;
 
-  // Triggers state display layout smoothly
-  &:hover {
-    background-color: #bae6fd;
+
+}
+
+.annotation-badge-pill {
+  position: relative; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  padding: 2px 22px 2px 8px; 
+  border-radius: 12px; 
+  margin: 0 4px; 
+  line-height: 1.2;
+  background-color: #e0f2fe; 
+  color: #0369a1;
+  // Add extra padding on the right so text doesn't hit the 'X'
+  .annotated-text {
+    padding-right: 18px; 
+  }
+
+  &.is-excluded {
+    background-color: #fee2e2;
+    color: #b91c1c;
+  }
+
+  // --- NEW INTEGRATED DELETE BUTTON STYLES ---
+  .delete-hit-icon {
+    position: absolute;
+    right: 4px;
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     
-    .badge-overlay-controls {
-      display: inline-flex; // Shows the controls bar cleanly
+    /* Ghost Style */
+    background: transparent;
+    border: 1px solid #b91c1c; /* Red border */
+    color: #b91c1c;           /* Red X */
+    border-radius: 50%;
+    
+    font-size: 9px;
+    font-weight: 900;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: #b91c1c;    /* Solid Red on hover */
+      color: white;           /* White X on hover */
     }
+
+    // Focus ring for accessibility
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 1px;
+      opacity: 1;
+    }
+  }
+
+  // --- EXISTING CONTROLS (kept for reference) ---
+  .badge-overlay-controls {
+     // Assuming this was hidden by default and showed on hover of parent
+     display: none; 
   }
 }
 
@@ -188,5 +253,30 @@
     padding: 0 2px;
 
     &:hover { color: #38bdf8; }
+  }
+}
+
+.manual-annotate-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  
+  /* Color for the icon */
+  color: #64748b; 
+  transition: all 0.2s ease;
+  border-radius: 50%; /* Makes it a nice circle */
+
+  &:hover {
+    color: #2563eb;
+    background-color: #f1f5f9;
+  }
+
+  svg {
+    display: block; /* Removes any extra baseline space */
   }
 }

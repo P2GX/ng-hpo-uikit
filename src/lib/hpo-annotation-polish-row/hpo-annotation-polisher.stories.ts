@@ -72,13 +72,6 @@ const mockModifiers: HpoTermMinimal[] = [
 ];
 // --- Stories ---
 
-/*
-export interface HierarchyMapItem {
-  currentTermId: string;
-  parents: HpoTermMinimal[];
-  children: HpoTermMinimal[];
-}
-  */
 
 export const DefaultObserved: Story = {
   args: {

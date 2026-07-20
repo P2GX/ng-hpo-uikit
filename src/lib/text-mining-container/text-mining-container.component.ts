@@ -4,13 +4,13 @@ import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fen
 import { DeleteHitRequest, OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 import { MatDialog } from '@angular/material/dialog';
 import { SentenceAnnotationDialogComponent } from '../sentence-annotation/sentence-annotation-dialog.component';
-import { MatIconModule } from "@angular/material/icon";
+
 
 
 @Component({
   selector: 'hpo-text-mining-container',
   standalone: true,
-  imports: [CommonModule, MatIconModule],
+  imports: [CommonModule],
   templateUrl: './text-mining-container.component.html',
   styleUrls: ['./text-mining-container.component.scss']
 })
