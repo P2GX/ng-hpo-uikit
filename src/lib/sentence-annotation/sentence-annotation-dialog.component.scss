@@ -1,3 +1,44 @@
+/* Root container bound to 80% of the viewport height */
+.manual-annotation-dialog {
+  display: flex;
+  flex-direction: column;
+  height: 80vh;
+  max-height: 80vh;
+  width: 100%;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.dialog-header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #e2e8f0; // Fixed border placement
+  display: flex;
+  flex-shrink: 0; // Prevent header from shrinking
+  
+  h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.dialog-body {
+  padding: 24px;
+  flex: 1 1 auto;
+  overflow-y: auto; /* This makes the content scrollable */
+  min-height: 0; /* Give it a minimum height to start with */
+}
+
+
+.dialog-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .dialog-hint {
   margin: 0 0 12px;
   font-size: 0.85rem;
@@ -29,7 +70,9 @@
   cursor: pointer;
   padding: 1px 4px;
   border-radius: 4px;
-  transition: background-color 0.1s ease, color 0.1s ease;
+  transition:
+    background-color 0.1s ease,
+    color 0.1s ease;
 
   &:hover {
     background: #e2e8f0;
@@ -43,7 +86,7 @@
 }
 
 .selected-preview {
-  margin: 12px 0 0;
+  margin: 16px 0 8px;
   font-size: 0.85rem;
   color: #475569;
 
@@ -58,36 +101,9 @@ mat-dialog-content {
 }
 
 hpo-ontology-autocomplete {
-  display: block; 
-}
-
-mat-dialog-actions {
-  gap: 4px;
-}
-
-.dialog-body {
-  padding: 24px;
-  flex-grow: 1;
-  overflow-y: auto; /* This makes the content scrollable */
-  min-height: 200px; /* Give it a minimum height to start with */
-}
-
-/* Ensure the autocomplete dropdown is not being clipped */
-app-ontology-autocomplete {
   display: block;
-  min-height: 400px; /* Ensure there is enough vertical space for results */
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
-.dialog-header {
-  padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-}
-.dialog-footer {
-  padding: 16px 24px;
-  border-top: 1px solid #e2e8f0;
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px; 
-}
+
+

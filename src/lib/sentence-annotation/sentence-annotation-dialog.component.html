@@ -1,47 +1,53 @@
-<!-- Native Dialog structure -->
-<div class="dialog-header">
-  <h2>Manual HPO Annotation</h2>
-</div>
+<div class="manual-annotation-dialog">
+  <div class="dialog-header">
+    <h2>Manual HPO Annotation</h2>
+  </div>
 
-<div class="dialog-body">
-  <p class="dialog-hint">Mark words to select the span that matches an HPO term.</p>
+  <div class="dialog-body">
+    <p class="dialog-hint">Mark words to select the span that matches an HPO term.</p>
 
-  <div class="word-picker"
-    [class.is-dragging]="isDragging()"
-    (mouseleave)="onMouseUp()">
-    @for (tok of tokens(); track $index) {
-      @if (tok.isWhitespace) {
-        <span class="word-space">{{ tok.text }}</span>
-      } @else if (tok.isPunctuation) {
-        <span
+    <div class="word-picker" [class.is-dragging]="isDragging()" (mouseleave)="onMouseUp()">
+      @for (tok of tokens(); track $index) {
+        @if (tok.isWhitespace) {
+          <span class="word-space">{{ tok.text }}</span>
+        } @else if (tok.isPunctuation) {
+          <span
             class="word-token punctuation-token"
             [class.selected]="selectedIndices().has($index)"
-            (mouseenter)="onWordMouseEnter($index)">{{ tok.text }}</span>
-    } @else {
-        <span
-          class="word-token"
-          [class.selected]="selectedIndices().has($index)"
-          (mousedown)="onWordMouseDown($index, $event)"
-          (mouseenter)="onWordMouseEnter($index)">
-            {{ tok.text }}</span>
+            (mouseenter)="onWordMouseEnter($index)"
+            >{{ tok.text }}</span
+          >
+        } @else {
+          <span
+            class="word-token"
+            [class.selected]="selectedIndices().has($index)"
+            (mousedown)="onWordMouseDown($index, $event)"
+            (mouseenter)="onWordMouseEnter($index)"
+          >
+            {{ tok.text }}</span
+          >
+        }
       }
+    </div>
+
+    @if (selectedText() && !isDragging()) {
+      <p class="selected-preview">
+        Selected: <strong>{{ selectedText() }}</strong>
+      </p>
+      <hpo-ontology-autocomplete
+        [inputString]="selectedText()"
+        [autocompleteProvider]="autocompleteProvider()"
+        [requireConfirmation]="true"
+        (selected)="handleAutocompleteSelection($event)"
+      >
+      </hpo-ontology-autocomplete>
     }
   </div>
 
-  @if (selectedText() && !isDragging()) {
-    <p class="selected-preview">Selected: <strong>{{ selectedText() }}</strong></p>
-    <hpo-ontology-autocomplete
-      [inputString]="selectedText()"
-      [autocompleteProvider]="autocompleteProvider()"
-      [requireConfirmation]="true"
-      (selected)="handleAutocompleteSelection($event)">
-    </hpo-ontology-autocomplete>
-  }
-</div>
-
-<div class="dialog-footer">
+  <div class="dialog-footer">
     @if (selectedIndices().size > 0) {
-        <button class="btn-outline-cancel" (click)="clearSelection()">Clear selection</button>
+      <button class="btn-outline-cancel" (click)="clearSelection()">Clear selection</button>
     }
-  <button class="btn-outline-cancel" (click)="cancel()">Cancel</button>
+    <button class="btn-outline-cancel" (click)="cancel()">Cancel</button>
+  </div>
 </div>
