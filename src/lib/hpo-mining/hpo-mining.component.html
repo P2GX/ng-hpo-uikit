@@ -9,6 +9,13 @@
       class="clinical-textarea"
       [disabled]="isMining()"
     ></textarea>
+    <a 
+      href="javascript:void(0)" 
+      (click)="!isMining() && loadExampleText()" 
+      class="example-text-link"
+      [class.disabled]="isMining()">
+      Load Example Text
+    </a>
     
     <div class="actions-footer">
       <button 
@@ -23,13 +30,6 @@
         [disabled]="isMining()">
         Cancel
       </button>
-      <a 
-        href="javascript:void(0)" 
-        (click)="!isMining() && loadExampleText()" 
-        class="example-text-link"
-        [class.disabled]="isMining()">
-        Load Example Text
-      </a>
     </div>
   </div>
 </div>

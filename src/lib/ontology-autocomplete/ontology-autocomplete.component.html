@@ -1,55 +1,70 @@
-<!-- ontology-autocomplete.component.html -->
 <div class="autocomplete-wrapper" (clickOutside)="hideDropdown()">
-  <div class="input-container">
-    <input type="text"
-      #ontologyInput
-      [placeholder]="placeholder()"
-      [formControl]="control"
-      (focus)="showDropdown()"
-      (keydown)="onKeyDown($event)"
-      spellcheck="false"
-      autocomplete="off">
+  <!-- Dynamic container class based on confirmPosition input -->
+  <div class="autocomplete-injection-box" [class.layout-right]="confirmPosition() === 'right'">
+    
+    <div class="input-container-wrapper">
+      <div class="input-container">
+        <input type="text"
+          #ontologyInput
+          [placeholder]="placeholder()"
+          [formControl]="control"
+          [class.error-border]="hasError()"
+          [title]="hasError() ? 'Please select a term from the list' : ''"
+          (focus)="showDropdown()"
+          (keydown)="onKeyDown($event)"
+          spellcheck="false"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off">
 
-    @if (control.value) {
-      <button type="button" class="clear-btn" aria-label="Clear input" (click)="clear()">
-        <span class="close-icon">&times;</span>
-      </button>
+        @if (control.value) {
+          <button type="button" class="clear-btn" aria-label="Clear input" (click)="clear()">
+            <span class="close-icon">&times;</span>
+          </button>
+        }
+      </div>
+
+      <!-- Dropdown Menu -->
+      @if (isOpen() && options().length > 0) {
+        <ul class="dropdown-menu" role="listbox">
+          @for (option of options(); track option.id; let i = $index) {
+            <li 
+              role="option"
+              [class.active-highlight]="i === activeHighlightIndex()"
+              [attr.aria-selected]="i === activeHighlightIndex()"
+              (click)="selectOption(option)"
+              (mouseenter)="activeHighlightIndex.set(i)">
+              
+              <div class="option-container">
+                <span class="option-matched-text">{{ option.matchedText }}</span>
+                @if (option.matchedText !== option.label) {
+                  <small class="option-primary-label">Primary: {{ option.label }}</small>
+                }
+                <small class="option-id">{{ option.id }}</small>
+              </div>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+
+    <!-- Confirm Action Section (Rendered inline when position is 'right', or stacked when 'bottom') -->
+    @if (requireConfirmation()) {
+      <div class="confirmation-actions">
+        <button type="button" 
+          class="confirm-btn btn-workspace-add" 
+          [disabled]="!activeSelection()"
+          (click)="confirmSelection()">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          @if (activeSelection(); as current) {
+            Confirm "{{ current.label }}"
+          } @else {
+            Add Term
+          }
+        </button>
+      </div>
     }
   </div>
-
-  <!-- Dropdown Menu -->
-  @if (isOpen() && options().length > 0) {
-    <ul class="dropdown-menu" role="listbox">
-      @for (option of options(); track option.id; let i = $index) {
-        <li 
-          role="option"
-          [class.active-highlight]="i === activeHighlightIndex()"
-          [attr.aria-selected]="i === activeHighlightIndex()"
-          (click)="selectOption(option)"
-          (mouseenter)="activeHighlightIndex.set(i)">
-          
-          <div class="option-container">
-            <span class="option-matched-text">{{ option.matchedText }}</span>
-            @if (option.matchedText !== option.label) {
-              <small class="option-primary-label">Primary: {{ option.label }}</small>
-            }
-            <small class="option-id">{{ option.id }}</small>
-          </div>
-        </li>
-      }
-    </ul>
-  }
-
-  @if (control.hasError('invalidSelection') && control.touched) {
-    <span class="error-message">Please select a term from the list</span>
-  }
 </div>
-
-<!-- Optional Confirm Action Section -->
-@if (requireConfirmation() && activeSelection()) {
-  <div class="confirmation-actions">
-    <button type="button" class="confirm-btn" (click)="confirmSelection()">
-      Confirm "{{ activeSelection()?.label }}"
-    </button>
-  </div>
-}

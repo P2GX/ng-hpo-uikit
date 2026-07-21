@@ -1,6 +1,6 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.2.59",
+  "version": "0.2.72",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

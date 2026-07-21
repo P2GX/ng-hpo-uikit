@@ -1,28 +1,12 @@
 // ontology-autocomplete.component.ts
-import { Component, input, output, viewChild, effect, ElementRef, signal, HostListener } from '@angular/core';
-import { AbstractControl, FormControl, ReactiveFormsModule, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Component, input, output, viewChild, effect, ElementRef, signal, HostListener, computed } from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, switchMap, of, map, startWith } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { OntologyMatch } from '../models/ontology-dto'; 
 import { OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 
-export function ontologyMatchValidator(component?: any): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const value = control.value;
-    // If it's an object (OntologyMatch object), it's valid
-    if (value && typeof value === 'object') {
-      return null;
-    }
-    // If it's a string, only allow it if it matches the confirmed selection
-    if (typeof value === 'string' && value.length > 0) {
-      if (component && component.activeSelection()?.label === value) {
-        return null;
-      }
-      return { 'invalidSelection': true };
-    }
-    return null;
-  };
-}
+
 
 @Component({
   selector: 'hpo-ontology-autocomplete',
@@ -35,29 +19,62 @@ export class OntologyAutocompleteComponent {
   placeholder = input<string>('Search ontology term...');
   inputString = input<string>('');
   autocompleteProvider = input.required<OntologyAutocompleteProvider>();
-  requireConfirmation = input<boolean>(false);
-
+  requireConfirmation = input.required<boolean>();
+  confirmPosition = input<'bottom' | 'right'>('right');
   selected = output<OntologyMatch>();
 
   inputElement = viewChild<ElementRef<HTMLInputElement>>('ontologyInput');
-  control = new FormControl<string | OntologyMatch>('', [ontologyMatchValidator(this)]);
+  control = new FormControl<string>('', { nonNullable: true });
 
   // UI State Signals
   isOpen = signal<boolean>(false);
   activeHighlightIndex = signal<number>(-1);
   activeSelection = signal<OntologyMatch | null>(null);
+  hasValidSelection = computed(() => this.activeSelection() !== null);
 
-  isValid = toSignal(this.control.statusChanges.pipe(map(status => status === 'VALID')), { initialValue: false });
+  isValid = toSignal(
+    this.control.valueChanges.pipe(
+      startWith(this.control.value),
+      map(val => {
+        const text = typeof val === 'string' ? val.trim() : '';
+        // Valid if empty, or if the current text matches the active selection label
+        return text === '' || text === this.activeSelection()?.label;
+      })
+    ),
+    { initialValue: true }
+  );
+
+  // Computed error flag for your template
+  hasError = computed(() => {
+    const text = this.control.value.trim();
+    // Show error if there's text typed in, it's touched/dirty, and it doesn't match a selected term
+    return text.length > 0 && text !== this.activeSelection()?.label && this.control.touched;
+  });
 
   options = toSignal(
     this.control.valueChanges.pipe(
       startWith(this.control.value),
       debounceTime(300),
       switchMap((value) => {
-        const query = typeof value === 'string' ? value : value?.label;
-        if (query && query.length > 2) {
+        const query = typeof value === 'string' ? value.trim() : '';
+        if (!query) {
+          this.activeSelection.set(null);
+          return of([]);
+        }
+        // If the current input text matches the active selection, don't search
+        if (query === this.activeSelection()?.label) {
+          return of([]);
+        }
+        // If the user typed something different than the active selection, 
+        // clear the old selection so they can search for a new term!
+        if (this.activeSelection() !== null) {
+          this.activeSelection.set(null);
+        }
+        // Perform autocomplete with fenominal!
+        if (query.length > 2) {
           return this.autocompleteProvider()(query);
         }
+        // fall back
         return of([]);
       })
     ),
@@ -93,6 +110,11 @@ export class OntologyAutocompleteComponent {
     });
   }
 
+  truncatedSelectionLabel = computed(() => {
+  const label = this.activeSelection()?.label ?? '';
+  return label.length > 20 ? label.slice(0, 20) + '…' : label;
+});
+
   showDropdown() {
     this.isOpen.set(true);
   }
@@ -102,25 +124,20 @@ export class OntologyAutocompleteComponent {
   }
 
   selectOption(option: OntologyMatch) {
-    this.control.setValue(option.label, { emitEvent: false });
-    this.control.setErrors(null);
-    
-    if (this.requireConfirmation()) {
-      this.activeSelection.set(option);
-    } else {
+    this.activeSelection.set(option);
+    this.control.setValue(option.label, { emitEvent: true });
+    this.control.markAsPristine();
+    if (! this.requireConfirmation()) {
       this.selected.emit(option);
-    }
+    } 
     this.hideDropdown();
   }
 
   confirmSelection() {
     const current = this.activeSelection();
     if (current) {
-      this.control.markAsUntouched();
-      this.control.markAsPristine();
-      this.control.setErrors(null);
-      this.activeSelection.set(null);
       this.selected.emit(current);
+      this.clear();
     }
   }
 
@@ -149,8 +166,15 @@ export class OntologyAutocompleteComponent {
   }
   
   clear() {
-    this.control.setValue('');
+    this.control.setValue('', { emitEvent: false });
+    this.control.markAsUntouched();
+    this.control.markAsPristine();
+    this.control.setErrors(null);
     this.activeSelection.set(null);
     this.activeHighlightIndex.set(-1);
+    const inputRef = this.inputElement();
+    if (inputRef) {
+      inputRef.nativeElement.value = '';
+    }
   }
 }

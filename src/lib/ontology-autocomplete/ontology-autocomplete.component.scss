@@ -1,4 +1,68 @@
-// ontology-autocomplete.component.scss
+.autocomplete-injection-box {
+  display: flex;
+  flex-direction: column; // Default layout: button beneath
+  gap: 8px;
+  width: 100%;
+
+  // When configured to layout to the right
+  &.layout-right {
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+
+    .input-container-wrapper {
+      flex: 1; // Input takes up available width
+    }
+  }
+}
+
+.input-container-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    padding: 10px 35px 10px 12px;
+    color: #2a66e8;
+    background-color: #fff;
+    font-size: 14px;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    outline: none;
+    transition: border-color .2s ease;
+
+    &.error-border {
+      border: 2px solid #ef4444;
+    }
+  }
+}
+
+.confirmation-actions {
+  display: flex;
+  align-items: center;
+}
+
+
+.btn-workspace-add {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  white-space: nowrap;
+  height: 41px;
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
 .autocomplete-wrapper {
   position: relative;
   width: 100%;
@@ -13,10 +77,17 @@
   input {
     width: 100%;
     padding: 10px 35px 10px 12px;
+    color: #2a66e8;
+    background-color: #ffffff;
     font-size: 14px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color, #ccc);
     border-radius: 4px;
     outline: none;
+    transition: border-color 0.2s ease;
+
+    &.error-border {
+      border: 2px solid #e53935; // Clean red warning color
+    }
 
     &:focus {
       border-color: #0066cc;

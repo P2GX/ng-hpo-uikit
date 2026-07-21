@@ -146,6 +146,7 @@ export class HpoPolishingWorkspaceComponent {
 
   protected handleAutocompleteSelection(match: OntologyMatch): void {
     this.selectedHpoMatch.set(match);
+    this.injectManualHpoToken();
   }
 
   /**
