@@ -1,9 +1,5 @@
 import { Component, computed, effect, HostListener, inject, input, output, signal } from '@angular/core';
 import {
-  MatDialogActions,
-  MatDialogContent,
-} from '@angular/material/dialog';
-import {
   FenominalHit,
   FenominalSegment,
 } from '../models/fenominal-models';
@@ -53,7 +49,7 @@ function tokenize(text: string): WordToken[] {
   standalone: true,
   templateUrl: './sentence-annotation-dialog.component.html',
   styleUrl: './sentence-annotation-dialog.component.scss',
-  imports: [MatDialogActions, OntologyAutocompleteComponent, MatDialogContent],
+  imports: [OntologyAutocompleteComponent],
 })
 export class SentenceAnnotationDialogComponent {
  
@@ -83,15 +79,11 @@ export class SentenceAnnotationDialogComponent {
       .map((t) => t.text)
       .join('');
   });
-
-  readonly canConfirm = computed(
-    () => this.selectedIndices().size > 0 && this.chosenTerm() !== null,
-  );
-
  
 
   handleAutocompleteSelection(match: OntologyMatch): void {
     this.chosenTerm.set(match);
+    this.confirm();
   }
 
   private textSegment(text: string, start: number, end: number): FenominalSegment {
@@ -109,8 +101,8 @@ export class SentenceAnnotationDialogComponent {
   }
 
  confirm(): void {
-    if (!this.canConfirm()) return;
-    
+
+
     // Use the signal inputs
     const seg = this.segment();
     const idxs = [...this.selectedIndices()].sort((a, b) => a - b);

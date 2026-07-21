@@ -33,6 +33,7 @@
     <hpo-ontology-autocomplete
       [inputString]="selectedText()"
       [autocompleteProvider]="autocompleteProvider()"
+      [requireConfirmation]="true"
       (selected)="handleAutocompleteSelection($event)">
     </hpo-ontology-autocomplete>
   }
@@ -43,7 +44,4 @@
         <button class="btn-outline-cancel" (click)="clearSelection()">Clear selection</button>
     }
   <button class="btn-outline-cancel" (click)="cancel()">Cancel</button>
-  <button class="btn-outline-primary" [disabled]="!canConfirm()" (click)="confirm()">
-    Add Term
-  </button>
 </div>
