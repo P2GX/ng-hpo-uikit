@@ -1,0 +1,35 @@
+{
+  "name": "ng-hpo-uikit",
+  "version": "0.2.85",
+  "peerDependencies": {
+    "@angular/common": ">=21.2.0 <23.0.0",
+    "@angular/core": ">=21.2.0 <23.0.0",
+    "@angular/material": ">=21.2.0 <23.0.0",
+    "@angular/platform-browser": ">=21.2.0 <23.0.0",
+    "@tauri-apps/plugin-opener": "^2.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "overrides": {
+    "webpack": "^5.90.0"
+  },
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "@tauri-apps/plugin-opener": {
+      "optional": true
+    }
+  },
+  "module": "fesm2022/ng-hpo-uikit.mjs",
+  "typings": "types/ng-hpo-uikit.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./types/ng-hpo-uikit.d.ts",
+      "default": "./fesm2022/ng-hpo-uikit.mjs"
+    }
+  },
+  "type": "module"
+}

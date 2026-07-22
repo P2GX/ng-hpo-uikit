@@ -1,0 +1,8 @@
+@use 'buttons';
+@use 'dialogs';
+@use 'tokens';
+@import '@angular/cdk/overlay-prebuilt.css';
+
+.cdk-overlay-transparent-backdrop {
+  background: transparent;
+}
