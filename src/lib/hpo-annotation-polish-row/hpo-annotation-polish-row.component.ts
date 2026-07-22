@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
-import { ModifierSelectorComponent } from './app-modifier-selector';
+import { ModifierSelectorComponent } from './hpo-modifier-selector.component';
 
 /*
  * This component provides one row in the HPO annotation table and allows users to "polish" the

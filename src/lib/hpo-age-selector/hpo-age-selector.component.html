@@ -1,13 +1,13 @@
 <button
   type="button"
-  [class.age-picker-trigger]="selectedOnset()"
-  [class.annotation-action]="!selectedOnset()"
+  [class]="selectedOnset() ? 'age-picker-trigger' : 'annotation-action'"
   [class.annotation-value-small]="size() === 'small'"
   (click)="openSelectorDialog()">
-
-  @if (selectedOnset()) {
-    <span class="age-value">{{ selectedOnset() }}</span>
-  } @else {
-    +Add Age of Onset
-  }
+  {{ selectedOnset() || '+Add Age of Onset' }}
 </button>
+
+<hpo-age-selector-dialog
+  [currentSelection]="selectedOnset()"
+  (selected)="onDialogSelected($event)">
+</hpo-age-selector-dialog>
+

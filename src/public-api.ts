@@ -12,6 +12,7 @@ export * from './lib/models/ontology-dto';
 export * from './lib/footer/footer.component';
 export * from './lib/help-button/help-button.component';
 export * from './lib/hpo-annotation-polish-row/hpo-annotation-polish-row.component';
+export * from './lib/hpo-annotation-polish-row/hpo-modifier-selector.component';
 export * from './lib/ontology-autocomplete/ontology-autocomplete.component'
 export * from './lib/hpo-polishing-workspace/hpo-polishing-workspace.component';
 export * from './lib/hpo-age-selector/hpo-age-selector.component';

@@ -1,34 +1,28 @@
-import { Component, input, output, inject } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { HpoAgeSelectorDialogComponent } from './hpo-age-selector-dialog.component';
+import { Component, input, output, ViewChild } from '@angular/core';
+import { HpoAgeSelectorDialogComponent } from "./hpo-age-selector-dialog.component";
+
 
 @Component({
   selector: 'hpo-age-selector',
   standalone: true,
+  imports: [HpoAgeSelectorDialogComponent],
   templateUrl: './hpo-age-selector.component.html',
   styleUrls: ['./hpo-age-selector.component.scss']
 })
 export class HpoAgeSelectorComponent {
-  private dialog = inject(MatDialog);
+  @ViewChild(HpoAgeSelectorDialogComponent) dialogComponent!: HpoAgeSelectorDialogComponent;
 
   selectedOnset = input<string | null>(null);
   size = input<'normal' | 'small'>('normal');
-
   onsetChanged = output<string>();
 
   openSelectorDialog(): void {
-    const dialogRef = this.dialog.open(HpoAgeSelectorDialogComponent, {
-      width: '440px',
-      panelClass: 'compact-dialog-overlay',
-      data: {
-        currentSelection: this.selectedOnset()
-      }
-    });
+    this.dialogComponent.open();
+  }
 
-    dialogRef.afterClosed().subscribe((result: string | undefined) => {
-      if (result) {
-        this.onsetChanged.emit(result);
-      }
-    });
+  onDialogSelected(result: string): void {
+    if (result) {
+      this.onsetChanged.emit(result);
+    }
   }
 }
