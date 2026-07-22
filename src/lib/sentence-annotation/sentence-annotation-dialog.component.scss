@@ -1,9 +1,15 @@
-/* Root container bound to 80% of the viewport height */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+
 .manual-annotation-dialog {
   display: flex;
   flex-direction: column;
-  height: 80vh;
-  max-height: 80vh;
+  height: 100%;
   width: 100%;
   background: #ffffff;
   box-sizing: border-box;

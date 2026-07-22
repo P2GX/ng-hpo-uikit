@@ -4,7 +4,7 @@ import { FenominalSentence, FenominalHit, FenominalSegment } from '../models/fen
 import { DeleteHitRequest, OntologyAutocompleteProvider } from '../models/hpo-annotation-models';
 import { SentenceAnnotationDialogComponent } from '../sentence-annotation/sentence-annotation-dialog.component';
 import { NotificationService } from '../services/notification.service';
-import { SEMICOLON } from '@angular/cdk/keycodes';
+
 
 @Component({
   selector: 'hpo-text-mining-container',

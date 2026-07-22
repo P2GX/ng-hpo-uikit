@@ -29,19 +29,23 @@
         }
       }
     </div>
-
+<div class="selection-section" [class.has-selection]="selectedText()">
     @if (selectedText() && !isDragging()) {
       <p class="selected-preview">
         Selected: <strong>{{ selectedText() }}</strong>
       </p>
-      <hpo-ontology-autocomplete
+    } @else {
+        <p class="selected-preview placeholder-text">
+          <em>Highlight text above to search for matching HPO terms...</em>
+        </p>
+      }
+       <hpo-ontology-autocomplete
         [inputString]="selectedText()"
         [autocompleteProvider]="autocompleteProvider()"
         [requireConfirmation]="true"
         (selected)="handleAutocompleteSelection($event)"
       >
       </hpo-ontology-autocomplete>
-    }
   </div>
 
   <div class="dialog-footer">

@@ -32,6 +32,33 @@ export class OntologyAutocompleteComponent {
   activeSelection = signal<OntologyMatch | null>(null);
   hasValidSelection = computed(() => this.activeSelection() !== null);
 
+   constructor(private elRef: ElementRef) {
+    effect(() => {
+      const val = this.inputString();
+      const inputRef = this.inputElement();
+
+      if (val && inputRef) {
+        this.control.setValue(val, { emitEvent: true });
+        setTimeout(() => {
+          inputRef.nativeElement.focus();
+          inputRef.nativeElement.select();
+        }, 0);
+      }
+    });
+    // Reset keyboard highlight whenever choices update
+    effect(() => {
+      this.options();
+      this.activeHighlightIndex.set(-1);
+    });
+    // Automatically clear the input and reset state if the parent clears the inputString
+    effect(() => {
+      const text = this.inputString();
+      if (!text) {
+        this.clear(); // Calls your existing clear method inside the autocomplete component
+      }
+    });
+  }
+
   isValid = toSignal(
     this.control.valueChanges.pipe(
       startWith(this.control.value),
@@ -89,26 +116,6 @@ export class OntologyAutocompleteComponent {
     }
   }
 
-  constructor(private elRef: ElementRef) {
-    effect(() => {
-      const val = this.inputString();
-      const inputRef = this.inputElement();
-
-      if (val && inputRef) {
-        this.control.setValue(val, { emitEvent: true });
-        setTimeout(() => {
-          inputRef.nativeElement.focus();
-          inputRef.nativeElement.select();
-        }, 0);
-      }
-    });
-
-    // Reset keyboard highlight whenever choices update
-    effect(() => {
-      this.options();
-      this.activeHighlightIndex.set(-1);
-    });
-  }
 
   truncatedSelectionLabel = computed(() => {
   const label = this.activeSelection()?.label ?? '';
@@ -172,6 +179,7 @@ export class OntologyAutocompleteComponent {
     this.control.setErrors(null);
     this.activeSelection.set(null);
     this.activeHighlightIndex.set(-1);
+    this.hideDropdown();
     const inputRef = this.inputElement();
     if (inputRef) {
       inputRef.nativeElement.value = '';

@@ -4,6 +4,13 @@ $badge-bg-exc: #fee2e2; // Red for excluded
 $badge-text-exc: #b91c1c;
 $badge-delete-hover: rgba(0, 0, 0, 0.15);
 
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
 
 .text-mining-workspace {
   line-height: 1.35; 
@@ -285,8 +292,9 @@ $badge-delete-hover: rgba(0, 0, 0, 0.15);
   padding: 0;
   border: none;
   border-radius: 8px;
-  width: 580px;
-  max-height: 90vh;
+  width: 750px;
+  height: 400px;
+  max-height: 600px;
   overflow: hidden;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
   
