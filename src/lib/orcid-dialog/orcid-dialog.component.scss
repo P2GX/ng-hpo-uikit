@@ -1,70 +1,113 @@
+ /* Native dialog positioning and backdrop */
+      dialog.orcid-modal {
+        border: none;
+        background: transparent;
+        padding: 0;
+        border-radius: 8px;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        width: 100%;
+        max-width: 450px;
+      }
 
-:host {
-  display: block;
-  font-family: var(--hpo-ui-font-family, system-ui, sans-serif);
+      dialog.orcid-modal::backdrop {
+        background-color: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+      }
 
-  // This override tells Angular Material to gracefully curve the outer dialog box container
-  --mdc-dialog-container-shape: 12px; 
-}
+      dialog.orcid-modal:not([open]) {
+        display: none;
+      }
 
-.dialog-title {
-  margin: 0 !important;
-  padding: 24px 24px 10px 24px !important;
-  border-bottom: none !important;
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem !important;
-}
+      /* Internal layout styling */
+      .dialog-content {
+        background: #ffffff;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+      }
 
-mat-dialog-content.dialog-content {
-  min-width: 400px;
-  overflow: hidden !important; 
-  display: block !important;
-  border-top: none !important; 
-  border-bottom: none !important;
-  padding-top: 12px !important;
-}
+      .dialog-title {
+        margin: 0 0 16px 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #1f2937;
+      }
 
-.orcid-form {
-  margin-top: 0.5rem;
+      .dialog-body {
+        padding-top: 8px;
+      }
 
-  .form-field-full {
-    width: 100%;
-    input.mat-mdc-input-element {
-      padding-left: 8px !important; 
-    }
-  }
-}
+      .orcid-form {
+        margin-top: 8px;
+      }
 
-.input-icon-prefix {
-    color: var(--hpo-ui-text-muted, #94a3b8);
-    margin-right: 12px !important;
-    font-size: 20px;
-    width: 20px;
-    height: 20px;
-  }
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
 
-.orcid-info {
-  background: var(--hpo-ui-bg-light, #f8f9fa);
-  padding: 12px;
-  border-radius: 6px;
-  margin-top: 20px;
-  font-size: 13px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--hpo-ui-text-muted, #4b5563);
-  border: 1px solid var(--hpo-ui-border-light, #e5e7eb);
+      .input-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #374151;
+      }
 
-  .orcid-link {
-    color: var(--hpo-ui-link-color, #2563eb);
-    text-decoration: underline;
-  }
-}
+      .orcid-text-input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        font-size: 1rem;
+        outline: none;
+        box-sizing: border-box;
+      }
 
-.dialog-actions {
-  padding: 16px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 12px;
-}
+      .orcid-text-input:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+      }
+
+      .orcid-text-input.invalid {
+        border-color: #ef4444;
+      }
+
+      .input-hint {
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+
+      .error-msg {
+        font-size: 0.75rem;
+        color: #dc2626;
+      }
+
+      .orcid-info {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 6px;
+        margin-top: 20px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
+      }
+
+      .info-link {
+        color: #2563eb;
+        text-decoration: underline;
+      }
+
+      .dialog-actions {
+        margin-top: 24px;
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+      }
+
+      .save-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }

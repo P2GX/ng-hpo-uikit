@@ -1,49 +1,56 @@
-<h2 mat-dialog-title class="dialog-title">Enter ORCID researcher identifier</h2>
+ <dialog #dialogEl class="orcid-modal">
+      <div class="dialog-content">
+        <h2 class="dialog-title">Enter ORCID researcher identifier</h2>
 
-<mat-dialog-content class="dialog-content">
-  <form [formGroup]="orcidForm" class="orcid-form">
-    <mat-form-field appearance="outline" class="form-field-full" subscriptSizing="fixed">
-      <mat-icon matPrefix class="input-icon-prefix">fingerprint</mat-icon>
-      <input matInput
-             formControlName="orcid"
-             placeholder="0000-0000-0000-0000"
-             maxlength="19"
-             class="orcid-input-field">
-      <mat-hint class="custom-hint">Format: 0000-0000-0000-0000</mat-hint>
-      
-      @if (orcidForm.get('orcid')?.hasError('required')) {
-        <mat-error>ORCID is required</mat-error>
-      }
-      @if (orcidForm.get('orcid')?.hasError('pattern')) {
-        <mat-error>Invalid ORCID format</mat-error>
-      }
-    </mat-form-field>
-  </form>
+        <div class="dialog-body">
+          <form [formGroup]="orcidForm" class="orcid-form">
+            <div class="input-group">
+              <label for="orcid-input" class="input-label">ORCID ID</label>
+              <input
+                id="orcid-input"
+                type="text"
+                formControlName="orcid"
+                placeholder="0000-0000-0000-0000"
+                maxlength="19"
+                class="orcid-text-input"
+                [class.invalid]="orcidForm.get('orcid')?.invalid && orcidForm.get('orcid')?.touched"
+              />
+              <span class="input-hint">Format: 0000-0000-0000-0000</span>
+              
+              @if (orcidForm.get('orcid')?.touched && orcidForm.get('orcid')?.hasError('required')) {
+                <span class="error-msg">ORCID is required</span>
+              }
+              @if (orcidForm.get('orcid')?.touched && orcidForm.get('orcid')?.hasError('pattern')) {
+                <span class="error-msg">Invalid ORCID format</span>
+              }
+            </div>
+          </form>
 
-  <div class="orcid-info">
-  <mat-icon class="info-icon" 
-            matTooltip="ORCID helps distinguish you from every other researcher with a matching name." 
-            matTooltipPosition="above"
-            style="cursor: help;">
-    info
-  </mat-icon>
-  <span>
-  ORCID provides a persistent digital identifier for researchers.
-  <a href="https://orcid.org/" (click)="onLinkClick($event)" class="orcid-link">Learn more</a>
-</span>
-</div>
-</mat-dialog-content>
+          <div class="orcid-info">
+            <app-icon name="info" [size]="20" />
+            <span>
+              ORCID provides a persistent digital identifier for researchers.
+              <a href="https://orcid.org/" target="_blank" class="info-link">Learn more</a>
+            </span>
+          </div>
+        </div>
 
-<div class="dialog-actions">
-  <button type="button"
-          (click)="onCancel()"
-          class="btn-outline-cancel">
-    Cancel
-  </button>
-  <button type="button"
-          (click)="onSave()"
-          [disabled]="orcidForm.invalid"
-          class="btn-outline-primary">
-    Save
-  </button>
-</div>
+        <div class="dialog-actions">
+          <button
+            type="button"
+            (click)="onCancel()"
+            class="btn-outline-primary px-6 py-2 min-w-[100px]"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            (click)="onSave()"
+            [disabled]="orcidForm.invalid"
+            class="btn-outline-primary px-6 py-2 min-w-[100px] save-btn"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </dialog>

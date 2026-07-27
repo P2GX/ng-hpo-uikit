@@ -1,7 +1,5 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
 import { HelpButtonComponent } from '../help-button/help-button.component';
 
 @Component({
@@ -9,8 +7,6 @@ import { HelpButtonComponent } from '../help-button/help-button.component';
   standalone: true,
   imports: [
     CommonModule, 
-    MatProgressSpinnerModule, 
-    MatIconModule,
     HelpButtonComponent 
   ],
   templateUrl: './load-ontology.component.html',
