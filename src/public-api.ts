@@ -27,7 +27,7 @@ export * from './lib/models/hpo-annotation-models';
 export * from './lib/models/ontology-dto';
 export * from './lib/text-mining-container/text-mining-container.component';
 export * from './lib/hpo-twostep-mining/hpo-twostep-mining.component'
-
+export * from './lib/hpo-document-button/document-button.component';
 
 
 

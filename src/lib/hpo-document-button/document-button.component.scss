@@ -1,0 +1,26 @@
+.btn-edit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f0f4f8; /* Soft neutral/blue background */
+  color: #0066cc; /* High contrast blue text/icon */
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 11px; /* Tiny, micro-utility text scale */
+  font-weight: 600;
+  padding: 3px 8px; /* Minimal padding */
+  cursor: pointer;
+  white-space: nowrap; /* Prevents the button text from wrapping */
+  transition: all 0.1s ease;
+}
+
+.btn-edit:hover {
+  background-color: #0066cc;
+  color: #ffffff;
+  border-color: #0066cc;
+}
+
+.btn-edit:active {
+  transform: scale(0.96);
+}
