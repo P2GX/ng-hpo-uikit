@@ -40,9 +40,11 @@
   width: 100%;
   min-height: 450px;
   font-family: 'Fira Code', monospace;
+  padding-right: 7rem;
   padding: 1rem;
   border: 2px solid #d1d5db;
   border-radius: 8px;
+  resize: vertical;
 }
 
 .example-text-link {

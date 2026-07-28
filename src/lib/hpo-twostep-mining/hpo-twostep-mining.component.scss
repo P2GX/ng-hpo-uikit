@@ -1,6 +1,6 @@
 .native-modal-backdrop {
   position: fixed;
-  inset: 0;              /* shorthand for top/left/width/height 100% */
+  inset: 0;
   background-color: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
@@ -48,9 +48,11 @@
   gap: 12px;
 }
 
-app-hpomining,
-app-hpopolishing {
-  display: block;
+hpo-mining-workspace,
+hpo-polishing-workspace {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   flex: 1;
+  box-sizing: border-box;
 }
