@@ -5,8 +5,7 @@
     <div class="quick-select-row">
       @for (mod of quickModifiers(); track mod.termId) {
         <button
-          mat-stroked-button
-          color="primary"
+          type="button"
           class="btn-small"
           [class.is-selected]="isSelected(mod)"
           (click)="selectQuickModifier(mod)">
@@ -22,7 +21,7 @@
         <span class="modifier-chip">
           {{ mod.label }}
           <button type="button" class="chip-remove-btn" (click)="removeModifier(mod)" aria-label="Remove modifier">
-            <mat-icon>close</mat-icon>
+            <app-icon name="close" [size]="14" />
           </button>
         </span>
       }
@@ -32,37 +31,45 @@
   <div class="inline-modifier-header">
     <span class="inline-label">Modifiers</span>
 
-    <mat-form-field class="compact-form-field" appearance="outline">
-      <input type="text"
+    <div class="combobox-wrapper" (focusout)="onFocusOut($event)">
+      <input
+        type="text"
         #hpoInput
+        class="combobox-input"
+        [class.has-error]="control.hasError('invalidSelection') && control.touched"
         [placeholder]="placeholder()"
-        matInput
         [formControl]="control"
-        [matAutocomplete]="auto"
+        role="combobox"
+        [attr.aria-expanded]="isOpen()"
+        aria-autocomplete="list"
+        aria-controls="modifier-listbox"
+        (focus)="onFocus()"
+        (keydown)="onKeydown($event)"
         (blur)="control.markAsTouched()"
         spellcheck="false"
         autocomplete="off">
 
       @if (control.value) {
-        <button matSuffix mat-icon-button aria-label="Clear" (click)="clear()">
-          <mat-icon>close</mat-icon>
+        <button type="button" class="clear-btn" aria-label="Clear" (click)="clear()">
+          <app-icon name="close" [size]="16" />
         </button>
       }
 
-      <mat-autocomplete
-        #auto="matAutocomplete"
-        [displayWith]="displayFn"
-        (optionSelected)="onOptionSelected($event)">
-        @for (option of filteredOptions(); track option.termId) {
-          <mat-option [value]="option">
-            <div class="option-container">
+      @if (isOpen() && filteredOptions().length) {
+        <ul id="modifier-listbox" class="combobox-listbox" role="listbox">
+          @for (option of filteredOptions(); track option.termId; let i = $index) {
+            <li
+              role="option"
+              class="combobox-option"
+              [class.is-active]="i === activeIndex()"
+              (mousedown)="$event.preventDefault(); onOptionSelected(option)">
               <span class="option-matched-text">{{ option.label }}</span>
               <small class="option-id"> ({{ option.termId }})</small>
-            </div>
-          </mat-option>
-        }
-      </mat-autocomplete>
-    </mat-form-field>
+            </li>
+          }
+        </ul>
+      }
+    </div>
   </div>
 
   @if (control.hasError('invalidSelection') && control.touched) {

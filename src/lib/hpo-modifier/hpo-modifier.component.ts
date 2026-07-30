@@ -1,15 +1,8 @@
 import { Component, input, model, output, computed, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormControl, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
 import { HpoTermMinimal } from '../models/hpo-annotation-models';
+import { IconComponent } from '../svg-icons/svg-icon.component';
 
-
-// Fixed severity term IDs — these three are stable, well-known HPO terms
 const SEVERITY_TERM_IDS: ReadonlySet<string> = new Set([
   'HP:0012825', // Mild
   'HP:0012826', // Moderate
@@ -19,10 +12,7 @@ const SEVERITY_TERM_IDS: ReadonlySet<string> = new Set([
 @Component({
   selector: 'hpo-modifier',
   standalone: true,
-  imports: [
-    CommonModule, ReactiveFormsModule, MatFormFieldModule,
-    MatInputModule, MatAutocompleteModule, MatIconModule, MatButtonModule
-  ],
+  imports: [ReactiveFormsModule, IconComponent],
   templateUrl: './hpo-modifier.component.html',
   styleUrls: ['./hpo-modifier.component.scss']
 })
@@ -34,7 +24,6 @@ export class HpoModifierComponent {
   modifierToggled = output<{ modifier: HpoTermMinimal; selected: boolean }>();
   menuClosed = output<void>();
 
-  // Mild, Moderate, Severe -- we always will display these terms
   protected quickModifiers = computed(() =>
     this.availableModifiers().filter(t => SEVERITY_TERM_IDS.has(t.termId))
   );
@@ -44,6 +33,8 @@ export class HpoModifierComponent {
   });
 
   private searchQuery = signal('');
+  protected isOpen = signal(false);
+  protected activeIndex = signal(-1);
 
   protected filteredOptions = computed(() => {
     const query = this.searchQuery().trim().toLowerCase();
@@ -58,6 +49,10 @@ export class HpoModifierComponent {
     this.control.valueChanges.subscribe(value => {
       const query = typeof value === 'string' ? value : value?.label ?? '';
       this.searchQuery.set(query);
+      this.activeIndex.set(-1);
+      if (typeof value === 'string') {
+        this.isOpen.set(value.length > 0);
+      }
     });
   }
 
@@ -75,9 +70,51 @@ export class HpoModifierComponent {
     this.addModifier(mod);
   }
 
-  protected onOptionSelected(event: MatAutocompleteSelectedEvent): void {
-    this.addModifier(event.option.value as HpoTermMinimal);
+  protected onFocus(): void {
+    this.isOpen.set(true);
+  }
+
+  protected onFocusOut(event: FocusEvent): void {
+    const wrapper = event.currentTarget as HTMLElement;
+    const next = event.relatedTarget as Node | null;
+    if (!next || !wrapper.contains(next)) {
+      this.isOpen.set(false);
+    }
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    const options = this.filteredOptions();
+    if (!options.length) return;
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.isOpen.set(true);
+        this.activeIndex.set((this.activeIndex() + 1) % options.length);
+        break;
+      case 'ArrowUp':
+        event.preventDefault();
+        this.isOpen.set(true);
+        this.activeIndex.set((this.activeIndex() - 1 + options.length) % options.length);
+        break;
+      case 'Enter': {
+        const active = this.activeIndex();
+        if (active >= 0 && active < options.length) {
+          event.preventDefault();
+          this.onOptionSelected(options[active]);
+        }
+        break;
+      }
+      case 'Escape':
+        this.isOpen.set(false);
+        break;
+    }
+  }
+
+  protected onOptionSelected(option: HpoTermMinimal): void {
+    this.addModifier(option);
     this.clear();
+    this.isOpen.set(false);
   }
 
   protected removeModifier(term: HpoTermMinimal): void {
@@ -89,10 +126,6 @@ export class HpoModifierComponent {
     if (this.isSelected(term)) return;
     this.selectedModifiers.set([...this.selectedModifiers(), term]);
     this.modifierToggled.emit({ modifier: term, selected: true });
-  }
-
-  protected displayFn(option: HpoTermMinimal | null): string {
-    return option ? option.label : '';
   }
 
   protected clear(): void {

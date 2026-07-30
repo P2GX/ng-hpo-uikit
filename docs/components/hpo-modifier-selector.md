@@ -101,12 +101,12 @@ interface Modifier {
   standalone: true,
   imports: [HpoModifierMenuComponent],
   template: `
-    <div class="table-cell-editor">
+     <div class="modifier-dialog-shell">
       <hpo-modifier
-        [(selectedModifierIds)]="activeModifiers"
-        [availableModifiers]="modifierList()"
-        (modifierToggled)="onModifierToggle($event)">
-      </hpo-modifier>
+        [availableModifiers]="data.availableModifiers"
+        [(selectedModifiers)]="currentSelection"
+        (menuClosed)="onDone()"
+      />
     </div>
   `
 })
@@ -128,7 +128,3 @@ export class TableCellEditorComponent {
 }
 ```
 
-> **Note on hosting in a dialog:** if you present this component inside a
-> `MatDialog`, wire `menuClosed` to close the dialog with the current selection
-> (see `HpoModifierDialogComponent` for the reference pattern) — this component
-> does not manage its own dialog lifecycle or dismiss-on-outside-click behavior.

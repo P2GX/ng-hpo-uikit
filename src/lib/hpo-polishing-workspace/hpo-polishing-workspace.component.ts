@@ -91,7 +91,6 @@ export class HpoPolishingWorkspaceComponent {
 
   constructor() {
     effect(() => {
-       // convert from FenominalSentence to UiFenominalSentence
       const rawSentences = this.sentences();
       if (rawSentences && rawSentences.length > 0 && !this.hasInitialized) {
       const uiSentences: UiFenominalSentence[] = rawSentences.map((s, sIdx) => ({
@@ -116,7 +115,6 @@ export class HpoPolishingWorkspaceComponent {
   }
 
   handleAnnotationUpdate(oldItem: PolishedHpoAnnotation, newItem: PolishedHpoAnnotation) {
-    console.log('update fired', { oldTermId: oldItem.termId, newItem });
     this.localSentences.update(sentences => {
       let matched = 0;
       const next = sentences.map(sentence => ({
@@ -129,7 +127,6 @@ export class HpoPolishingWorkspaceComponent {
           return segment;
         })
       }));
-      console.log('matched segments:', matched);
       return next;
     });
   }
