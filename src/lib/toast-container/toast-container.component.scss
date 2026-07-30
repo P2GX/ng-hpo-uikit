@@ -1,0 +1,41 @@
+// [popover] ships with its own UA defaults (centered, bordered, opaque) — override all of it
+.toast-stack {
+  position: fixed;
+  inset: auto 0 24px 0;
+  margin: 0 auto;
+  width: max-content;
+  max-width: 90vw;
+  border: none;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none; // let clicks pass through the gaps between toasts
+}
+
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.toast-error   { background: #b00020; }
+.toast-success { background: #2e7d32; }
+.toast-warning { background: #b45309; }
+
+.toast-dismiss {
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}

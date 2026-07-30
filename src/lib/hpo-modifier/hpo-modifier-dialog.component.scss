@@ -1,0 +1,26 @@
+
+:host {
+  display: contents; // let the native <dialog> self-position; :host shouldn't impose a box
+}
+
+.orcid-modal {
+  border: none;
+  border-radius: 8px;
+  padding: 0;
+  width: 380px;
+  max-width: 90vw;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+.modifier-dialog-shell {
+  display: flex;
+  flex-direction: column;
+  // hpo-modifier's own .modifier-menu-card already supplies padding/gap,
+  // so this wrapper stays unstyled unless you need to constrain height, e.g.:
+  // max-height: 70vh;
+  // overflow-y: auto;
+}

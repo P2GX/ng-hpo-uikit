@@ -1,7 +1,6 @@
 import { Component, input, model, computed, output, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { OverlayModule } from '@angular/cdk/overlay';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
 import { ModifierSelectorComponent } from './hpo-modifier-selector.component';
@@ -19,7 +18,6 @@ import { ModifierSelectorComponent } from './hpo-modifier-selector.component';
     CommonModule,
     FormsModule,
     HpoAgeSelectorComponent,
-    OverlayModule
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'
@@ -100,7 +98,6 @@ export class HpoPolishRowComponent {
     this.showHierarchyMenu.update(v => !v);
   }
 
-  /* replace a term with a parent or child from the hierarchy menu */
   /* replace a term with a parent or child from the hierarchy menu */
   async replaceTerm(target: HpoTermMinimal): Promise<void> {
     const updatedAnnotation = {

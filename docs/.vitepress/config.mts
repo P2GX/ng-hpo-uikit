@@ -35,7 +35,8 @@ export default defineConfig({
           { text: "HPO Two-Step Mining", link: '/components/hpo-twostep-mining'},
           { text: "HPO Age Selector", link: '/components/hpo-age-selector'},
           { text: "Phenopacket Loader", link:  '/components/phenopacket-loader' } ,
-          { text: 'Help button', link: '/components/help-button' }
+          { text: 'Help button', link: '/components/help-button' },
+          { text: 'Notification service', link: '/components/notification-service' }
         ]
       },
       {

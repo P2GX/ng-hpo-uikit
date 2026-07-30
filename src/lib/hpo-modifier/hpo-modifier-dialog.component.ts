@@ -1,9 +1,6 @@
-// hpo-modifier-dialog.component.ts
-import { Component, inject, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { Component, ElementRef, ViewChild, afterNextRender, input, output, signal } from '@angular/core';
 import { HpoModifierComponent } from './hpo-modifier.component';
 import { HpoTermMinimal } from '../models/hpo-annotation-models';
-
 
 export interface ModifierDialogData {
   availableModifiers: HpoTermMinimal[];
@@ -17,26 +14,37 @@ export interface ModifierDialogResult {
 @Component({
   selector: 'hpo-modifier-dialog',
   standalone: true,
-  imports: [MatDialogModule, HpoModifierComponent],
+  imports: [HpoModifierComponent],
   template: `
-    <div class="modifier-dialog-shell">
-      <hpo-modifier
-        [availableModifiers]="data.availableModifiers"
-         [(selectedModifiers)]="currentSelection"
-        (menuClosed)="onDone()"
-      />
-    </div>
-  `
+    <dialog #modifierDialogEl class="orcid-modal modifier-dialog-modal">
+      <div class="modifier-dialog-shell">
+        <hpo-modifier
+          [availableModifiers]="data().availableModifiers"
+          [(selectedModifiers)]="currentSelection"
+          (menuClosed)="onDone()"
+        />
+      </div>
+    </dialog>
+  `,
+  styleUrl: './hpo-modifier-dialog.component.scss',
 })
 export class HpoModifierDialogComponent {
-  private dialogRef = inject(MatDialogRef<HpoModifierDialogComponent, ModifierDialogResult>);
-  protected data = inject<ModifierDialogData>(MAT_DIALOG_DATA);
+  data = input.required<ModifierDialogData>();
+  done = output<ModifierDialogResult>();
 
+  protected currentSelection = signal<HpoTermMinimal[]>([]);
 
-  protected currentSelection = signal<HpoTermMinimal[]>(this.data.selectedModifiers);
+  @ViewChild('modifierDialogEl') dialogEl!: ElementRef<HTMLDialogElement>;
 
+  constructor() {
+    afterNextRender(() => {
+      this.currentSelection.set(this.data().selectedModifiers);
+      this.dialogEl?.nativeElement.showModal();
+    });
+  }
 
   protected onDone(): void {
-    this.dialogRef.close({ selectedModifiers: this.currentSelection() });
+    this.dialogEl?.nativeElement.close();
+    this.done.emit({ selectedModifiers: this.currentSelection() });
   }
 }

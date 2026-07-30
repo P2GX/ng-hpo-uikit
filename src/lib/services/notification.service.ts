@@ -1,33 +1,40 @@
-import { inject, Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Injectable, signal } from '@angular/core';
+
+export type ToastKind = 'error' | 'success' | 'warning';
+
+export interface Toast {
+  id: number;
+  message: string;
+  kind: ToastKind;
+  dismissLabel: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private snackBar = inject(MatSnackBar);
+  private nextId = 0;
+  readonly toasts = signal<Toast[]>([]);
 
-  showError(message: string, duration: number = 8000) {
-    this.snackBar.open(message, 'Dismiss', {
-      panelClass: ['error-snackbar'],
-      duration,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
+  showError(message: string, duration = 8000) {
+    this.push(message, 'error', 'Dismiss', duration);
   }
 
-  showSuccess(message: string, duration: number = 4000) {
-    this.snackBar.open(message, 'OK', {
-      panelClass: ['success-snackbar'],
-      duration,
-      verticalPosition: 'bottom',
-    });
+  showSuccess(message: string, duration = 4000) {
+    this.push(message, 'success', 'OK', duration);
   }
 
-  showWarning(message: string, duration: number = 6000) {
-    this.snackBar.open(message, 'Close', {
-      panelClass: ['warning-snackbar'],
-      duration,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
-    });
+  showWarning(message: string, duration = 6000) {
+    this.push(message, 'warning', 'Close', duration);
+  }
+
+  dismiss(id: number) {
+    this.toasts.update(list => list.filter(t => t.id !== id));
+  }
+
+  private push(message: string, kind: ToastKind, dismissLabel: string, duration: number) {
+    const id = this.nextId++;
+    this.toasts.update(list => [...list, { id, message, kind, dismissLabel }]);
+    if (duration > 0) {
+      setTimeout(() => this.dismiss(id), duration);
+    }
   }
 }

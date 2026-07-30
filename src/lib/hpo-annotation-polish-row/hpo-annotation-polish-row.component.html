@@ -5,51 +5,35 @@
   </td>
 
   <td class="label-cell">
-      <div class="dropdown-wrapper">
-      <span 
-        cdkOverlayOrigin
-        #trigger="cdkOverlayOrigin"
-        (click)="openHierarchyMenu();" 
-        class="dropdown-trigger">
-          {{ annotation().label }} <span class="caret">▼</span>
-      </span>
-        <ng-template
-            cdkConnectedOverlay
-            [cdkConnectedOverlayOrigin]="trigger"
-            [cdkConnectedOverlayOpen]="showHierarchyMenu()"
-            [cdkConnectedOverlayPositions]="[{
-                originX: 'start', originY: 'bottom',
-                overlayX: 'start', overlayY: 'top',
-                offsetY: 4
-            }, {
-                originX: 'start', originY: 'top',
-                overlayX: 'start', overlayY: 'bottom',
-                offsetY: -4
-            }]"
-            (backdropClick)="showHierarchyMenu.set(false)"
-            [cdkConnectedOverlayHasBackdrop]="true"
-            [cdkConnectedOverlayBackdropClass]="'cdk-overlay-transparent-backdrop'">
-          <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
-          @if (hierarchy()?.parents?.length) {
-              <div class="menu-section-title">Parents</div>
-              <ul>
-              @for (p of hierarchy()?.parents; track p.termId) {
-                  <li (click)="replaceTerm(p);$event.stopPropagation();" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
-              }
-              </ul>
+    <div class="dropdown-wrapper">
+    <span
+      (click)="openHierarchyMenu()"
+      class="dropdown-trigger">
+        {{ annotation().label }} <span class="caret">▼</span>
+    </span>
+
+    @if (showHierarchyMenu()) {
+      <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
+      @if (hierarchy()?.parents?.length) {
+          <div class="menu-section-title">Parents</div>
+          <ul>
+          @for (p of hierarchy()?.parents; track p.termId) {
+              <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
           }
-          @if (hierarchy()?.children?.length) {
-              <div class="menu-section-title">Children</div>
-              <ul>
-              @for (c of hierarchy()?.children; track c.termId) {
-                  <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
-              }
-              </ul>
+          </ul>
+      }
+      @if (hierarchy()?.children?.length) {
+          <div class="menu-section-title">Children</div>
+          <ul>
+          @for (c of hierarchy()?.children; track c.termId) {
+              <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
           }
-          </div>
-      </ng-template>
+          </ul>
+      }
       </div>
-  </td>
+    }
+    </div>
+</td>
 
   <td>
       <span class="badge" [ngClass]="annotation().excluded ?  'badge-red' : 'badge-green'">
