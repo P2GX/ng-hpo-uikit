@@ -7,31 +7,37 @@
   <td class="label-cell">
     <div class="dropdown-wrapper">
     <span
+      #hierarchyTrigger
       (click)="openHierarchyMenu()"
       class="dropdown-trigger">
         {{ annotation().label }} <span class="caret">▼</span>
     </span>
 
     @if (showHierarchyMenu()) {
-      <div class="local-context-menu" (mouseleave)="showHierarchyMenu.set(false)">
-      @if (hierarchy()?.parents?.length) {
-          <div class="menu-section-title">Parents</div>
-          <ul>
-          @for (p of hierarchy()?.parents; track p.termId) {
-              <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
-          }
-          </ul>
-      }
-      @if (hierarchy()?.children?.length) {
-          <div class="menu-section-title">Children</div>
-          <ul>
-          @for (c of hierarchy()?.children; track c.termId) {
-              <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
-          }
-          </ul>
-      }
-      </div>
+  <div class="local-context-menu" [style.top.px]="menuPosition().top" [style.left.px]="menuPosition().left" (mouseleave)="showHierarchyMenu.set(false)">
+    @if (hierarchy()?.parents?.length) {
+        <div class="menu-section-title">Parents</div>
+        <ul>
+        @for (p of hierarchy()?.parents; track p.termId) {
+            <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
+        }
+        </ul>
     }
+    @if (hierarchy()?.children?.length) {
+        <div class="menu-section-title">Children</div>
+        <ul>
+        @for (c of hierarchy()?.children; track c.termId) {
+            <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
+        }
+        </ul>
+    }
+    @if (!hierarchy()) {
+      <div class="menu-item-empty">Loading…</div>
+    } @else if (!hierarchy()?.parents?.length && !hierarchy()?.children?.length) {
+      <div class="menu-item-empty">No related terms found</div>
+    }
+  </div>
+}
     </div>
 </td>
 

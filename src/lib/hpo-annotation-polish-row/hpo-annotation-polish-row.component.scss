@@ -20,17 +20,14 @@
 
 /* Scoped to this specific cell, no absolute screen-space coordinate math needed! */
 .local-context-menu {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 0;
+    position: fixed;
     z-index: 20;
-    margin-bottom: 8px;
-    background: #ffffff; 
-    border: 1px solid #e2e8f0; 
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15); 
-    min-width: 260px; 
-    max-height: 300px; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    min-width: 260px;
+    max-height: 300px;
     overflow-y: auto;
 }
 .menu-section-title { background: #f8f9fa; padding: 6px 12px; font-weight: bold; font-size: 11px; text-transform: uppercase; color: #6c757d; }

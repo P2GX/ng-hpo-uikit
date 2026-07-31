@@ -1,4 +1,4 @@
-import { Component, input, model, computed, output, signal } from '@angular/core';
+import { Component, input, model, computed, output, signal, viewChild, ElementRef, HostListener, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
@@ -28,7 +28,7 @@ export class HpoPolishRowComponent {
   
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = signal<HierarchyMapItem | null>(null);
-   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
+  hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
   readonly availableModifiers = input<HpoTermMinimal[]>([]);
 
   readonly updated = output<PolishedHpoAnnotation>();
@@ -36,9 +36,17 @@ export class HpoPolishRowComponent {
   readonly termClick = output<string>();
   // Local autocomplete search inputs
   modifierSearchQuery = signal<string>('');
- 
+  private triggerEl = viewChild.required<ElementRef<HTMLElement>>('hierarchyTrigger');
+
+  menuPosition = signal({ top: 0, left: 0 });
   readonly showHierarchyMenu = signal(false);
   showModifierMenu = signal(false);
+
+  constructor() {
+  effect(() => {
+    console.log('showHierarchyMenu is now:', this.showHierarchyMenu());
+  });
+}
 
   filteredModifiers = computed(() => {
     const query = this.modifierSearchQuery().toLowerCase().trim();
@@ -90,13 +98,20 @@ export class HpoPolishRowComponent {
   }
 
   async openHierarchyMenu(): Promise<void> {
-    if (!this.showHierarchyMenu() && this.hierarchy() === null) {
-      const provider = this.hierarchyProvider(); // Get the function
-      const data = await provider(this.annotation().termId); // Fetch fresh
-      this.hierarchy.set(data);
-      }
-    this.showHierarchyMenu.update(v => !v);
+    const rect = this.triggerEl().nativeElement.getBoundingClientRect();
+      console.log('trigger rect:', rect); // temporary debug line
+
+    this.menuPosition.set({
+      top: rect.bottom + 4,
+      left: rect.left,
+    });
+     const provider = this.hierarchyProvider();
+  const data = await provider(this.annotation().termId);
+  this.hierarchy.set(data);
+    this.showHierarchyMenu.set(true);
   }
+
+
 
   /* replace a term with a parent or child from the hierarchy menu */
   async replaceTerm(target: HpoTermMinimal): Promise<void> {

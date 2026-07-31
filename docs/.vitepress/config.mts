@@ -17,7 +17,8 @@ export default defineConfig({
           { text: 'Installation & Setup', link: '/guides/installation' },
           { text: 'Release', link: '/guides/release' },
           { text: 'Storybook', link: '/guides/storybook' },
-          { text: 'Developers', link: '/guides/developers' }
+          { text: 'Developers', link: '/guides/developers' },
+          { text: 'Dialogs', link: '/guides/dialogs' }
         ]
       },
       {
