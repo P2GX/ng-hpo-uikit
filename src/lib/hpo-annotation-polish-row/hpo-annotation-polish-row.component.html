@@ -82,15 +82,11 @@
         </button>
     </div>
     @if (isModifierDialogOpen()) {
-    <div class="modifier-overlay">
-      <app-modifier-selector
-        [availableModifiers]="availableModifiers()"
-        [selectedModifiers]="annotation().modifiers ?? []"
-        (selectionChanged)="updateModifiers($event)"
-        (close)="isModifierDialogOpen.set(false)"
-      />
-    </div>
-  }
+        <hpo-modifier-dialog
+            [data]="{ availableModifiers: availableModifiers(), selectedModifiers: annotation().modifiers ?? [] }"
+            (done)="onModifierDialogDone($event)"
+        />
+    }
   </td>
 
   <td class="action-cell">

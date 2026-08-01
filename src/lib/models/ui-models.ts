@@ -3,7 +3,7 @@
 export interface OntologyLoadEvent {
     status: 'loading' | 'success' | 'error' | 'cancel';
     payload?: {
-        statusMessage?: string;
+        version?: string;
         termCount?: number;
         errorMessage?: string;
     };

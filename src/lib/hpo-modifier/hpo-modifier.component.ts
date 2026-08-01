@@ -62,6 +62,8 @@ export class HpoModifierComponent {
     return typeof value === 'string' ? { invalidSelection: true } : null;
   }
 
+
+
   protected isSelected(term: HpoTermMinimal): boolean {
     return this.selectedModifiers().some(t => t.termId === term.termId);
   }
@@ -111,11 +113,13 @@ export class HpoModifierComponent {
     }
   }
 
-  protected onOptionSelected(option: HpoTermMinimal): void {
-    this.addModifier(option);
-    this.clear();
-    this.isOpen.set(false);
-  }
+
+    protected onOptionSelected(option: HpoTermMinimal): void {
+      this.addModifier(option);
+      this.clear();
+      this.isOpen.set(false);
+      this.menuClosed.emit();
+    }
 
   protected removeModifier(term: HpoTermMinimal): void {
     this.selectedModifiers.set(this.selectedModifiers().filter(t => t.termId !== term.termId));

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
 import { ModifierSelectorComponent } from './hpo-modifier-selector.component';
+import { HpoModifierDialogComponent, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component';
 
 /*
  * This component provides one row in the HPO annotation table and allows users to "polish" the
@@ -14,18 +15,16 @@ import { ModifierSelectorComponent } from './hpo-modifier-selector.component';
   selector: 'tr[hpo-polisher-row]',
   standalone: true,
   imports: [
-    ModifierSelectorComponent,
     CommonModule,
     FormsModule,
     HpoAgeSelectorComponent,
+    HpoModifierDialogComponent,
+    ModifierSelectorComponent
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'
 })
 export class HpoPolishRowComponent {
-  
-  readonly isModifierDialogOpen = signal(false);
-  
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = signal<HierarchyMapItem | null>(null);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
@@ -41,6 +40,8 @@ export class HpoPolishRowComponent {
   menuPosition = signal({ top: 0, left: 0 });
   readonly showHierarchyMenu = signal(false);
   showModifierMenu = signal(false);
+
+  readonly isModifierDialogOpen = signal(false);
 
   constructor() {
   effect(() => {
@@ -80,19 +81,26 @@ export class HpoPolishRowComponent {
     return count === 0 ? '+Add modifier' : 'Edit';
   });
 
-  updateModifiers(updatedMods: HpoTermMinimal[]): void {
-    const updatedAnnotation = {
-      ...this.annotation(),
-      modifiers: updatedMods
-    };
-    this.annotation.set(updatedAnnotation); 
-    this.updated.emit(updatedAnnotation); 
-  }
+ 
 
   toggleModifierModal(): void {
     this.isModifierDialogOpen.update(v => !v);
   }
 
+  onModifierDialogDone(result: ModifierDialogResult): void {
+    this.isModifierDialogOpen.set(false);
+    this.updateModifiers(result.selectedModifiers);
+  }
+
+  updateModifiers(updatedMods: HpoTermMinimal[]): void {
+    const updatedAnnotation = {
+      ...this.annotation(),
+      modifiers: updatedMods
+    };
+    this.annotation.set(updatedAnnotation);
+    this.updated.emit(updatedAnnotation);
+  }
+  
   toggleHierarchyMenu(): void {
     this.showHierarchyMenu.update(v => !v);
   }
