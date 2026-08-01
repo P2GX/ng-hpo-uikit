@@ -1,13 +1,12 @@
 /*
- * Public API Surface of ng-hpo-uikit
+ * Public API of ng-hpo-uikit
  */
-
-/* export * from './lib/ng-hpo-uikit'; */
 
 /* services */
 export * from './lib/services/notification.service';
 /* models */
 export * from './lib/models/ontology-dto';
+export * from './lib/models/ui-models';
 /* components */
 export * from './lib/footer/footer.component';
 export * from './lib/svg-icons/svg-icon.component';

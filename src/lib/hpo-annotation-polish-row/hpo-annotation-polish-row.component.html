@@ -1,7 +1,11 @@
-  <td class="font-mono">
-      <a (click)="termClick.emit(annotation().termId)" class="link-text">
+  <td class="hpo-id-cell">
+     <a 
+      [href]="'https://hpo.jax.org/browse/term/' + annotation().termId"
+      target="_blank"
+      rel="noopener"
+      class="link-text">
       {{ annotation().termId }}
-      </a>
+    </a>
   </td>
 
   <td class="label-cell">
