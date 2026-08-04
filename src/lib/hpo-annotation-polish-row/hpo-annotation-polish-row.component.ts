@@ -1,9 +1,8 @@
-import { Component, input, model, computed, output, signal, viewChild, ElementRef, HostListener, effect } from '@angular/core';
+import { Component, input, model, computed, output, signal, viewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
-import { ModifierSelectorComponent } from './hpo-modifier-selector.component';
 import { HpoModifierDialogComponent, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component';
 
 /*
@@ -18,8 +17,7 @@ import { HpoModifierDialogComponent, ModifierDialogResult } from '../hpo-modifie
     CommonModule,
     FormsModule,
     HpoAgeSelectorComponent,
-    HpoModifierDialogComponent,
-    ModifierSelectorComponent
+    HpoModifierDialogComponent
 ],
   templateUrl: './hpo-annotation-polish-row.component.html',
   styleUrl: './hpo-annotation-polish-row.component.scss'

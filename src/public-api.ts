@@ -28,6 +28,6 @@ export * from './lib/text-mining-container/text-mining-container.component';
 export * from './lib/hpo-twostep-mining/hpo-twostep-mining.component'
 export * from './lib/hpo-document-button/document-button.component';
 export * from './lib/toast-container/toast-container.component';
-
+export * from './lib/services/age_service';
 
 
