@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 20px;
   height: 100%;
+  overflow: hidden;
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -38,6 +39,7 @@
 
 .table-viewport {
   flex: 1;
+  min-height: 0;
   border: 1px solid #e2e8f0;
   border-radius: 8px;
   overflow: auto;
@@ -118,6 +120,8 @@
   align-items: center;
   padding-top: 14px;
   border-top: 1px solid #e2e8f0;
+  flex-shrink: 0;
+  min-height:  100px;
 }
 
 .autocomplete-injection-box {

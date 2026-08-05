@@ -10,7 +10,7 @@ import {
   ui_from_fenominal, 
   FenominalSegment} from '../models/fenominal-models';
 import { OntologyMatch } from '../models/ontology-dto';
-import { NotificationService } from '../services/notification.service';
+import { OnsetSortService } from '../services/onset-sort.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
 import { DeleteHitRequest, HierarchyMapItem, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
@@ -32,8 +32,7 @@ import { TextMiningContainerComponent } from "../text-mining-container/text-mini
   styleUrls: ['./hpo-polishing-workspace.component.scss']
 })
 export class HpoPolishingWorkspaceComponent {
-  private notificationService = inject(NotificationService);
-  
+  private onsetSort = inject(OnsetSortService);
   sentences = input<FenominalSentence[]>([]);
   // relay change signal to data owner outside of the library
   readonly segmentsReplaced = output<{ sentence: FenominalSentence; segmentIndex: number; newSegments: FenominalSegment[] }>();
@@ -84,7 +83,7 @@ export class HpoPolishingWorkspaceComponent {
         }
       }
     }
-    return Array.from(uniqueMap.values());
+    return this.onsetSort.sorted(Array.from(uniqueMap.values()));
   });
 
   private hasInitialized = false;
