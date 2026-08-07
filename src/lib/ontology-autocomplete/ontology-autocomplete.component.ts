@@ -21,6 +21,7 @@ export class OntologyAutocompleteComponent {
   autocompleteProvider = input.required<OntologyAutocompleteProvider>();
   requireConfirmation = input.required<boolean>();
   confirmPosition = input<'bottom' | 'right'>('right');
+  popupMenuDirection = input<'up' | 'down'>('up');;
   selected = output<OntologyMatch>();
 
   inputElement = viewChild<ElementRef<HTMLInputElement>>('ontologyInput');

@@ -127,6 +127,13 @@
   list-style: none;
   z-index: 1000;
 
+   &.dropdown-down {
+    bottom: auto;
+    top: 100%;
+    margin: 4px 0 0 0;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // flip shadow direction too
+  }
+
   li {
     padding: 8px 12px;
     cursor: pointer;

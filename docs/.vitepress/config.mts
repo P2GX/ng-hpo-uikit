@@ -12,7 +12,7 @@ export default defineConfig({
     ],
     sidebar: [
       {
-        text: 'Getting Started',
+        text: 'Installation and Usage',
         items: [
           { text: 'Installation & Setup', link: '/guides/installation' },
           { text: 'Release', link: '/guides/release' },
