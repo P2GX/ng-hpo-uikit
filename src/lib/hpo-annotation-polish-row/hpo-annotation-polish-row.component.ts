@@ -41,12 +41,6 @@ export class HpoPolishRowComponent {
 
   readonly isModifierDialogOpen = signal(false);
 
-  constructor() {
-  effect(() => {
-    console.log('showHierarchyMenu is now:', this.showHierarchyMenu());
-  });
-}
-
   filteredModifiers = computed(() => {
     const query = this.modifierSearchQuery().toLowerCase().trim();
     const available = this.availableModifiers();
@@ -138,9 +132,15 @@ export class HpoPolishRowComponent {
   }
 
   toggleObserved(): void {
+    const currentlyExcluded = this.annotation().excluded;
+    const willBeExcluded = !currentlyExcluded; // we are about to toggle from observed to excluded
+
     const updatedAnnotation: PolishedHpoAnnotation = {
       ...this.annotation(),
-      excluded: !this.annotation().excluded
+      excluded: willBeExcluded,
+      // clear modifiers and onset if we are about to exclude a term
+      onsetString: willBeExcluded ? undefined : this.annotation().onsetString,
+      modifiers: willBeExcluded ? [] : this.annotation().modifiers
     };
     this.annotation.set(updatedAnnotation);
     this.updated.emit(updatedAnnotation);

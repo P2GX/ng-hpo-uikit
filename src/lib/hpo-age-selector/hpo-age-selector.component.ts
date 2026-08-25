@@ -14,9 +14,11 @@ export class HpoAgeSelectorComponent {
 
   selectedOnset = input<string | null>(null);
   size = input<'normal' | 'small'>('normal');
+  disabled = input(false);
   onsetChanged = output<string>();
 
   openSelectorDialog(): void {
+    if (this.disabled()) return;
     this.dialogComponent.open();
   }
 

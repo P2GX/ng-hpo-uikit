@@ -55,12 +55,15 @@
     <hpo-age-selector
       size="small"
       [selectedOnset]="annotation().onsetString || null"
+      [disabled]="annotation().excluded"
       (onsetChanged)="changeOnset($event)"
     />
   </td>
 
   <td class="modifier-cell">
-    <div class="active-modifiers-preview" (click)="toggleModifierModal()">
+    <div class="active-modifiers-preview" 
+    [class.disabled-section]="annotation().excluded"
+    (click)="!annotation().excluded && toggleModifierModal()">
       @for (mod of annotation().modifiers?.slice(0,2) ?? []; track mod.termId) {
         <span class="modifier-chip"
                 [title]="mod.label">
@@ -77,6 +80,7 @@
         }
         <button
             class="annotation-action"
+            [disabled]="annotation().excluded"
             (click)="toggleModifierModal(); $event.stopPropagation()">
             {{ modifierButtonText() }}
         </button>

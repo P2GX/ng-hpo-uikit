@@ -51,6 +51,22 @@ td {
     gap: 2px;
     align-items: center;
     min-height: 22px;
+
+    &.disabled-section {
+        opacity: 0.5;
+        pointer-events: none;
+        cursor: not-allowed;
+
+        .modifier-chip {
+            background-color: var(var(--bg-gray-light));
+            color: var(--text-gray-muted);
+        }
+
+        .annotation-action {
+            color: var(--text-gray-muted);
+            cursor: not-allowed;
+        }
+    }
 }
 
 .badge {
@@ -89,3 +105,9 @@ td {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
+
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}

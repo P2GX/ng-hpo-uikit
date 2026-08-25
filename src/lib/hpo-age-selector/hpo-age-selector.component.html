@@ -1,5 +1,6 @@
 <button
   type="button"
+  [disabled]="disabled()"
   [class]="selectedOnset() ? 'age-picker-trigger' : 'annotation-action'"
   [class.annotation-value-small]="size() === 'small'"
   (click)="openSelectorDialog()">
