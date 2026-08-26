@@ -82,7 +82,6 @@ export const DefaultObserved: Story = {
       onsetString: 'Infantile onset',
       modifiers: mockModifiers
     },
-    hierarchy: mockHierarchy,
     availableModifiers: mockModifiers
   }
 };
@@ -95,7 +94,6 @@ export const ExcludedWithNoMetadata: Story = {
       excluded: true,
       modifiers: []
     },
-    hierarchy: { currentTermId:'', parents: [], children: [] },
     availableModifiers: mockModifiers
   }
 };

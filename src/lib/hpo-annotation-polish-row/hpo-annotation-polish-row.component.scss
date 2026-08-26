@@ -111,3 +111,12 @@ button:disabled {
     cursor: not-allowed;
     pointer-events: none;
 }
+
+
+td.excluded-annotation,
+td.excluded-annotation a,
+td.excluded-annotation .dropdown-trigger {
+  color: #dc2626; /* A clean modern red */
+  text-decoration: line-through;
+}
+

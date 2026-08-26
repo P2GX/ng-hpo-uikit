@@ -1,4 +1,4 @@
-  <td class="hpo-id-cell">
+  <td class="hpo-id-cell" [class.excluded-annotation]="annotation().excluded">
      <a 
       [href]="'https://hpo.jax.org/browse/term/' + annotation().termId"
       target="_blank"
@@ -8,7 +8,7 @@
     </a>
   </td>
 
-  <td class="label-cell">
+  <td class="label-cell" [class.excluded-annotation]="annotation().excluded">
     <div class="dropdown-wrapper">
     <span
       #hierarchyTrigger
