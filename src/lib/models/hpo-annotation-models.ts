@@ -7,7 +7,7 @@ export interface HpoTermMinimal {
   label: string;
 }
 
-/* This is useful for the menu that allows to use to navegate to the parents or children of the current term. */
+/* This is useful for the menu that allows to use to navigate to the parents or children of the current term. */
 export interface HierarchyMapItem {
   currentTermId: string;
   parents: HpoTermMinimal[];
@@ -22,7 +22,7 @@ export interface PolishedHpoAnnotation {
   modifiers: HpoTermMinimal[];
 }
 
-/* Records what changes when a user moves a badge in our textmining component */
+/* Records what changes when a user moves a badge in our text mining component */
 export interface HitSpanPatch {
   action: 'SPAN_BOUNDARIES_CHANGED' | 'SPAN_POSITION_SHIFTED';
   sentenceStart: number;

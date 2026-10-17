@@ -21,9 +21,9 @@
             'ontology-status__text--loaded': isLoaded()}" 
             class="ontology-status__text">
             @if(isLoaded()) {
-                <app-icon name="check_circle" [size]="14" />
+                <app-icon name="check" [size]="16" />
                 {{ statusMessage() }}
-                <span class="ontology-status__terms">{{ termCount() }} terms available</span>
+                <span class="ontology-status__terms">{{ termCount() }}</span>
             }
         </span>
     </div>
