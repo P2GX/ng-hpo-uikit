@@ -1,12 +1,14 @@
 import { Component, ElementRef, input, viewChild } from '@angular/core';
 import { openExternalUrl } from "../services/open-external-url";
+import { IconComponent } from '../svg-icons/svg-icon.component';
 
 
 @Component({
   selector: 'hpo-help-button',
   standalone: true,
   templateUrl: './help-button.component.html',
-  styleUrl: './help-button.component.scss'
+  styleUrl: './help-button.component.scss',
+  imports: [IconComponent]
 })
 export class HelpButtonComponent {
   title = input.required<string>();
