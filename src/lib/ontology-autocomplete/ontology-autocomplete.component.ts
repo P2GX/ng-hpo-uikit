@@ -21,13 +21,12 @@ export class OntologyAutocompleteComponent {
   autocompleteProvider = input.required<OntologyAutocompleteProvider>();
   requireConfirmation = input.required<boolean>();
   confirmPosition = input<'bottom' | 'right'>('right');
-  popupMenuDirection = input<'up' | 'down'>('up');;
+  popupMenuDirection = input<'up' | 'down'>('up');
   selected = output<OntologyMatch>();
 
   inputElement = viewChild<ElementRef<HTMLInputElement>>('ontologyInput');
   control = new FormControl<string>('', { nonNullable: true });
 
-  // UI State Signals
   isOpen = signal<boolean>(false);
   activeHighlightIndex = signal<number>(-1);
   activeSelection = signal<OntologyMatch | null>(null);
