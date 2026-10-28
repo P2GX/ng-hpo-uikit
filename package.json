@@ -1,6 +1,20 @@
 {
   "name": "ng-hpo-uikit",
   "version": "0.2.118",
+  "description": "Angular toolkit for applications that leverages Human Phenotype Ontology and GA4GH Phenopacket Schema",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/P2GX/ng-hpo-uikit.git"
+  },
+  "homepage": "https://p2gx.github.io/ng-hpo-uikit/",
+  "bugs": {
+    "url": "https://github.com/P2GX/ng-hpo-uikit/issues"
+  },
+  "keywords": [
+    "angular", "tauri", "hpo", "human-phenotype-ontology",
+    "ga4gh", "phenopackets", "ontology", "biocuration"
+  ],
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
