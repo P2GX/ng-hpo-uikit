@@ -30,7 +30,7 @@ import { LoadOntologyComponent } from 'ng-hpo-uikit';
 | `onLoad` | `Output<void>` | — | Fires a bubble event hook when the primary action button is clicked. |
 
 
-## mplementation Context Examples
+## Implementation Context Examples
 
 Standard Human Phenotype Ontology Setup
 

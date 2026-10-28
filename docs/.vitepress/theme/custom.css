@@ -1,0 +1,16 @@
+/* Use more of the screen for documentation pages */
+:root {
+  --vp-layout-max-width: 1600px;
+}
+
+.VPDoc .container,
+.VPDoc .content-container,
+.VPDoc.has-aside .content-container {
+  max-width: 100% !important;
+}
+
+/* Let tables use the full column instead of scrolling sideways */
+.vp-doc table {
+  display: table;
+  width: 100%;
+}
