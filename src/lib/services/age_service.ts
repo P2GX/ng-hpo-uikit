@@ -119,8 +119,6 @@ export class AgeService {
         const wVal = wMatch ? parseFloat(wMatch[1]) : 0;
         const dVal = dMatch ? parseFloat(dMatch[1]) : 0;
 
-        console.log(`input=${input} y=${yVal} m=${mVal} w=${wVal} d=${dVal}`);
-
         if (yVal === 0 && mVal === 0 && wVal === 0 && dVal === 0) return undefined;
 
         const years = Math.floor(yVal);

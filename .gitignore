@@ -49,3 +49,5 @@ Thumbs.db
 docs/.vitepress/cache/
 *storybook.log
 storybook-static
+documentation.json
+*.log

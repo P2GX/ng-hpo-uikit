@@ -99,15 +99,13 @@ export class HpoPolishRowComponent {
 
   async openHierarchyMenu(): Promise<void> {
     const rect = this.triggerEl().nativeElement.getBoundingClientRect();
-      console.log('trigger rect:', rect); // temporary debug line
-
     this.menuPosition.set({
       top: rect.bottom + 4,
       left: rect.left,
     });
-     const provider = this.hierarchyProvider();
-  const data = await provider(this.annotation().termId);
-  this.hierarchy.set(data);
+    const provider = this.hierarchyProvider();
+    const data = await provider(this.annotation().termId);
+    this.hierarchy.set(data);
     this.showHierarchyMenu.set(true);
   }
 
