@@ -9,6 +9,11 @@
     "target": "ES2022"
   },
   "exclude": ["../src/test.ts", "../src/**/*.spec.ts"],
-  "include": ["../src/**/*.stories.*", "./preview.ts", "../src/lib/styles/styles.scss"],
+  "include": [
+    "../src/**/*.stories.*", 
+    "../src/**/*.component.ts",
+    "./preview.ts",
+    "../src/lib/styles/styles.scss"
+  ],
   "files": ["./typings.d.ts"]
 }
