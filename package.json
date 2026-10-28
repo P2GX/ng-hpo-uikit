@@ -1,6 +1,6 @@
 {
   "name": "ng-hpo-uikit",
-  "version": "0.2.118",
+  "version": "0.2.119",
   "description": "Angular toolkit for applications that leverages Human Phenotype Ontology and GA4GH Phenopacket Schema",
   "license": "MIT",
   "repository": {
