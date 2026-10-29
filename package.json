@@ -1,0 +1,54 @@
+{
+  "name": "ng-hpo-uikit",
+  "version": "0.2.120",
+  "description": "Angular toolkit for applications that leverages Human Phenotype Ontology and GA4GH Phenopacket Schema",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/P2GX/ng-hpo-uikit.git"
+  },
+  "homepage": "https://p2gx.github.io/ng-hpo-uikit/",
+  "bugs": {
+    "url": "https://github.com/P2GX/ng-hpo-uikit/issues"
+  },
+  "keywords": [
+    "angular",
+    "tauri",
+    "hpo",
+    "human-phenotype-ontology",
+    "ga4gh",
+    "phenopackets",
+    "ontology",
+    "biocuration"
+  ],
+  "peerDependencies": {
+    "@angular/common": ">=21.2.0 <23.0.0",
+    "@angular/core": ">=21.2.0 <23.0.0",
+    "@angular/platform-browser": ">=21.2.0 <23.0.0",
+    "@tauri-apps/plugin-opener": "^2.0.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "overrides": {
+    "webpack": "^5.90.0"
+  },
+  "sideEffects": false,
+  "peerDependenciesMeta": {
+    "@tauri-apps/plugin-opener": {
+      "optional": true
+    }
+  },
+  "module": "fesm2022/ng-hpo-uikit.mjs",
+  "typings": "types/ng-hpo-uikit.d.ts",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./types/ng-hpo-uikit.d.ts",
+      "default": "./fesm2022/ng-hpo-uikit.mjs"
+    }
+  },
+  "type": "module"
+}
