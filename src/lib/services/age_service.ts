@@ -7,7 +7,8 @@ const RE_MONTH = /(\d+(?:\.\d+)?)\s*m/i;
 const RE_WEEK = /(\d+(?:\.\d+)?)\s*w/i;
 const RE_DAY = /(\d+)\s*d/i;
 // Matches ISO 8601 durations like "P1Y6M3D" or "P0D"
-const ISO8601_RE = /^P(?:\d+Y)?(?:\d+M)?(?:\d+D)?$/i;
+// ISO 8601 age: at least one of years, months, days
+const ISO8601_RE = /^P(?=\d)(?:\d+Y)?(?:\d+M)?(?:\d+D)?$/;
 const GESTATIONAL_AGE_RE = /^G(\d+)w(?:([0-6])d)?$/i;
 
 
@@ -36,7 +37,6 @@ export class AgeService {
         na: "na",
     };
 
-    readonly isoPattern = /^P(?:\d+Y)?(?:\d+M)?(?:\d+D)?$/;
     readonly gestationalAgePattern = /^G\d{1,2}w(?:[0-6]d)?$/;
     /** The source of truth for user-selected age strings.*/
     public _selectedTerms = signal<string[]>(["na"]);
@@ -55,7 +55,7 @@ export class AgeService {
     validateAgeInput(input: string): boolean {
         return input == "na" ||
         this.ALLOWED_AGE_LABELS.has(input) || 
-        this.isoPattern.test(input) || 
+        ISO8601_RE.test(input) || 
         this.gestationalAgePattern.test(input);
     }
 
@@ -141,7 +141,8 @@ export class AgeService {
         const symbolic = this.mapAgeStringToSymbolic(input);
         if (symbolic) return symbolic;
         if (GESTATIONAL_AGE_RE.test(input)) return input;
-        if (ISO8601_RE.test(input)) return input;
+        const upper = input.toUpperCase();
+        if (ISO8601_RE.test(upper)) return upper;
         return this.mapYmdToIso(input);
     }
 
