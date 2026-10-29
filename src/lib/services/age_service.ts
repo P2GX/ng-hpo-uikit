@@ -6,10 +6,10 @@ const RE_YEAR = /(\d+(?:\.\d+)?)\s*y/i;
 const RE_MONTH = /(\d+(?:\.\d+)?)\s*m/i;
 const RE_WEEK = /(\d+(?:\.\d+)?)\s*w/i;
 const RE_DAY = /(\d+)\s*d/i;
-// Matches ISO 8601 durations like "P1Y6M3D" or "P0D"
-// ISO 8601 age: at least one of years, months, days
+// Matches ISO8601 durations like "P1Y6M3D" or "P0D" (at least one of years, months, days)
 const ISO8601_RE = /^P(?=\d)(?:\d+Y)?(?:\d+M)?(?:\d+D)?$/;
-const GESTATIONAL_AGE_RE = /^G(\d+)w(?:([0-6])d)?$/i;
+// Matches G35w1d etc.
+const GESTATIONAL_AGE_RE = /^G\d{1,2}w(?:([0-6])d)?$/i;
 
 
 @Injectable({
@@ -37,9 +37,8 @@ export class AgeService {
         na: "na",
     };
 
-    readonly gestationalAgePattern = /^G\d{1,2}w(?:[0-6]d)?$/;
     /** The source of truth for user-selected age strings.*/
-    public _selectedTerms = signal<string[]>(["na"]);
+    private _selectedTerms = signal<string[]>(["na"]);
     /** Expose the signal as read-only for components */
     readonly selectedTerms = this._selectedTerms.asReadonly();
     /** for autocomplete lists */
@@ -53,10 +52,10 @@ export class AgeService {
      * 3. A known HPO onset term ("na" is also an allowed entry)
      */
     validateAgeInput(input: string): boolean {
-        return input == "na" ||
+        return input === "na" ||
         this.ALLOWED_AGE_LABELS.has(input) || 
         ISO8601_RE.test(input) || 
-        this.gestationalAgePattern.test(input);
+        GESTATIONAL_AGE_RE.test(input);
     }
 
     /** Expose an Angular validator that uses the same logic */
@@ -108,6 +107,7 @@ export class AgeService {
         return res === "P" ? undefined : res;
     }
 
+    // Lenient parser: unanchored on purpose. It accepts any text with a number and a unit
     mapYmdToIso(input: string): string | undefined {
         const yMatch = RE_YEAR.exec(input);
         const mMatch = RE_MONTH.exec(input);
@@ -140,7 +140,8 @@ export class AgeService {
         if (! input) return undefined;
         const symbolic = this.mapAgeStringToSymbolic(input);
         if (symbolic) return symbolic;
-        if (GESTATIONAL_AGE_RE.test(input)) return input;
+        const normalized = 'G' + input.slice(1).toLowerCase();
+        if (GESTATIONAL_AGE_RE.test(normalized)) return normalized;
         const upper = input.toUpperCase();
         if (ISO8601_RE.test(upper)) return upper;
         return this.mapYmdToIso(input);

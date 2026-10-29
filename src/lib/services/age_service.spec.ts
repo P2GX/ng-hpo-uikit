@@ -16,7 +16,21 @@ describe('AgeService.validateAgeInput', () => {
     expect(service.validateAgeInput(input)).toBe(true);
   });
 
+  // malformed age strings
   it.each(['P', 'xyz', '', 'G20w7d'])('rejects "%s"', input => {
     expect(service.validateAgeInput(input)).toBe(false);
   });
+
+  it('normalises lower-case ISO strings to upper case', () => {
+    const mapped = service.mapEtlAgeString('p31y4m1d');
+    expect(mapped).toBe('P31Y4M1D');
+    expect(service.validateAgeInput(mapped!)).toBe(true);
+  });
+
+  it('normalizes mis-capitalized gestational age string', () => {
+    const mapped = service.mapEtlAgeString("g30W1D");
+    expect(mapped).toBe('G30w1d');
+    expect(service.validateAgeInput(mapped!)).toBe(true);
+  });
+
 });
