@@ -3,6 +3,19 @@
 This page provides some explanations for developers.
 
 
+## Checks
+
+Before finalizing, perform the following checks
+```bash
+git status
+npm test -- --no-watch
+npm run lint
+npm run build
+npm run storybook # and look at them, or 
+npm run build-storybook # check stories compile
+```
+# bump the version
+
 ## Rapid iteration
 
 During development, we may want to revise a component in ng-hpo-toolkit and test it in an application. To do so, revise the code here and build

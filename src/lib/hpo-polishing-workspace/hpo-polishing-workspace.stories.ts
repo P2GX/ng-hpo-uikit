@@ -1,10 +1,9 @@
 import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
-import { fn } from '@storybook/test';
+import { fn } from 'storybook/test';
 
 import { HpoPolishingWorkspaceComponent } from './hpo-polishing-workspace.component';
 import { FenominalSentence } from '../models/fenominal-models';
@@ -92,11 +91,6 @@ const mockSearchProvider = (query: string) => {
 const meta: Meta<HpoPolishingWorkspaceComponent> = {
   title: 'Components/HPO Polishing Workspace',
   component: HpoPolishingWorkspaceComponent,
-  decorators: [
-    moduleMetadata({
-      imports: [CommonModule, FormsModule, MatIconModule],
-    }),
-  ],
   parameters: {
     layout: 'padded',
   },

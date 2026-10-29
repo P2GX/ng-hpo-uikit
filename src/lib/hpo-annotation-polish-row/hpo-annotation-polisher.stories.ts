@@ -1,7 +1,6 @@
 import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { HpoPolishRowComponent } from './hpo-annotation-polish-row.component';
 import { HpoTermMinimal } from '../models/hpo-annotation-models';
 
@@ -10,7 +9,7 @@ const meta: Meta<HpoPolishRowComponent> = {
   component: HpoPolishRowComponent,
   decorators: [
     moduleMetadata({
-      imports: [CommonModule, FormsModule, MatIconModule, HpoPolishRowComponent],
+      imports: [CommonModule, FormsModule, HpoPolishRowComponent],
     }),
     (story, context) => {
       const storyInstance = story();

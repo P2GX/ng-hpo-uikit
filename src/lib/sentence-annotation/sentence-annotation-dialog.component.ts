@@ -1,4 +1,4 @@
-import { Component, computed, effect, HostListener, inject, input, output, signal } from '@angular/core';
+import { Component, computed, effect, HostListener, input, output, signal } from '@angular/core';
 import {
   FenominalHit,
   FenominalSegment,

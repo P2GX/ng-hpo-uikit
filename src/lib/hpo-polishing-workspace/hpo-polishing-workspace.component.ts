@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 
 import { 
   FenominalSentence, 
-  FenominalHit, 
   UiFenominalSentence,
   UiFenominalHit, 
   ui_from_fenominal, 
