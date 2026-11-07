@@ -12,7 +12,7 @@ import { OntologyMatch } from '../models/ontology-dto';
 import { OnsetSortService } from '../services/onset-sort.service';
 import { OntologyAutocompleteComponent } from '../ontology-autocomplete/ontology-autocomplete.component';
 import { HpoPolishRowComponent } from '../hpo-annotation-polish-row/hpo-annotation-polish-row.component';
-import { DeleteHitRequest, HierarchyMapItem, HpoTermMinimal, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
+import { DeleteHitRequest, HierarchyMapItem, HpoTermDuplet, OntologyAutocompleteProvider, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { TextMiningContainerComponent } from "../text-mining-container/text-mining-container.component";
 
 
@@ -36,7 +36,7 @@ export class HpoPolishingWorkspaceComponent {
   // relay change signal to data owner outside of the library
   readonly segmentsReplaced = output<{ sentence: FenominalSentence; segmentIndex: number; newSegments: FenominalSegment[] }>();
 
-  availableModifiers = input<HpoTermMinimal[]>([]);
+  availableModifiers = input<HpoTermDuplet[]>([]);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
   autocompleteProvider = input.required<OntologyAutocompleteProvider>();
 

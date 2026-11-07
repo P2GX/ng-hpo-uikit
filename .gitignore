@@ -52,3 +52,4 @@ storybook-static
 documentation.json
 *.log
 docs/.vitepress/dist
+.claude/

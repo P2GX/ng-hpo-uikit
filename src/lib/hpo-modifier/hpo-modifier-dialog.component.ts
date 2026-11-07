@@ -1,14 +1,14 @@
 import { Component, ElementRef, ViewChild, afterNextRender, input, output, signal } from '@angular/core';
 import { HpoModifierComponent } from './hpo-modifier.component';
-import { HpoTermMinimal } from '../models/hpo-annotation-models';
+import { HpoTermDuplet } from '../models/hpo-annotation-models';
 
 export interface ModifierDialogData {
-  availableModifiers: HpoTermMinimal[];
-  selectedModifiers: HpoTermMinimal[];
+  availableModifiers: HpoTermDuplet[];
+  selectedModifiers: HpoTermDuplet[];
 }
 
 export interface ModifierDialogResult {
-  selectedModifiers: HpoTermMinimal[];
+  selectedModifiers: HpoTermDuplet[];
 }
 
 @Component({
@@ -32,7 +32,7 @@ export class HpoModifierDialogComponent {
   data = input.required<ModifierDialogData>();
   done = output<ModifierDialogResult>();
 
-  protected currentSelection = signal<HpoTermMinimal[]>([]);
+  protected currentSelection = signal<HpoTermDuplet[]>([]);
 
   @ViewChild('modifierDialogEl') dialogEl!: ElementRef<HTMLDialogElement>;
   private emitted = false;

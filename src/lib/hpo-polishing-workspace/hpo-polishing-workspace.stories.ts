@@ -1,6 +1,4 @@
-import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { Meta, StoryObj } from '@storybook/angular';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { fn } from 'storybook/test';
@@ -8,7 +6,7 @@ import { fn } from 'storybook/test';
 import { HpoPolishingWorkspaceComponent } from './hpo-polishing-workspace.component';
 import { FenominalSentence } from '../models/fenominal-models';
 import { OntologyMatch } from '../models/ontology-dto';
-import { HpoTermMinimal } from '../models/hpo-annotation-models';
+import { HpoTermDuplet } from '../models/hpo-annotation-models';
 
 // 1. Maintain mock input data as clean raw backend structures (FenominalSentence[])
 const mockSentences: FenominalSentence[] = [
@@ -62,13 +60,13 @@ const mockSentences: FenominalSentence[] = [
 ];
 
 const mockOnsets = ['Congenital onset', 'Antenatal onset', 'Neonatal onset', 'Infantile onset'];
-const mockModifiers: HpoTermMinimal[] = [
-  { termId: 'HP:0012825', label: 'Mild' },
-  { termId: 'HP:0012826', label: 'Moderate' },
-  { termId: 'HP:0012828', label: 'Severe' },
-  { termId: 'HP:0031375', label: 'Insidious onset' },
-  { termId: 'HP:0003679', label: 'Static' },
-  { termId: 'HP:0003676', label: 'Progressive' },
+const mockModifiers: HpoTermDuplet[] = [
+  { hpoId: 'HP:0012825', hpoLabel: 'Mild' },
+  { hpoId: 'HP:0012826', hpoLabel: 'Moderate' },
+  { hpoId: 'HP:0012828', hpoLabel: 'Severe' },
+  { hpoId: 'HP:0031375', hpoLabel: 'Insidious onset' },
+  { hpoId: 'HP:0003679', hpoLabel: 'Static' },
+  { hpoId: 'HP:0003676', hpoLabel: 'Progressive' },
 ];
 
 const mockSearchProvider = (query: string) => {

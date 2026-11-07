@@ -3,13 +3,13 @@
   @if (quickModifiers().length) {
     <label class="section-label">Severity</label>
     <div class="quick-select-row">
-      @for (mod of quickModifiers(); track mod.termId) {
+      @for (mod of quickModifiers(); track mod.hpoId) {
         <button
           type="button"
           class="btn-small"
           [class.is-selected]="isSelected(mod)"
           (click)="selectQuickModifier(mod)">
-          {{ mod.label }}
+          {{ mod.hpoLabel }}
         </button>
       }
     </div>
@@ -17,9 +17,9 @@
 
   @if (selectedModifiers().length) {
     <div class="selected-chips-row">
-      @for (mod of selectedModifiers(); track mod.termId) {
+      @for (mod of selectedModifiers(); track mod.hpoId) {
         <span class="modifier-chip">
-          {{ mod.label }}
+          {{ mod.hpoLabel }}
           <button type="button" class="chip-remove-btn" (click)="removeModifier(mod)" aria-label="Remove modifier">
             <app-icon name="close" [size]="14" />
           </button>
@@ -57,14 +57,14 @@
 
       @if (isOpen() && filteredOptions().length) {
         <ul id="modifier-listbox" class="combobox-listbox" role="listbox">
-          @for (option of filteredOptions(); track option.termId; let i = $index) {
+          @for (option of filteredOptions(); track option.hpoId; let i = $index) {
             <li
               role="option"
               class="combobox-option"
               [class.is-active]="i === activeIndex()"
               (mousedown)="$event.preventDefault(); onOptionSelected(option)">
-              <span class="option-matched-text">{{ option.label }}</span>
-              <small class="option-id"> ({{ option.termId }})</small>
+              <span class="option-matched-text">{{ option.hpoLabel }}</span>
+              <small class="option-id"> ({{ option.hpoId }})</small>
             </li>
           }
         </ul>

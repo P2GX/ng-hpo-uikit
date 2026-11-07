@@ -2,16 +2,17 @@ import { Observable } from 'rxjs';
 import { OntologyMatch } from "./ontology-dto";
 import { FenominalHit  } from './fenominal-models';
 
-export interface HpoTermMinimal {
-  termId: string;
-  label: string;
+/** An HPO term. Matches ga4ghphetools HpoTermDuplet (camelCase on the wire). */
+export interface HpoTermDuplet {
+  hpoLabel: string;
+  hpoId: string;
 }
 
 /* This is useful for the menu that allows to use to navigate to the parents or children of the current term. */
 export interface HierarchyMapItem {
   currentTermId: string;
-  parents: HpoTermMinimal[];
-  children: HpoTermMinimal[];
+  parents: HpoTermDuplet[];
+  children: HpoTermDuplet[];
 }
 
 export interface PolishedHpoAnnotation {
@@ -19,7 +20,7 @@ export interface PolishedHpoAnnotation {
   label: string;
   excluded: boolean;
   onsetString?: string;
-  modifiers: HpoTermMinimal[];
+  modifiers: HpoTermDuplet[];
 }
 
 /* Records what changes when a user moves a badge in our text mining component */

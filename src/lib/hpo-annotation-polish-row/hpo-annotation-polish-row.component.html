@@ -22,16 +22,16 @@
     @if (hierarchy()?.parents?.length) {
         <div class="menu-section-title">Parents</div>
         <ul>
-        @for (p of hierarchy()?.parents; track p.termId) {
-            <li (click)="replaceTerm(p)" class="menu-item">{{ p.label }} ({{ p.termId }})</li>
+        @for (p of hierarchy()?.parents; track p.hpoId) {
+            <li (click)="replaceTerm(p)" class="menu-item">{{ p.hpoLabel }} ({{ p.hpoId }})</li>
         }
         </ul>
     }
     @if (hierarchy()?.children?.length) {
         <div class="menu-section-title">Children</div>
         <ul>
-        @for (c of hierarchy()?.children; track c.termId) {
-            <li (click)="replaceTerm(c)" class="menu-item">{{ c.label }} ({{ c.termId }})</li>
+        @for (c of hierarchy()?.children; track c.hpoId) {
+            <li (click)="replaceTerm(c)" class="menu-item">{{ c.hpoLabel }} ({{ c.hpoId }})</li>
         }
         </ul>
     }
@@ -64,10 +64,10 @@
     <div class="active-modifiers-preview" 
     [class.disabled-section]="annotation().excluded"
     (click)="!annotation().excluded && toggleModifierModal()">
-      @for (mod of annotation().modifiers?.slice(0,2) ?? []; track mod.termId) {
+      @for (mod of annotation().modifiers?.slice(0,2) ?? []; track mod.hpoId) {
         <span class="modifier-chip"
-                [title]="mod.label">
-             {{ mod.label.length > 10 ? mod.label.slice(0, 10) + '…' : mod.label }}
+                [title]="mod.hpoLabel">
+             {{ mod.hpoLabel.length > 10 ? mod.hpoLabel.slice(0, 10) + '…' : mod.hpoLabel }}
         </span>
         }
 

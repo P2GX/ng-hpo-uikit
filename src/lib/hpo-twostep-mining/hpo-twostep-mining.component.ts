@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, inject, input, output, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FenominalSegment, FenominalSentence } from '../models/fenominal-models';
-import { HierarchyMapItem, HpoTermMinimal, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
+import { HierarchyMapItem, HpoTermDuplet, PolishedHpoAnnotation } from '../models/hpo-annotation-models';
 import { OntologyMatch } from '../models/ontology-dto';
 import { HpoMiningComponent } from '../hpo-mining/hpo-mining.component';
 import { HpoPolishingWorkspaceComponent } from '../hpo-polishing-workspace/hpo-polishing-workspace.component';
@@ -10,7 +10,7 @@ import { NotificationService } from '../services/notification.service';
 export interface HpoTwostepData {
   mineTextProvider: (text: string) => Promise<FenominalSentence[]>;
   hierarchyProvider: (termId: string) => Promise<HierarchyMapItem>;
-  availableModifiers: () => Promise<HpoTermMinimal[]>;
+  availableModifiers: () => Promise<HpoTermDuplet[]>;
   autocompleteProvider: (query: string) => Observable<OntologyMatch[]>;
 }
 
@@ -32,7 +32,7 @@ export class HpoTwostepMiningComponent implements OnInit {
   // Internal component state using signals
   protected currentStep = signal<1 | 2>(1);
   protected curatedSentences = signal<FenominalSentence[]>([]);
-  protected readonly availableModifiers = signal<HpoTermMinimal[]>([]);
+  protected readonly availableModifiers = signal<HpoTermDuplet[]>([]);
 
 
   // Modern Outputs (Observable-like emitters without RxJS overhead)

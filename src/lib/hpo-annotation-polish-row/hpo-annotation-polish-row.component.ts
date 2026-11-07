@@ -1,7 +1,7 @@
 import { Component, input, model, computed, output, signal, viewChild, ElementRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermMinimal } from "../models/hpo-annotation-models"
+import { PolishedHpoAnnotation, HierarchyMapItem, HpoTermDuplet } from "../models/hpo-annotation-models"
 import { HpoAgeSelectorComponent } from '../hpo-age-selector/hpo-age-selector.component';
 import { HpoModifierDialogComponent, ModifierDialogResult } from '../hpo-modifier/hpo-modifier-dialog.component';
 
@@ -26,7 +26,7 @@ export class HpoPolishRowComponent {
   readonly annotation = model.required<PolishedHpoAnnotation>();
   readonly hierarchy = signal<HierarchyMapItem | null>(null);
   hierarchyProvider = input.required<(termId: string) => Promise<HierarchyMapItem>>();
-  readonly availableModifiers = input<HpoTermMinimal[]>([]);
+  readonly availableModifiers = input<HpoTermDuplet[]>([]);
 
   readonly updated = output<PolishedHpoAnnotation>();
   readonly deleteRequested = output<void>();
@@ -48,7 +48,7 @@ export class HpoPolishRowComponent {
     
     return available.filter(mod => 
       !currentSelected.includes(mod) && 
-      mod.label.includes(query)
+      mod.hpoLabel.includes(query)
     );
   });
 
@@ -64,7 +64,7 @@ export class HpoPolishRowComponent {
 
     return mods
       .slice(2)
-      .map(m => m.label)
+      .map(m => m.hpoLabel)
       .join('\n');
   });
 
@@ -84,7 +84,7 @@ export class HpoPolishRowComponent {
     this.updateModifiers(result.selectedModifiers);
   }
 
-  updateModifiers(updatedMods: HpoTermMinimal[]): void {
+  updateModifiers(updatedMods: HpoTermDuplet[]): void {
     const updatedAnnotation = {
       ...this.annotation(),
       modifiers: updatedMods
@@ -112,11 +112,11 @@ export class HpoPolishRowComponent {
 
 
   /* replace a term with a parent or child from the hierarchy menu */
-  async replaceTerm(target: HpoTermMinimal): Promise<void> {
+  async replaceTerm(target: HpoTermDuplet): Promise<void> {
     const updatedAnnotation = {
       ...this.annotation(),
-      termId: target.termId,
-      label: target.label
+      termId: target.hpoId,
+      label: target.hpoLabel
     };
     this.annotation.set(updatedAnnotation);
     this.updated.emit(updatedAnnotation);
@@ -124,7 +124,7 @@ export class HpoPolishRowComponent {
     //  fetch fresh data for the new term immediately
     // this prevents the menu from showing stale data on the next open
     const provider = this.hierarchyProvider();
-    const data = await provider(target.termId);
+    const data = await provider(target.hpoId);
     this.hierarchy.set(data);
     this.showHierarchyMenu.set(false);
   }

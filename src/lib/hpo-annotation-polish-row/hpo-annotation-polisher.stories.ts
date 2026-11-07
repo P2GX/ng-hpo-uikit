@@ -2,7 +2,7 @@ import { Meta, StoryObj, moduleMetadata } from '@storybook/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HpoPolishRowComponent } from './hpo-annotation-polish-row.component';
-import { HpoTermMinimal } from '../models/hpo-annotation-models';
+import { HpoTermDuplet } from '../models/hpo-annotation-models';
 
 const meta: Meta<HpoPolishRowComponent> = {
   title: 'Components/HPO Annotation Polisher',
@@ -61,13 +61,13 @@ const mockHierarchy = {
   ]
 };
 
-const mockModifiers: HpoTermMinimal[] = [
-  { termId: 'HP:0012825', label: 'Mild' },
-  { termId: 'HP:0012826', label: 'Moderate' },
-  { termId: 'HP:0012828', label: 'Severe' },
-  { termId: 'HP:0031375', label: 'Insidious onset' },
-  { termId: 'HP:0003679', label: 'Static' },
-  { termId: 'HP:0003676', label: 'Progressive' },
+const mockModifiers: HpoTermDuplet[] = [
+  { hpoId: 'HP:0012825', hpoLabel: 'Mild' },
+  { hpoId: 'HP:0012826', hpoLabel: 'Moderate' },
+  { hpoId: 'HP:0012828', hpoLabel: 'Severe' },
+  { hpoId: 'HP:0031375', hpoLabel: 'Insidious onset' },
+  { hpoId: 'HP:0003679', hpoLabel: 'Static' },
+  { hpoId: 'HP:0003676', hpoLabel: 'Progressive' },
 ];
 // --- Stories ---
 

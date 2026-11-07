@@ -1,13 +1,15 @@
 import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HelpButtonComponent } from '../help-button/help-button.component';
+import { IconComponent } from '../svg-icons/svg-icon.component';
 
 @Component({
   selector: 'ui-load-ontology',
   standalone: true,
   imports: [
     CommonModule, 
-    HelpButtonComponent 
+    HelpButtonComponent,
+    IconComponent
   ],
   templateUrl: './load-ontology.component.html',
   styleUrls: ['./load-ontology.component.scss']

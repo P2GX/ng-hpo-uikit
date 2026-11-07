@@ -1,6 +1,6 @@
 import { Component, input, model, output, computed, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
-import { HpoTermMinimal } from '../models/hpo-annotation-models';
+import { HpoTermDuplet } from '../models/hpo-annotation-models';
 import { IconComponent } from '../svg-icons/svg-icon.component';
 
 const SEVERITY_TERM_IDS: ReadonlySet<string> = new Set([
@@ -17,18 +17,18 @@ const SEVERITY_TERM_IDS: ReadonlySet<string> = new Set([
   styleUrls: ['./hpo-modifier.component.scss']
 })
 export class HpoModifierComponent {
-  availableModifiers = input.required<HpoTermMinimal[]>();
-  selectedModifiers = model<HpoTermMinimal[]>([]);
+  availableModifiers = input.required<HpoTermDuplet[]>();
+  selectedModifiers = model<HpoTermDuplet[]>([]);
   placeholder = input('Search modifiers...');
 
-  modifierToggled = output<{ modifier: HpoTermMinimal; selected: boolean }>();
+  modifierToggled = output<{ modifier: HpoTermDuplet; selected: boolean }>();
   menuClosed = output<void>();
 
   protected quickModifiers = computed(() =>
-    this.availableModifiers().filter(t => SEVERITY_TERM_IDS.has(t.termId))
+    this.availableModifiers().filter(t => SEVERITY_TERM_IDS.has(t.hpoId))
   );
 
-  protected control = new FormControl<string | HpoTermMinimal | null>('', {
+  protected control = new FormControl<string | HpoTermDuplet | null>('', {
     validators: [this.mustBeKnownTerm.bind(this)]
   });
 
@@ -41,13 +41,13 @@ export class HpoModifierComponent {
     const all = this.availableModifiers();
     if (!query) return all;
     return all.filter(t =>
-      t.label.toLowerCase().includes(query) || t.termId.toLowerCase().includes(query)
+      t.hpoLabel.toLowerCase().includes(query) || t.hpoId.toLowerCase().includes(query)
     );
   });
 
   constructor() {
     this.control.valueChanges.subscribe(value => {
-      const query = typeof value === 'string' ? value : value?.label ?? '';
+      const query = typeof value === 'string' ? value : value?.hpoLabel ?? '';
       this.searchQuery.set(query);
       this.activeIndex.set(-1);
       if (typeof value === 'string') {
@@ -64,11 +64,11 @@ export class HpoModifierComponent {
 
 
 
-  protected isSelected(term: HpoTermMinimal): boolean {
-    return this.selectedModifiers().some(t => t.termId === term.termId);
+  protected isSelected(term: HpoTermDuplet): boolean {
+    return this.selectedModifiers().some(t => t.hpoId === term.hpoId);
   }
 
-  protected selectQuickModifier(mod: HpoTermMinimal): void {
+  protected selectQuickModifier(mod: HpoTermDuplet): void {
     this.addModifier(mod);
   }
 
@@ -114,19 +114,19 @@ export class HpoModifierComponent {
   }
 
 
-    protected onOptionSelected(option: HpoTermMinimal): void {
+    protected onOptionSelected(option: HpoTermDuplet): void {
       this.addModifier(option);
       this.clear();
       this.isOpen.set(false);
       this.menuClosed.emit();
     }
 
-  protected removeModifier(term: HpoTermMinimal): void {
-    this.selectedModifiers.set(this.selectedModifiers().filter(t => t.termId !== term.termId));
+  protected removeModifier(term: HpoTermDuplet): void {
+    this.selectedModifiers.set(this.selectedModifiers().filter(t => t.hpoId !== term.hpoId));
     this.modifierToggled.emit({ modifier: term, selected: false });
   }
 
-  private addModifier(term: HpoTermMinimal): void {
+  private addModifier(term: HpoTermDuplet): void {
     if (this.isSelected(term)) return;
     this.selectedModifiers.set([...this.selectedModifiers(), term]);
     this.modifierToggled.emit({ modifier: term, selected: true });
