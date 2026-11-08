@@ -2,15 +2,15 @@
 import type { Meta, StoryObj } from '@storybook/angular';
 import { moduleMetadata } from '@storybook/angular';
 import { HpoModifierComponent } from './hpo-modifier.component';
-import { HpoTermMinimal } from '../models/hpo-annotation-models';
+import { HpoTermDuplet } from '../models/hpo-annotation-models';
 
-const SAMPLE_MODIFIERS: HpoTermMinimal[] = [
-  { termId: 'HP:0012825', label: 'Mild' },
-  { termId: 'HP:0012826', label: 'Moderate' },
-  { termId: 'HP:0012828', label: 'Severe' },
-  { termId: 'HP:0031375', label: 'Insidious onset' },
-  { termId: 'HP:0003679', label: 'Static' },
-  { termId: 'HP:0003676', label: 'Progressive' },
+const SAMPLE_MODIFIERS: HpoTermDuplet[] = [
+  { hpoId: 'HP:0012825', hpoLabel: 'Mild' },
+  { hpoId: 'HP:0012826', hpoLabel: 'Moderate' },
+  { hpoId: 'HP:0012828', hpoLabel: 'Severe' },
+  { hpoId: 'HP:0031375', hpoLabel: 'Insidious onset' },
+  { hpoId: 'HP:0003679', hpoLabel: 'Static' },
+  { hpoId: 'HP:0003676', hpoLabel: 'Progressive' },
 ];
 
 const meta: Meta<HpoModifierComponent> = {
@@ -70,10 +70,10 @@ export const ManyModifiers: Story = {
   args: {
     availableModifiers: [
       ...SAMPLE_MODIFIERS,
-      { termId: 'HP:0025153', label: 'Recurrent' },
-      { termId: 'HP:0031797', label: 'Cyclic' },
-      { termId: 'HP:0025302', label: 'Fluctuating' },
-      { termId: 'HP:0011009', label: 'Sudden onset' },
+      { hpoId: 'HP:0025153', hpoLabel: 'Recurrent' },
+      { hpoId: 'HP:0031797', hpoLabel: 'Cyclic' },
+      { hpoId: 'HP:0025302', hpoLabel: 'Fluctuating' },
+      { hpoId: 'HP:0011009', hpoLabel: 'Sudden onset' },
     ],
     selectedModifiers: [SAMPLE_MODIFIERS[0]],
   },

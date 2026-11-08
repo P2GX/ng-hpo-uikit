@@ -136,6 +136,17 @@ export class AgeService {
         return res === "P" ? undefined : res;
     }
 
+    /**
+     * Normalize free-text age input (e.g. "childhood", "4y2m", "g35w1d") and validate it.
+     * Returns the canonical string, or null if the input cannot be interpreted.
+     */
+    normalizeAgeInput(raw: string): string | null {
+        const trimmed = raw.trim();
+        if (!trimmed) return null;
+        const normalized = this.mapEtlAgeString(trimmed);
+        return normalized && this.validateAgeInput(normalized) ? normalized : null;
+    }
+
     mapEtlAgeString(input: string | null | undefined): string | undefined {
         if (! input) return undefined;
         const symbolic = this.mapAgeStringToSymbolic(input);

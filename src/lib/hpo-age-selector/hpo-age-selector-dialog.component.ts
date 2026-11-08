@@ -61,17 +61,17 @@ export class HpoAgeSelectorDialogComponent implements OnInit {
   onSelectExisting(term: string): void {
     if (term) {
       this.showSuggestions.set(false);
+      this.ageService.addSelectedTerm(term); 
       this.selected.emit(term);
       this.close();
     }
   }
 
   onSubmitCustom(): void {
-    const rawVal = this.customAge().trim();
-    if (!rawVal) return;
+    if (!this.customAge().trim()) return;
+    const processedVal = this.ageService.normalizeAgeInput(this.customAge());
     this.showSuggestions.set(false);
-    const processedVal = this.ageService.mapEtlAgeString(rawVal);
-    if (processedVal && this.ageService.validateAgeInput(processedVal)) {
+    if (processedVal) {
       this.ageService.addSelectedTerm(processedVal);
       this.selected.emit(processedVal);
       this.close();
