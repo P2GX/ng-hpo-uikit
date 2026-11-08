@@ -19,7 +19,7 @@ When the user picks or enters a valid age, the component emits it through `onset
 | ISO 8601 duration | `P1Y6M`, `P35Y`, `P10D` |
 | Gestational age | `G20w`, `G32w3d` |
 | Not available | `na` |
-| Informal text (converted to ISO 8601) | `4y2m` becomes `P4Y2M`; `11.5` or `3 w` is not accepted unless it has a unit |
+| Informal text (converted to ISO 8601) | Informal text (converted) | 4y2m becomes P4Y2M; 3 w becomes P21D; childhood becomes Childhood onset. A bare number such as 11.5 is rejected. |
 
 Anything else is rejected with an error message.
 
@@ -27,7 +27,7 @@ Anything else is rejected with an error message.
 
 1. **Feed the value back.** The component does not keep the selected age itself. Store the emitted value and pass it back through `selectedOnset`, or the button never changes.
 2. **Show error messages.** Invalid input is reported through the library's [NotificationService](./notification-service.md). Put `<app-toast-container />` once in your app, for example in the root component, or the user sees nothing.
-3. **Optional:** the "existing" tags come from `AgeService`. Seed them at startup with `AgeService.addSelectedTerms(['Infantile onset', 'P1Y'])`. `AgeService` is shared by the whole app.
+3. **Remembered ages (optional setup):** Every age the user picks or enters is remembered in the shared AgeService and offered as a “Choose existing” tag next time. Optionally, code can seed it at startup with `AgeService.addSelectedTerms([...])`, and call `AgeService.clearSelectedTerms()` when a new cohort begins. `AgeService` is shared by the whole app.
 
 ## Usage
 

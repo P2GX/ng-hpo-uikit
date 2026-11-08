@@ -43,7 +43,7 @@ export default defineConfig({
       {
         text: 'Shared Services',
         items: [
-
+          { text: 'Age Service', link: '/services/age-service' },
           { text: 'Notification Service', link: '/services/notification-service' }
         ]
       },
