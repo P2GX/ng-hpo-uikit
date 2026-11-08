@@ -1,0 +1,16 @@
+:root {
+  /* Brand Colors */
+  --hpo-primary: #1e3a8a;       /* Deep clinical blue */
+  --hpo-primary-hover: #172554;
+  --hpo-cancel: #64748b;        /* Slate gray */
+  --hpo-cancel-hover: #475569;
+  
+  /* State Colors */
+  --hpo-disabled-bg: #e2e8f0;
+  --hpo-disabled-text: #94a3b8;
+
+  /* Typography & Layout */
+  --hpo-font-sans: system-ui, -apple-system, sans-serif;
+  --hpo-radius: 6px;
+  --hpo-transition: all 0.2s ease-in-out;
+}
