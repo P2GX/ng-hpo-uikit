@@ -32,7 +32,7 @@ export class NotificationService {
 
   private push(message: string, kind: ToastKind, dismissLabel: string, duration: number) {
     const id = this.nextId++;
-    this.toasts.update(list => [...list, { id, message, kind, dismissLabel }]);
+    this.toasts.set([{ id, message, kind, dismissLabel }]);   // was: update(list => [...list, ...])
     if (duration > 0) {
       setTimeout(() => this.dismiss(id), duration);
     }
